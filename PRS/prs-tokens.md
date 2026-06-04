@@ -237,16 +237,27 @@ font-family: Pretendard, sans-serif;
 > **주의:** 검토 요청/완료/블로킹의 텍스트 색상은 base-color-tokens에 정확히 일치하는 토큰이 없는 PRS 커스텀 값입니다.
 > CSS 변수로 사용 시 `--prs-status-review-text: #a07800` 등 PRS 전용 변수로 정의하세요.
 
-### PRS 액센트 적용 기준
+### 버튼 컬러 규칙
+
+> **원칙:** Primary 버튼은 디폴트(neutral dark) 컬러. Violet 액센트는 **강조가 필요한 버튼에만** 사용한다.
+
+| 버튼 종류 | 배경 | 텍스트 | 사용처 |
+|----------|------|--------|-------|
+| **Primary** (기본 주요 액션) | `$base-color-neutral-coolgray-700` `#343434` | `#ffffff` | 새 이슈, 저장, 생성, 추가 등 일반 확정 액션 |
+| Primary hover | `$base-color-neutral-coolgray-800` `#191919` | — | — |
+| **Accent** (강조 액션) | `$base-color-accent-violet-400` `#6f64dd` | `#ffffff` | AI 기능 CTA, 온보딩 진입, 특별 강조 액션 |
+| Accent hover | `$base-color-accent-violet-500` `#6358d5` | — | — |
+| **Ghost** (보조 액션) | `#ffffff` + border `#d2d2d2` | `#343434` | 버전관리, 취소, 내보내기 등 |
+| **Text** (인라인 액션) | transparent | `#848484` | 초기화, 더보기 링크 등 |
+
+### PRS 액센트 적용 기준 (버튼 외)
 | 용도 | Token | Value |
 |------|-------|-------|
-| Primary CTA 버튼 | `$base-color-accent-violet-400` | `#6f64dd` |
-| CTA hover | `$base-color-accent-violet-500` | `#6358d5` |
-| CTA pressed | `$base-color-accent-violet-600` | `#574ccd` |
 | 액센트 배경 (카드, 뱃지) | `$base-color-accent-violet-25` | `#f2f1fe` |
 | 액센트 배경 (선택, hover) | `$base-color-accent-violet-50` | `#dfdcfd` |
 | AI/기획자동화 강조 텍스트 | `$base-color-accent-violet-500` | `#6358d5` |
 | AI/기획자동화 아이콘 | `$base-color-accent-violet-400` | `#6f64dd` |
+| 활성 필터 칩, 선택 상태 | `$base-color-accent-violet-400` | `#6f64dd` |
 
 ---
 

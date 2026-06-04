@@ -20,8 +20,8 @@
 화면 작업 시작 전 반드시 아래 파일을 읽는다:
 
 ```
-1. /Users/leejy/claude/PRS/prs-tokens.md       — 컬러·스페이싱·타이포·레이아웃 토큰
-2. /Users/leejy/claude/PRS/components.md        — 컴포넌트 사용 기준 + PRD 번역 테이블
+1. ./prs-tokens.md       — 컬러·스페이싱·타이포·레이아웃 토큰
+2. ./components.md       — 컴포넌트 사용 기준 + PRD 번역 테이블
 ```
 
 ---
@@ -95,9 +95,12 @@ font-family: Pretendard, sans-serif
 섹션 헤더: Title3 18px / weight 600
 메타/보조: Body3 12px / line-height 16px
 
-Primary CTA: $base-color-accent-violet-400 #6f64dd
-Hover:       $base-color-accent-violet-500 #6358d5
-Pressed:     $base-color-accent-violet-600 #574ccd
+/* 버튼 컬러 원칙: Primary는 디폴트, Accent만 강조 */
+Primary 버튼:  $base-color-neutral-coolgray-700 #343434  (일반 확정 액션)
+Primary hover: $base-color-neutral-coolgray-800 #191919
+Accent 버튼:   $base-color-accent-violet-400 #6f64dd     (강조 액션만)
+Accent hover:  $base-color-accent-violet-500 #6358d5
+Ghost 버튼:    background #ffffff, border #d2d2d2
 
 기본 텍스트:  $semantic-color-text-default #343434
 보조 텍스트:  $semantic-color-text-subtle #848484
@@ -194,7 +197,9 @@ LNB: 너비 220px, 좌측 고정
 컴포넌트
 [ ] Status Badge 사용 (텍스트 단독 상태 표시 금지)
 [ ] AI 액션 버튼에 ✦ sparkle 접두어
-[ ] 버튼 배치: Ghost → Secondary → Primary 순서 (좌→우)
+[ ] Primary 버튼은 #343434 (neutral-coolgray-700) — 일반 확정 액션
+[ ] Accent 버튼(#6f64dd violet-400)은 강조 액션에만 사용
+[ ] 버튼 배치: Ghost → Primary 순서 (좌→우), 강조 필요 시만 Accent
 [ ] Modal Footer: 취소(Ghost) → 확인(Primary) 우측 정렬
 
 Edge Case

@@ -4,7 +4,7 @@
 
 PRS 화면 관련 작업 요청이 오면 **말하지 않아도** 아래 파이프라인을 자동으로 따른다.
 
-**파이프라인 전체 정의:** `/Users/leejy/claude/PRS/prs-skill.md`
+**파이프라인 전체 정의:** `./PRS/prs-skill.md`
 
 ```
 STEP 1   화면 유형 확정 (조회형/등록형/노드뷰/AI Wizard 등 9종)
@@ -21,10 +21,10 @@ STEP 5   Edge Case 필수 구현 (Loading Skeleton / Empty State / Error)
 모든 화면 작업 시 아래 순서로 참조한다.
 
 ### 1. 참조 파일 우선순위
-1. `/Users/leejy/claude/PRS/prs-skill.md` — 화면 작업 파이프라인
-2. `/Users/leejy/claude/PRS/prs-tokens.md` — PRS 전용 토큰 (컬러·타이포·스페이싱·레이아웃)
-3. `/Users/leejy/claude/PRS/components.md` — 컴포넌트 사용 기준 + PRD 번역 테이블
-4. `/Users/leejy/claude/UIX/*.md` — 공통 UIX 디자인 시스템 기반
+1. `./PRS/prs-skill.md` — 화면 작업 파이프라인
+2. `./PRS/prs-tokens.md` — PRS 전용 토큰 (컬러·타이포·스페이싱·레이아웃)
+3. `./PRS/components.md` — 컴포넌트 사용 기준 + PRD 번역 테이블
+4. `./UIX/*.md` — 공통 UIX 디자인 시스템 기반
 
 ### 2. 폰트
 - `font-family: Pretendard, sans-serif`
@@ -35,9 +35,10 @@ STEP 5   Edge Case 필수 구현 (Loading Skeleton / Empty State / Error)
 ### 3. 색상 — PRS 브랜드
 - **콘텐츠 영역 기본 배경**: `#f5f5f5` (`$semantic-color-background-sunken`) — LNB 제외 전체 적용
   - 예외: 노드뷰 캔버스 `#f0f0f0`, AI Wizard violet gradient
-- **Primary CTA**: `#6f64dd` (violet-400)
-- **Primary hover**: `#6358d5` (violet-500)
-- **Primary pressed**: `#574ccd` (violet-600)
+- **버튼 원칙**: Primary는 디폴트 컬러, 강조 액션에만 Accent 사용
+  - **Primary 버튼**: `#343434` (neutral-coolgray-700) — 새 이슈, 저장, 생성 등 일반 확정 액션
+  - **Accent 버튼**: `#6f64dd` (violet-400) — AI 기능 CTA 등 강조 액션에만
+  - **Ghost 버튼**: `#ffffff` + border `#d2d2d2`
 - **액센트 배경**: `#f2f1fe` (violet-25)
 - **기본 배경**: `#ffffff`
 - **서브 배경**: `#f5f5f5`
