@@ -757,6 +757,17 @@ Types:
 
 ---
 
+## 프로토타입 사용 규칙
+
+- `viewBox="0 0 20 20"` 고정 (Figma 원본 그리드)
+- `width`/`height`는 사용 맥락에 따라:
+  - `16px`: Body3 텍스트 옆 인라인 아이콘
+  - `20px`: 기본 UI 아이콘 (버튼, 인풋)
+  - `24px`: LNB 네비게이션 아이콘
+- `fill: currentColor` 사용 → 부모 `color`로 제어
+
+---
+
 ## Usage
 
 ### Export SVG from Figma
