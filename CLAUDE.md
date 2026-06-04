@@ -11,7 +11,7 @@ STEP 1   화면 유형 확정 (조회형/등록형/노드뷰/AI Wizard 등 9종)
 STEP 1.5 불명확 사항은 자의적으로 채우지 않고 먼저 보고
 STEP 2   components.md 기준으로 컴포넌트 선택
 STEP 3   prs-tokens.md 기준으로 토큰 매핑 (hex 단독 사용 금지)
-STEP 4   레이아웃 구성 (1920px / LNB 220px / 콘텐츠 40px 패딩)
+STEP 4   레이아웃 구성 (1920px / LNB 220px / 콘텐츠 영역 1200px / 콘텐츠 40px 패딩)
 STEP 5   Edge Case 필수 구현 (Loading Skeleton / Empty State / Error)
 → 출력 전 체크리스트 확인
 ```
