@@ -725,6 +725,38 @@ Types:
 
 ---
 
+## 아이콘 규격 (Figma 원본 기준)
+
+> Figma `[UIX] Design_Kit` 기준. 인라인 SVG 사용 시 반드시 준수.
+
+| 항목 | 값 |
+|------|-----|
+| 프레임 크기 | **20 × 20px** |
+| 상하좌우 여백 | **약 4px** (19~20%) |
+| 실제 벡터 영역 | **약 12 × 12px** |
+| SVG viewBox | `0 0 20 20` |
+
+### ✅ 올바른 사용 (4px 여백 준수)
+
+```svg
+<!-- 프레임 20×20, 벡터는 (3.9, 3.9) 기준 12×12 영역 내에 위치 -->
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <circle cx="9" cy="9" r="5" stroke="currentColor" stroke-width="1.4"/>
+  <path d="M13 13l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+</svg>
+```
+
+### ❌ 잘못된 사용 (벡터가 프레임 꽉 채움)
+
+```svg
+<!-- 안티패턴: path가 0,0부터 20,20까지 꽉 채움 -->
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <circle cx="10" cy="10" r="10" stroke="currentColor" stroke-width="1.4"/>
+</svg>
+```
+
+---
+
 ## Usage
 
 ### Export SVG from Figma
