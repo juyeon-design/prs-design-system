@@ -4,7 +4,7 @@
 
 PRS 화면 관련 작업 요청이 오면 **말하지 않아도** 아래 파이프라인을 자동으로 따른다.
 
-**파이프라인 전체 정의:** `./PRS/prs-skill.md`
+**파이프라인 전체 정의:** `.claude/skills/prs-screen/SKILL.md`
 
 ```
 STEP 1   화면 유형 확정 (조회형/등록형/노드뷰/AI Wizard 등 9종)
@@ -21,7 +21,7 @@ STEP 5   Edge Case 필수 구현 (Loading Skeleton / Empty State / Error)
 모든 화면 작업 시 아래 순서로 참조한다.
 
 ### 1. 참조 파일 우선순위
-1. `./PRS/prs-skill.md` — 화면 작업 파이프라인
+1. `.claude/skills/prs-screen/SKILL.md` — 화면 작업 파이프라인
 2. `./PRS/prs-tokens.md` — PRS 전용 토큰 (컬러·타이포·스페이싱·레이아웃)
 3. `./PRS/components.md` — 컴포넌트 사용 기준 + PRD 번역 테이블
 4. `./UIX/*.md` — 공통 UIX 디자인 시스템 기반
