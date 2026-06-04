@@ -268,9 +268,33 @@ font-family: Pretendard, sans-serif;
 ### 기본 캔버스
 - **전체 너비:** 1920px (데스크톱 기준)
 - **LNB (좌측 네비게이션):** 220px 고정
-- **콘텐츠 영역:** 1200px (LNB 제외 나머지 영역 중 중앙 정렬)
+- **콘텐츠 영역:** max-width 1200px, 중앙 정렬 (LNB 제외 나머지 영역 내 center)
 - **콘텐츠 내부 패딩:** 좌우 각 40px (`$base-dimen-space-500`)
 - **상단 GNB:** 56px 고정 높이
+
+### 콘텐츠 영역 중앙 정렬 규칙
+
+콘텐츠 영역은 항상 `max-width: 1200px` + 중앙 정렬을 적용한다. 외부 wrapper가 전체 너비를 채우고, 내부 inner가 1200px로 제한된다.
+
+```css
+/* 외부 wrapper — flex 컨테이너로 중앙 정렬 */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f5f5f5; /* $semantic-color-background-sunken */
+}
+
+/* 내부 inner — 실제 콘텐츠 너비 제한 */
+.content-inner {
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px; /* $base-dimen-space-500 */
+}
+```
+
+> **규칙:** 모든 프로토타입/화면 구현 시 위 구조를 반드시 적용한다. `padding: 40px`을 `.content`에 직접 주는 방식은 사용하지 않는다.
 
 ### 콘텐츠 영역 기본 배경
 | 영역 | 토큰 | 값 |
