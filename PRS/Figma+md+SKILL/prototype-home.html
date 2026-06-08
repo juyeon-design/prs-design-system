@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRS — 홈</title>
+<style>
+/* ── Design Tokens ── */
+:root {
+  --color-gray-50:  #f0f0f0;
+  --color-gray-100: #eaeaea;
+  --color-gray-200: #dfdfdf;
+  --color-gray-300: #d2d2d2;
+  --color-gray-400: #aeaeae;
+  --color-gray-500: #848484;
+  --color-gray-700: #343434;
+  --color-violet-25:  #f2f1fe;
+  --color-violet-50:  #dfdcfd;
+  --color-violet-400: #6f64dd;
+  --color-violet-500: #6358d5;
+  --color-blue-25:  #eef5fb;
+  --color-blue-50:  #e0eeff;
+  --color-blue-300: #3982ef;
+  --color-blue-400: #33b2fe;
+  --color-blue-600: #174fde;
+  --color-green-25: #e6fef0;
+  --color-green-700:#077a36;
+  --color-yellow-25:#fffadb;
+  --color-yellow-800:#a07800;
+  --color-red-25:   #fff5f5;
+  --color-red-700:  #c0251b;
+  --color-skyblue-400:#33b2fe;
+  --bg:         #ffffff;
+  --bg-sunken:  #f5f5f5;
+  --bg-hover:   #f5f5f5;
+  --text:       #343434;
+  --text-sub:   #848484;
+  --text-hint:  #aeaeae;
+  --border:     #d2d2d2;
+  --border-sub: #dfdfdf;
+  --shadow-0: 0 1px 2px rgba(16,24,40,.05);
+  --shadow-1: 0 1px 3px rgba(16,24,40,.10),0 1px 2px rgba(16,24,40,.06);
+  --shadow-2: 0 4px 8px rgba(16,24,40,.10),0 2px 4px rgba(16,24,40,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:14px;line-height:20px;color:var(--text);background:var(--bg-sunken);min-height:100vh}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;padding:0}
+ul,li{list-style:none}
+
+/* ── Layout ── */
+.app{display:flex;min-height:100vh}
+
+/* ── LNB ── */
+.lnb{width:220px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border-sub);
+  display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto}
+
+.lnb-header{height:56px;padding:0 8px 0 12px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border-sub);flex-shrink:0}
+.lnb-logo{width:28px;height:28px;border-radius:6px;background:var(--color-violet-400);color:#fff;
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:-.5px}
+.lnb-brand{font-size:14px;font-weight:600;color:var(--text);flex:1;display:flex;align-items:center;gap:4px}
+.icon-btn{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-sub);transition:background .12s;cursor:pointer;flex-shrink:0}
+.icon-btn:hover{background:var(--bg-hover)}
+.icon-btn svg{width:18px;height:18px}
+
+.lnb-body{flex:1;padding:8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+
+.nav-item{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;
+  cursor:pointer;color:var(--text);font-size:14px;transition:background .12s;
+  user-select:none;white-space:nowrap;text-decoration:none}
+.nav-item:hover{background:var(--bg-hover)}
+.nav-item.active{background:var(--color-violet-25);color:var(--color-violet-500)}
+.nav-icon{width:20px;height:20px;flex-shrink:0;color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px}
+.nav-label{flex:1;font-weight:600}
+
+.lnb-section-label{font-size:11px;font-weight:600;color:var(--text-hint);
+  padding:8px 8px 4px;letter-spacing:.04em;text-transform:uppercase}
+
+.lnb-divider{height:1px;background:var(--border-sub);margin:4px 0}
+
+.proj-row{height:36px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;
+  cursor:pointer;transition:background .12s;text-decoration:none;color:var(--text)}
+.proj-row:hover{background:var(--bg-hover)}
+.proj-badge-sm{width:24px;height:24px;border-radius:6px;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.proj-name-sm{font-size:13px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.lnb-footer{padding:12px 16px;border-top:1px solid var(--border-sub);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.avatar{width:24px;height:24px;border-radius:50%;background:var(--color-blue-50);color:var(--color-blue-600);
+  font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-user-info{flex:1;min-width:0}
+.lnb-user-name{font-size:14px;font-weight:500}
+.lnb-user-email{font-size:12px;color:var(--text-hint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Content ── */
+.content{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--bg-sunken);min-width:0;overflow-y:auto}
+.content-inner{width:100%;max-width:1200px;padding:40px}
+
+/* ── Page header ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;gap:16px}
+.page-title{font-size:22px;font-weight:600;line-height:32px;color:var(--text)}
+.header-right{display:flex;align-items:center;gap:10px}
+
+.search-wrap{position:relative}
+.search-input{height:36px;width:240px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px 0 36px;font-size:14px;font-family:inherit;color:var(--text);
+  background:var(--bg);outline:none;transition:border-color .12s}
+.search-input:focus{border-color:var(--color-violet-400)}
+.search-input::placeholder{color:var(--text-hint)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-hint);pointer-events:none}
+.search-icon svg{width:16px;height:16px}
+
+.btn-primary{height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;
+  background:var(--color-gray-700);color:#fff;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:background .12s}
+.btn-primary:hover{background:#474747}
+.btn-primary svg{width:16px;height:16px}
+
+/* ── Section ── */
+.section{margin-bottom:32px}
+.section-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px}
+.section-title svg{width:16px;height:16px;color:var(--text-sub)}
+.section-count{font-size:12px;font-weight:500;color:var(--text-hint);
+  background:var(--bg-sunken);padding:1px 7px;border-radius:10px;border:1px solid var(--border-sub)}
+
+/* ── 즐겨찾기 Card grid ── */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+.proj-card{background:var(--bg);border-radius:12px;border:1px solid var(--border-sub);
+  box-shadow:var(--shadow-0);padding:20px;display:flex;flex-direction:column;gap:14px;
+  cursor:pointer;text-decoration:none;color:inherit;
+  transition:box-shadow .15s,border-color .15s}
+.proj-card:hover{box-shadow:var(--shadow-2);border-color:var(--border)}
+
+.card-top{display:flex;align-items:flex-start;gap:12px}
+.proj-badge{width:36px;height:36px;border-radius:10px;font-size:15px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.card-name-wrap{flex:1;min-width:0;padding-top:2px}
+.card-proj-name{font-size:15px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:22px}
+.card-proj-org{font-size:12px;color:var(--text-sub);margin-top:2px}
+.card-desc{font-size:13px;color:var(--text-sub);line-height:19px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-divider{height:1px;background:var(--border-sub)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-owner{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-sub);min-width:0;overflow:hidden}
+.card-owner-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.card-date{font-size:12px;color:var(--text-hint);white-space:nowrap}
+
+/* star button (shared) */
+.star-btn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-hint);cursor:pointer;border-radius:4px;flex-shrink:0;transition:color .12s}
+.star-btn:hover{color:var(--color-violet-400)}
+.star-btn.on{color:var(--color-violet-400)}
+.star-btn svg{width:16px;height:16px}
+
+/* ── 전체 프로젝트 Table ── */
+.proj-table{background:var(--bg);border-radius:12px;border:1px solid var(--border-sub);
+  box-shadow:var(--shadow-0);overflow:hidden}
+.proj-table-head{display:grid;grid-template-columns:28px 1fr 150px 120px 110px 100px;
+  padding:0 20px;height:38px;background:var(--bg-sunken);
+  border-bottom:1px solid var(--border-sub);align-items:center;gap:12px}
+.proj-th{font-size:12px;font-weight:600;color:var(--text-sub);white-space:nowrap}
+.proj-row-item{display:grid;grid-template-columns:28px 1fr 150px 120px 110px 100px;
+  padding:0 20px;min-height:58px;border-bottom:1px solid var(--border-sub);
+  align-items:center;gap:12px;cursor:pointer;transition:background .12s;
+  text-decoration:none;color:inherit}
+.proj-row-item:last-child{border-bottom:none}
+.proj-row-item:hover{background:var(--bg-hover)}
+.proj-name-cell{display:flex;align-items:center;gap:10px;min-width:0}
+.proj-badge-sm2{width:30px;height:30px;border-radius:8px;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.proj-name{font-size:14px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-desc-sm{font-size:12px;color:var(--text-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-td{font-size:13px;color:var(--text-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-td-owner{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-sub)}
+
+.avatar-xs{width:20px;height:20px;border-radius:50%;background:var(--color-blue-50);
+  color:var(--color-blue-600);font-size:9px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* Status badges */
+.badge{height:22px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:600;
+  display:inline-flex;align-items:center;white-space:nowrap}
+.badge-inprog {background:var(--color-blue-50);  color:var(--color-blue-600)}
+.badge-review  {background:var(--color-yellow-25);color:var(--color-yellow-800)}
+.badge-done    {background:var(--color-green-25); color:var(--color-green-700)}
+.badge-plan    {background:var(--color-gray-50);  color:var(--text-sub)}
+
+/* ── Empty state ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 24px;text-align:center;gap:16px;
+  background:var(--bg);border-radius:12px;border:1px solid var(--border-sub)}
+.empty-icon{width:56px;height:56px;color:#d2d2d2;margin-bottom:4px}
+.empty-title{font-size:16px;font-weight:600;color:var(--text)}
+.empty-desc{font-size:14px;color:var(--text-sub);line-height:20px;max-width:280px}
+
+/* ── Modal ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;
+  display:flex;align-items:center;justify-content:center}
+.modal-backdrop.hidden{display:none}
+.modal{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-2);
+  width:480px;overflow:hidden}
+.modal-header{padding:24px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:18px;font-weight:600;color:var(--text)}
+.modal-close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-sub);cursor:pointer;transition:background .12s}
+.modal-close:hover{background:var(--bg-hover)}
+.modal-close svg{width:18px;height:18px}
+.modal-body{padding:24px}
+.form-field{margin-bottom:16px}
+.form-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;display:block}
+.form-required{color:var(--color-violet-400);margin-left:2px}
+.form-input{width:100%;height:40px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px;font-size:14px;font-family:inherit;color:var(--text);
+  background:var(--bg);outline:none;transition:border-color .12s}
+.form-input:focus{border-color:var(--color-violet-400)}
+.form-input::placeholder{color:var(--text-hint)}
+.form-input.error{border-color:var(--color-red-700)}
+.form-error{font-size:12px;color:var(--color-red-700);margin-top:4px}
+.form-select{width:100%;height:40px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px;font-size:14px;font-family:inherit;color:var(--text);
+  background:var(--bg);outline:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23aeaeae' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  padding-right:32px;transition:border-color .12s}
+.form-select:focus{border-color:var(--color-violet-400);outline:none}
+.modal-footer{padding:16px 24px 24px;display:flex;gap:8px;justify-content:flex-end;
+  border-top:1px solid var(--border-sub)}
+.btn-ghost{height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;
+  transition:border-color .12s}
+.btn-ghost:hover{border-color:var(--text-sub)}
+.btn-confirm{height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;
+  background:var(--color-gray-700);color:#fff;border:none;cursor:pointer;transition:background .12s}
+.btn-confirm:hover:not(:disabled){background:#474747}
+.btn-confirm:disabled{background:var(--color-gray-300);cursor:not-allowed}
+
+/* ── Edge case toggle ── */
+.proto-bar{position:fixed;bottom:20px;right:20px;display:flex;gap:8px;z-index:999}
+.proto-btn{height:30px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text-sub);
+  cursor:pointer;box-shadow:var(--shadow-1);transition:background .12s}
+.proto-btn:hover{background:var(--bg-hover)}
+.proto-btn.on{background:var(--color-gray-700);color:#fff;border-color:var(--color-gray-700)}
+/* -- LNB new structure -- */
+.lnb{width:220px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border-sub);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow:visible;z-index:10}
+.lnb-hd{height:56px;padding:0 8px 0 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-sub);flex-shrink:0;position:relative}
+.lnb-logo-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0}
+.lnb-product-btn{flex:1;display:flex;align-items:center;gap:4px;font-size:14px;font-weight:600;color:var(--text);background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:6px;text-align:left;white-space:nowrap;overflow:hidden;font-family:inherit;transition:background .12s;min-width:0}
+.lnb-product-btn:hover{background:var(--bg-hover)}
+.lnb-product-btn svg{width:13px;height:13px;color:var(--text-hint);flex-shrink:0}
+.lnb-bell{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);cursor:pointer;transition:background .12s;flex-shrink:0;background:none;border:none;font-family:inherit}
+.lnb-bell:hover{background:var(--bg-hover)}
+.lnb-bell svg{width:18px;height:18px}
+.prod-dd{position:absolute;top:56px;left:0;width:220px;background:var(--bg);border:1px solid var(--border-sub);border-top:none;border-radius:0 0 12px 12px;box-shadow:var(--shadow-2);z-index:200;display:none}
+.prod-dd.open{display:block}
+.prod-dd-item{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;transition:background .12s}
+.prod-dd-item:hover{background:var(--bg-hover)}
+.prod-dd-item.cur{background:var(--color-violet-25)}
+.prod-dd-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;color:#fff}
+.prod-dd-name{font-size:14px;font-weight:500;color:var(--text)}
+.lnb-body{flex:1;padding:8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;overflow-x:visible;position:relative}
+.lnb-nav-item{height:36px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--text);font-size:14px;font-weight:600;transition:background .12s;user-select:none;white-space:nowrap;text-decoration:none}
+.lnb-nav-item:hover{background:var(--bg-hover)}
+.lnb-nav-item.active{background:var(--color-violet-25);color:var(--color-violet-500)}
+.lnb-nav-item.disabled{opacity:.35;pointer-events:none}
+.lnb-nav-ic{width:18px;height:18px;flex-shrink:0;color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.lnb-nav-ic svg{width:18px;height:18px}
+.lnb-div{height:1px;background:var(--border-sub);margin:4px 0}
+.lnb-proj-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;transition:background .12s;position:relative}
+.lnb-proj-row:hover{background:var(--bg-hover)}
+.lnb-proj-badge{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:700;color:#fff}
+.lnb-proj-name{flex:1;font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lnb-proj-chev{width:16px;height:16px;color:var(--text-hint);flex-shrink:0;transition:transform .2s}
+.lnb-proj-chev.open{transform:rotate(180deg)}
+.proj-dd{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg);border:1px solid var(--border-sub);border-radius:10px;box-shadow:var(--shadow-2);z-index:200;display:none;overflow:hidden}
+.proj-dd.open{display:block}
+.proj-dd-sec{font-size:11px;font-weight:600;color:var(--text-hint);padding:8px 12px 3px;text-transform:uppercase;letter-spacing:.05em}
+.proj-dd-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;transition:background .12s}
+.proj-dd-item:hover{background:var(--bg-hover)}
+.proj-dd-item.cur{background:var(--color-violet-25)}
+.proj-dd-badge{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:#fff}
+.proj-dd-name{font-size:13px;font-weight:500;color:var(--text)}
+.proj-dd-all{display:flex;align-items:center;gap:6px;padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text-sub);border-top:1px solid var(--border-sub);transition:background .12s}
+.proj-dd-all:hover{background:var(--bg-hover)}
+.proj-dd-all svg{width:14px;height:14px;color:var(--text-hint)}
+.lnb-sub{display:flex;flex-direction:column;gap:1px;padding-left:4px}
+.lnb-ft{padding:12px 16px;border-top:1px solid var(--border-sub);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.lnb-av{width:28px;height:28px;border-radius:50%;background:#e0eeff;color:#174fde;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-uname{font-size:13px;font-weight:500;color:var(--text)}
+.lnb-uemail{font-size:11px;color:var(--text-hint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lnb-more{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);cursor:pointer;transition:background .12s;background:none;border:none;font-family:inherit;flex-shrink:0}
+.lnb-more:hover{background:var(--bg-hover)}
+.lnb-more svg{width:16px;height:16px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ LNB ══════════ -->
+<nav class="lnb">
+  <!-- Header -->
+  <div class="lnb-hd">
+    <img src="logo.png" class="lnb-logo-img" alt="MIDAS">
+    <button class="lnb-product-btn" onclick="toggleProdDD(event)">
+      PRS
+      <svg viewBox="0 0 13 13" fill="none"><path d="M3 5l3.5 3.5L10 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="lnb-bell" title="알림">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v3l-1.5 2H17.5L16 11V8a6 6 0 00-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 16.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <!-- Product dropdown -->
+    <div class="prod-dd" id="prodDD">
+      <div class="prod-dd-item" onclick="window.location.href='prototype-home.html'">
+        <div class="prod-dd-badge" style="background:#9b59b6">N</div>
+        <span class="prod-dd-name">뉴로우</span>
+      </div>
+      <div class="prod-dd-item" onclick="window.location.href='prototype-home.html'">
+        <img src="logo.png" style="width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0">
+        <span class="prod-dd-name">NRS</span>
+      </div>
+      <div class="prod-dd-item cur" onclick="document.getElementById('prodDD').classList.remove('open')">
+        <img src="logo.png" style="width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0">
+        <span class="prod-dd-name">PRS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="lnb-body">
+    <!-- 홈 -->
+    <a href="prototype-home.html" class="lnb-nav-item active">
+      <span class="lnb-nav-ic"><svg viewBox="0 0 20 20" fill="none"><path d="M3 8.5L10 3l7 5.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V8.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 18V12h5v6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+      홈
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div class="lnb-ft">
+    <div class="lnb-av">김</div>
+    <div class="lnb-user-info">
+      <div class="lnb-uname">김승수</div>
+      <div class="lnb-uemail">kss0610@midasit.com</div>
+    </div>
+    <button class="lnb-more">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12" r="1.2" fill="currentColor"/></svg>
+    </button>
+  </div>
+</nav>
+<!-- /LNB -->
+
+
+<!-- ══════════ CONTENT ══════════ -->
+<main class="content">
+  <div class="content-inner">
+
+    <!-- ─── Page Header ─── -->
+    <div class="page-header">
+      <span class="page-title">프로젝트 목록</span>
+      <div class="header-right">
+        <!-- Search -->
+        <div class="search-wrap">
+          <span class="search-icon">
+            <svg viewBox="0 0 16 16" fill="none">
+              <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <input class="search-input" type="text" placeholder="프로젝트명, 조직, 담당자 검색" id="searchInput" oninput="handleSearch(this.value)">
+        </div>
+        <!-- Create button -->
+        <button class="btn-primary" onclick="openModal()">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          프로젝트 생성하기
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── Normal View ─── -->
+    <div id="normal-view">
+
+      <!-- ─── 즐겨찾기: 카드형 ─── -->
+      <div class="section" id="fav-section">
+        <div class="section-title">
+          <svg viewBox="0 0 16 16" fill="var(--color-violet-400)" width="16" height="16">
+            <path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/>
+          </svg>
+          즐겨찾기
+          <span class="section-count">2</span>
+        </div>
+        <div class="card-grid">
+
+          <!-- Card 1 -->
+          <a href="prototype-project-home.html" class="proj-card">
+            <div class="card-top">
+              <div class="proj-badge" style="background:var(--color-skyblue-400)">P</div>
+              <div class="card-name-wrap">
+                <div class="card-proj-name">PRS</div>
+                <div class="card-proj-org">inAX TF</div>
+              </div>
+              <div class="star-btn on" onclick="toggleStar(event,this)">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/></svg>
+              </div>
+            </div>
+            <p class="card-desc">제품 히스토리와 기획 맥락을 연결하고, 기획 자동화로 상품성과 생산성을 향상시키는 협업 플랫폼</p>
+            <div class="card-divider"></div>
+            <div class="card-footer">
+              <div class="card-owner">
+                <span class="avatar-xs">이</span>
+                <span class="card-owner-name">이상엽</span>
+              </div>
+              <div class="card-right">
+                <span class="badge badge-inprog">진행중</span>
+                <span class="card-date">2시간 전</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Card 2 -->
+          <a href="#" class="proj-card">
+            <div class="card-top">
+              <div class="proj-badge" style="background:#6f64dd">M</div>
+              <div class="card-name-wrap">
+                <div class="card-proj-name">MIDAS CIM</div>
+                <div class="card-proj-org">CIM TF</div>
+              </div>
+              <div class="star-btn on" onclick="toggleStar(event,this)">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/></svg>
+              </div>
+            </div>
+            <p class="card-desc">건설 정보 관리 플랫폼 차세대 버전 — BIM 데이터 통합 및 협업 워크플로우 개선</p>
+            <div class="card-divider"></div>
+            <div class="card-footer">
+              <div class="card-owner">
+                <span class="avatar-xs">박</span>
+                <span class="card-owner-name">박지현</span>
+              </div>
+              <div class="card-right">
+                <span class="badge badge-review">검토중</span>
+                <span class="card-date">1일 전</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ─── 전체 프로젝트: 테이블형 ─── -->
+      <div class="section">
+        <div class="section-title">
+          전체 프로젝트
+          <span class="section-count" id="total-count">5</span>
+        </div>
+        <div class="proj-table" id="all-table">
+          <div class="proj-table-head">
+            <div></div>
+            <div class="proj-th">프로젝트명</div>
+            <div class="proj-th">담당 조직</div>
+            <div class="proj-th">담당자</div>
+            <div class="proj-th">상태</div>
+            <div class="proj-th">최근 업데이트</div>
+          </div>
+
+          <a href="prototype-project-home.html" class="proj-row-item proj-data" data-name="PRS" data-org="inAX TF" data-owner="이상엽">
+            <div class="star-btn on" onclick="toggleStar(event,this)">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/></svg>
+            </div>
+            <div class="proj-name-cell">
+              <div class="proj-badge-sm2" style="background:var(--color-skyblue-400)">P</div>
+              <div>
+                <div class="proj-name">PRS</div>
+                <div class="proj-desc-sm">제품 히스토리와 기획 맥락을 연결하는 협업 플랫폼</div>
+              </div>
+            </div>
+            <div class="proj-td">inAX TF</div>
+            <div class="proj-td-owner"><span class="avatar-xs">이</span>이상엽</div>
+            <div><span class="badge badge-inprog">진행중</span></div>
+            <div class="proj-td">2시간 전</div>
+          </a>
+
+          <a href="#" class="proj-row-item proj-data" data-name="MIDAS CIM" data-org="CIM TF" data-owner="박지현">
+            <div class="star-btn on" onclick="toggleStar(event,this)">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/></svg>
+            </div>
+            <div class="proj-name-cell">
+              <div class="proj-badge-sm2" style="background:#6f64dd">M</div>
+              <div>
+                <div class="proj-name">MIDAS CIM</div>
+                <div class="proj-desc-sm">건설 정보 관리 플랫폼 차세대 버전</div>
+              </div>
+            </div>
+            <div class="proj-td">CIM TF</div>
+            <div class="proj-td-owner"><span class="avatar-xs">박</span>박지현</div>
+            <div><span class="badge badge-review">검토중</span></div>
+            <div class="proj-td">1일 전</div>
+          </a>
+
+          <a href="#" class="proj-row-item proj-data" data-name="Gen AI Platform" data-org="AI TF" data-owner="김민수">
+            <div class="star-btn" onclick="toggleStar(event,this)">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="proj-name-cell">
+              <div class="proj-badge-sm2" style="background:#08bf52">G</div>
+              <div>
+                <div class="proj-name">Gen AI Platform</div>
+                <div class="proj-desc-sm">전사 AI 서비스 통합 플랫폼</div>
+              </div>
+            </div>
+            <div class="proj-td">AI TF</div>
+            <div class="proj-td-owner"><span class="avatar-xs">김</span>김민수</div>
+            <div><span class="badge badge-inprog">진행중</span></div>
+            <div class="proj-td">3일 전</div>
+          </a>
+
+          <a href="#" class="proj-row-item proj-data" data-name="Calendar CRUD" data-org="xRS" data-owner="홍길동">
+            <div class="star-btn" onclick="toggleStar(event,this)">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="proj-name-cell">
+              <div class="proj-badge-sm2" style="background:#f0b429">C</div>
+              <div>
+                <div class="proj-name">Calendar CRUD</div>
+                <div class="proj-desc-sm">캘린더 기능 추가 및 CRUD 구현</div>
+              </div>
+            </div>
+            <div class="proj-td">xRS</div>
+            <div class="proj-td-owner"><span class="avatar-xs">홍</span>홍길동</div>
+            <div><span class="badge badge-done">완료</span></div>
+            <div class="proj-td">2026.04.28</div>
+          </a>
+
+          <a href="#" class="proj-row-item proj-data" data-name="MIDAS IT 2.0" data-org="플랫폼 TF" data-owner="최민준">
+            <div class="star-btn" onclick="toggleStar(event,this)">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="proj-name-cell">
+              <div class="proj-badge-sm2" style="background:#fd493f">M</div>
+              <div>
+                <div class="proj-name">MIDAS IT 2.0</div>
+                <div class="proj-desc-sm">내부 IT 인프라 전면 리뉴얼 프로젝트</div>
+              </div>
+            </div>
+            <div class="proj-td">플랫폼 TF</div>
+            <div class="proj-td-owner"><span class="avatar-xs">최</span>최민준</div>
+            <div><span class="badge badge-plan">계획중</span></div>
+            <div class="proj-td">2026.05.01</div>
+          </a>
+
+        </div>
+
+        <!-- 검색 결과 없음 -->
+        <div id="search-empty" style="display:none">
+          <div class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 56 56" fill="none">
+              <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2.5"/>
+              <path d="M34 34l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <div class="empty-title">검색 결과가 없습니다</div>
+            <p class="empty-desc">다른 검색어로 다시 시도해보세요.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /normal-view -->
+
+
+    <!-- ─── Empty View ─── -->
+    <div id="empty-view" style="display:none">
+      <div class="empty-state" style="margin-top:40px">
+        <svg class="empty-icon" viewBox="0 0 56 56" fill="none">
+          <rect x="8" y="10" width="32" height="36" rx="4" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M16 22h16M16 29h12M16 36h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="38" cy="38" r="10" fill="var(--bg-sunken)" stroke="currentColor" stroke-width="2"/>
+          <path d="M38 34v4M38 42v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="empty-title">아직 프로젝트가 없어요</div>
+        <p class="empty-desc">첫 번째 프로젝트를 생성하고 기획을 시작해보세요.</p>
+        <button class="btn-primary" onclick="openModal()" style="margin-top:4px">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          프로젝트 생성하기
+        </button>
+      </div>
+    </div>
+
+  </div>
+</main>
+<!-- /CONTENT -->
+
+</div><!-- /app -->
+
+
+<!-- ══════════ Modal: 프로젝트 생성 ══════════ -->
+<div class="modal-backdrop hidden" id="modal" onclick="closeModalOnBackdrop(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">프로젝트 생성</span>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 18 18" fill="none">
+          <path d="M5 5l8 8M13 5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- 프로젝트명 -->
+      <div class="form-field">
+        <label class="form-label">프로젝트명<span class="form-required">*</span></label>
+        <input class="form-input" type="text" id="projectName" placeholder="예: PRS"
+          maxlength="50" oninput="validateForm()" autocomplete="off">
+        <div class="form-error" id="nameError" style="display:none">프로젝트명을 입력해주세요.</div>
+      </div>
+      <!-- 담당 조직 -->
+      <div class="form-field">
+        <label class="form-label">담당 조직</label>
+        <select class="form-select" id="projectOrg">
+          <option value="" selected>Project Team</option>
+          <option>inAX TF</option>
+          <option>CIM TF</option>
+          <option>AI TF</option>
+          <option>플랫폼 TF</option>
+          <option>xRS</option>
+        </select>
+      </div>
+      <!-- 담당자 -->
+      <div class="form-field" style="margin-bottom:0">
+        <label class="form-label">담당자</label>
+        <select class="form-select" id="projectOwner">
+          <option value="" selected>비워두면 담당자 없음</option>
+          <option>김승수 (나)</option>
+          <option>이상엽 (팀 리더)</option>
+          <option>박지현</option>
+          <option>홍길동</option>
+          <option>최민준</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">닫기</button>
+      <button class="btn-confirm" id="confirmBtn" disabled onclick="submitModal()">완료</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Edge case toggle ── -->
+<div class="proto-bar">
+  <button class="proto-btn on" onclick="showView('normal')">정상</button>
+  <button class="proto-btn"    onclick="showView('empty')">빈 상태</button>
+  <button class="proto-btn"    onclick="openModal()">생성 모달</button>
+</div>
+
+
+<script>
+/* ── View switching ── */
+function showView(v){
+  document.getElementById('normal-view').style.display = v==='normal' ? 'block' : 'none';
+  document.getElementById('empty-view').style.display  = v==='empty'  ? 'block' : 'none';
+  document.querySelectorAll('.proto-btn').forEach((b,i)=>{
+    b.classList.toggle('on', ['normal','empty'][i]===v);
+  });
+}
+
+/* ── Star toggle ── */
+function toggleStar(e, btn){
+  e.preventDefault();
+  e.stopPropagation();
+  const on = btn.classList.toggle('on');
+  btn.innerHTML = on
+    ? `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z"/></svg>`
+    : `<svg viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.6 3.7L13.5 6l-2.8 2.7.7 3.8L8 10.7l-3.4 1.8.7-3.8L2.5 6l3.9-.8L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
+  btn.title = on ? '즐겨찾기 해제' : '즐겨찾기';
+}
+
+/* ── Search ── */
+function handleSearch(q){
+  const rows = document.querySelectorAll('.proj-data');
+  const kw = q.trim().toLowerCase();
+  let visible = 0;
+  rows.forEach(r=>{
+    const match = !kw ||
+      r.dataset.name.toLowerCase().includes(kw) ||
+      r.dataset.org.toLowerCase().includes(kw) ||
+      r.dataset.owner.toLowerCase().includes(kw);
+    r.style.display = match ? '' : 'none';
+    if(match) visible++;
+  });
+  document.getElementById('total-count').textContent = visible;
+  document.getElementById('search-empty').style.display = visible===0 ? 'block' : 'none';
+  document.getElementById('all-table').style.display    = visible===0 ? 'none'  : '';
+  document.getElementById('fav-section').style.display  = kw ? 'none' : '';
+}
+
+/* ── Modal ── */
+function openModal(){
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('projectName').focus();
+}
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('projectName').value='';
+  document.getElementById('confirmBtn').disabled=true;
+  document.getElementById('nameError').style.display='none';
+  document.getElementById('projectName').classList.remove('error');
+}
+function closeModalOnBackdrop(e){
+  if(e.target===document.getElementById('modal')) closeModal();
+}
+function validateForm(){
+  const v = document.getElementById('projectName').value.trim();
+  document.getElementById('confirmBtn').disabled = !v;
+}
+function submitModal(){
+  const name = document.getElementById('projectName').value.trim();
+  if(!name){
+    document.getElementById('projectName').classList.add('error');
+    document.getElementById('nameError').style.display='block';
+    return;
+  }
+  closeModal();
+  // 실제로는 프로젝트 홈으로 이동
+  window.location.href='prototype-project-home.html';
+}
+
+/* ESC to close modal */
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+</script>
+
+</body>
+</html>

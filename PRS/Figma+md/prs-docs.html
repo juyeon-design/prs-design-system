@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRS - 기획 문서</title>
+  <!-- v2.1.0 | Figma 기획문서 완전 재현 (299-5372 / 322-5820 / 340-8814) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --font: 'Pretendard', sans-serif;
+      --white: #ffffff;
+      --gray-25: #f5f5f5; --gray-50: #f0f0f0; --gray-100: #eaeaea;
+      --gray-200: #dfdfdf; --gray-300: #d2d2d2; --gray-400: #aeaeae;
+      --gray-500: #848484; --gray-600: #474747; --gray-700: #343434; --gray-800: #191919;
+      --violet-25: #f2f1fe; --violet-50: #dfdcfd;
+      --violet-400: #6f64dd; --violet-500: #6358d5; --violet-600: #574ccd;
+      --blue-25: #eef5fb; --blue-50: #e0eeff;
+      --blue-400: #376cf2; --blue-500: #1e5af0; --blue-600: #174fde;
+      --green-25: #e6fef0; --green-700: #077a36;
+      --yellow-25: #fffadb; --yellow-700: #a07800;
+      --red-25: #fff5f5; --red-500: #fd493f;
+      --shadow-0: 0 1px 2px rgba(16,24,40,.05);
+      --shadow-1: 0 1px 3px rgba(16,24,40,.10), 0 1px 2px rgba(16,24,40,.06);
+      --shadow-2: 0 4px 8px rgba(16,24,40,.10), 0 2px 4px rgba(16,24,40,.06);
+      --shadow-3: 0 12px 16px rgba(16,24,40,.08), 0 4px 6px rgba(16,24,40,.03);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); font-size: 14px; line-height: 20px;
+      color: var(--gray-700); background: var(--gray-25);
+      display: flex; height: 100vh; overflow: hidden; }
+    svg { display: inline-block; vertical-align: middle; }
+    button { font-family: var(--font); cursor: pointer; }
+    a { text-decoration: none; }
+
+    /* ══ LNB ══ */
+    .lnb { width: 220px; min-width: 220px; background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      display: flex; flex-direction: column; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+
+    /* ══ MAIN ══ */
+    .main { flex: 1; display: flex; overflow: hidden; position: relative;
+      background: #f5f5f5; /* $semantic-color-background-sunken */ }
+
+    /* ── Empty State ── */
+    #emptyState { flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #f5f5f5; /* $semantic-color-background-sunken — 콘텐츠 영역 기본 배경 */ }
+    .empty-wrap { display: flex; flex-direction: column; align-items: center;
+      gap: 20px; text-align: center; max-width: 420px; padding: 60px 40px; }
+    .empty-icon { width: 72px; height: 72px; opacity: .35; }
+    .empty-title { font-size: 16px; font-weight: 600; line-height: 26px; color: var(--gray-700); }
+    .empty-sub { font-size: 13px; line-height: 20px; color: var(--gray-400); }
+    .btn-primary-ai {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 20px; border-radius: 8px; /* $base-dimen-radius-100 */
+      background: var(--violet-400); /* $base-color-accent-violet-400 #6f64dd */
+      color: var(--white); font-size: 14px; font-weight: 600; border: none;
+      cursor: pointer; transition: background .12s; }
+    .btn-primary-ai:hover { background: var(--violet-500); }
+
+    /* ── Node View ── */
+    #nodeView { flex: 1; display: none; position: relative; overflow: hidden; }
+
+    /* Mini Toolbar — components.md §33 */
+    .mini-toolbar { position: absolute; left: 12px; top: 12px; z-index: 10;
+      display: flex; flex-direction: column; gap: 2px;
+      background: var(--white); border-radius: 8px; box-shadow: var(--shadow-1); padding: 4px; }
+    .mt-btn { width: 32px; height: 32px; border-radius: 6px; border: none;
+      background: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: var(--gray-400); transition: background .12s, color .12s; }
+    .mt-btn:hover { background: var(--gray-25); color: var(--gray-700); }
+    .mt-btn.active { background: var(--violet-25); color: var(--violet-500); }
+
+    /* Canvas — components.md §32 */
+    .canvas-wrap { width: 100%; height: 100%; overflow: auto;
+      background-color: var(--gray-50); /* $base-color-neutral-coolgray-50 #f0f0f0 */
+      background-image: radial-gradient(circle, var(--gray-200) 1px, transparent 1px);
+      /* $base-color-neutral-coolgray-200 #dfdfdf */
+      background-size: 24px 24px; }
+    .canvas-inner { position: relative; }
+    .conn-svg { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; }
+
+    /* Node Card — components.md §30 */
+    .node-card { position: absolute; display: flex; align-items: center; gap: 7px;
+      padding: 0 10px; border-radius: 10px; border: 1px solid var(--gray-300);
+      background: var(--white); cursor: pointer; user-select: none;
+      box-shadow: var(--shadow-0); transition: border-color .15s, box-shadow .15s; }
+    .node-card:hover { border-color: var(--violet-400); box-shadow: var(--shadow-1); }
+    .node-card:hover .nc-add { opacity: 1; }
+    .node-card.selected {
+      border-color: var(--violet-400);
+      box-shadow: 0 0 0 3px var(--violet-25), var(--shadow-1); }
+
+    /* Root node */
+    .node-card.root {
+      background: var(--violet-400); /* $base-color-accent-violet-400 */
+      border-color: var(--violet-400); border-radius: 12px;
+      padding: 0 14px; gap: 10px; }
+    .root-badge { width: 28px; height: 28px; border-radius: 7px;
+      background: rgba(255,255,255,0.2); display: flex; align-items: center;
+      justify-content: center; font-size: 13px; font-weight: 700;
+      color: var(--white); flex-shrink: 0; }
+    .node-card.root .nc-label { color: var(--white); font-size: 15px; font-weight: 600; }
+    .node-card.root .nc-add { border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15); color: var(--white); opacity: 1; }
+    .node-card.root .nc-add:hover { background: rgba(255,255,255,0.3); }
+
+    /* Node icon */
+    .nc-icon { width: 22px; height: 22px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nc-label { font-size: 13px; font-weight: 500; color: var(--gray-700);
+      white-space: nowrap; flex: 1; }
+    .nc-star { display: flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; color: var(--gray-300); flex-shrink: 0;
+      opacity: 0; transition: opacity .12s; }
+    .node-card:hover .nc-star { opacity: 1; }
+    .nc-star.starred { opacity: 1 !important; color: var(--blue-400); }
+    .nc-add { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--gray-300);
+      background: var(--white); display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); opacity: 0; flex-shrink: 0; transition: opacity .15s; }
+    .nc-add:hover { background: var(--violet-25); border-color: var(--violet-400); color: var(--violet-400); }
+
+    /* ── Detail Panel ── */
+    .detail-panel { position: absolute; top: 0; right: -580px; width: 580px; height: 100%;
+      background: var(--white); border-left: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-3); display: flex; flex-direction: column;
+      z-index: 100; transition: right .28s cubic-bezier(.25,.46,.45,.94); }
+    .detail-panel.open { right: 0; }
+
+    /* Panel header */
+    .panel-head { padding: 20px 24px 0; flex-shrink: 0; }
+    .panel-breadcrumb { font-size: 11px; color: var(--gray-400);
+      display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+    .panel-title { font-size: 18px; font-weight: 600; color: var(--gray-800);
+      line-height: 28px; } /* Title3 */
+    .panel-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center;
+      justify-content: flex-end; }
+    .btn-ghost-sm { display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      background: var(--white); border: 1px solid var(--gray-300); color: var(--gray-700);
+      cursor: pointer; transition: background .12s; }
+    .btn-ghost-sm:hover { background: var(--gray-25); }
+    .btn-primary-sm { display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      background: var(--violet-400); color: var(--white); border: none;
+      cursor: pointer; transition: background .12s; }
+    .btn-primary-sm:hover { background: var(--violet-500); }
+    .btn-icon { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--gray-200);
+      background: var(--white); display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500); cursor: pointer; }
+    .btn-icon:hover { background: var(--gray-25); }
+
+    /* Step nav — components.md §34 */
+    .step-nav { display: flex; align-items: center; gap: 4px;
+      padding: 12px 24px; border-bottom: 1px solid var(--gray-200); flex-shrink: 0; }
+    .step-item { display: flex; align-items: center; gap: 6px;
+      padding: 6px 10px; border-radius: 8px; border: none; background: none;
+      cursor: pointer; transition: background .12s; }
+    .step-item:hover { background: var(--gray-25); }
+    .step-num { width: 20px; height: 20px; border-radius: 50%;
+      background: var(--gray-200); color: var(--gray-500); font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: background .2s, color .2s; }
+    .step-label { font-size: 13px; font-weight: 500; color: var(--gray-400);
+      white-space: nowrap; transition: color .2s; }
+    .step-item.active .step-num { background: var(--violet-400); color: var(--white); }
+    .step-item.active .step-label { color: var(--violet-400); font-weight: 600; }
+    .step-item.done .step-num { background: #08bf52; color: var(--white); }
+    .step-item.done .step-label { color: var(--green-700); }
+    .step-sep { color: var(--gray-300); font-size: 12px; }
+
+    /* Panel content */
+    .panel-content { flex: 1; overflow-y: auto; padding: 24px; }
+    .doc-section { margin-bottom: 24px; }
+    .doc-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--gray-400); margin-bottom: 10px; }
+    .doc-section-text { font-size: 14px; line-height: 24px; color: var(--gray-700); }
+    .doc-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .doc-meta-box { background: var(--gray-25); border-radius: 8px; padding: 12px 14px; }
+    .doc-meta-label { font-size: 11px; color: var(--gray-400); margin-bottom: 4px; }
+    .doc-meta-val { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+    .status-badge { display: inline-flex; align-items: center; padding: 3px 8px;
+      border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .s-inprogress { background: var(--blue-50); color: var(--blue-600); }
+    .s-todo       { background: var(--gray-50); color: var(--gray-500); }
+    .s-done       { background: var(--green-25); color: var(--green-700); }
+    .s-review     { background: var(--yellow-25); color: var(--yellow-700); }
+    .doc-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .doc-list li { display: flex; align-items: flex-start; gap: 8px;
+      font-size: 14px; line-height: 22px; color: var(--gray-700); }
+    .doc-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--violet-400); margin-top: 9px; flex-shrink: 0; }
+    .doc-divider { border: none; border-top: 1px solid var(--gray-200); margin: 20px 0; }
+
+    /* Placeholder pane */
+    .placeholder-pane { display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 260px; gap: 12px;
+      color: var(--gray-400); text-align: center; }
+    .placeholder-pane p { font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<!-- LNB -->
+<aside class="lnb" id="lnb-root"></aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- ① Empty State — components.md §27 -->
+  <div id="emptyState">
+    <div class="empty-wrap">
+      <!-- Folder illustration -->
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <rect x="4" y="22" width="64" height="42" rx="5" fill="#d2d2d2"/>
+        <rect x="4" y="28" width="64" height="36" rx="5" fill="#dfdfdf"/>
+        <rect x="4" y="22" width="30" height="12" rx="5" fill="#d2d2d2"/>
+        <rect x="8" y="36" width="56" height="4" rx="2" fill="#c8c8c8" opacity=".5"/>
+        <rect x="8" y="44" width="40" height="4" rx="2" fill="#c8c8c8" opacity=".5"/>
+        <rect x="8" y="52" width="50" height="4" rx="2" fill="#c8c8c8" opacity=".5"/>
+      </svg>
+      <div class="empty-title">프로젝트 PRS를 바탕으로<br>에이전트와 기능 구조를 설계해보세요.</div>
+      <div class="empty-sub">AI 에이전트가 PRD를 분석하여<br>전체 기능 구조를 자동으로 설계합니다.</div>
+      <!-- AI CTA — prs-skill.md: ✦ sparkle 필수 -->
+      <button class="btn-primary-ai" onclick="showCanvas()">✦ 기능 설계하기</button>
+    </div>
+  </div>
+
+  <!-- ② Node View — components.md §30~33 -->
+  <div id="nodeView">
+
+    <!-- Canvas Mini Toolbar — components.md §33 -->
+    <div class="mini-toolbar">
+      <button class="mt-btn active" title="노드뷰">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="6" y="1" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="6" y="9" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="11" y="5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M5 7h1M10 3h1M10 11h1M5 7h1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="mt-btn" title="연결뷰">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>
+          <circle cx="13" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/>
+          <circle cx="13" cy="12" r="2" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M5 8h3M8 8l2-2.3M8 8l2 2.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="mt-btn" title="목록뷰">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M5 4h8M5 8h8M5 12h8M2 4h.5M2 8h.5M2 12h.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="mt-btn" title="즐겨찾기">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 2l1.6 3.6 3.9.4-2.9 2.7 1 3.8L8 10.5 4.4 12.5l1-3.8L2.5 6l3.9-.4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Canvas -->
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="canvas-inner" id="canvasInner">
+        <svg class="conn-svg" id="connSvg"></svg>
+        <!-- Node cards rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ Detail Panel (slide-in) -->
+  <div class="detail-panel" id="detailPanel">
+
+    <div class="panel-head">
+      <div class="panel-breadcrumb">
+        <span>PRS</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 2l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span id="panelParent">—</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <div class="panel-title" id="panelTitle">—</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-ghost-sm" onclick="enterEdit()">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 1.5a1 1 0 011.4 1.4L3.6 10H2.5v-1.1L9.5 1.5zM1 12h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            편집
+          </button>
+          <button class="btn-icon" onclick="closePanel()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step nav — components.md §34 -->
+    <div class="step-nav" id="stepNav">
+      <button class="step-item active" id="sn0" onclick="switchStep(0)">
+        <div class="step-num" id="snc0">1</div>
+        <span class="step-label">기능 상세</span>
+      </button>
+      <span class="step-sep">›</span>
+      <button class="step-item" id="sn1" onclick="switchStep(1)">
+        <div class="step-num" id="snc1">2</div>
+        <span class="step-label">사용자 플로우</span>
+      </button>
+      <span class="step-sep">›</span>
+      <button class="step-item" id="sn2" onclick="switchStep(2)">
+        <div class="step-num" id="snc2">3</div>
+        <span class="step-label">와이어프레임</span>
+      </button>
+    </div>
+
+    <!-- Step panes -->
+    <div class="panel-content">
+      <!-- Step 0: 기능 상세 -->
+      <div id="pane0">
+        <div class="doc-meta-grid">
+          <div class="doc-meta-box">
+            <div class="doc-meta-label">개발 상태</div>
+            <div class="doc-meta-val" id="docStatus"></div>
+          </div>
+          <div class="doc-meta-box">
+            <div class="doc-meta-label">주요 사용자</div>
+            <div class="doc-meta-val" id="docUsers" style="font-size:12px;font-weight:500;"></div>
+          </div>
+        </div>
+        <div class="doc-section">
+          <div class="doc-section-label">기능 개요</div>
+          <div class="doc-section-text" id="docDesc"></div>
+        </div>
+        <hr class="doc-divider"/>
+        <div class="doc-section">
+          <div class="doc-section-label">핵심 기능</div>
+          <ul class="doc-list" id="docFeats"></ul>
+        </div>
+      </div>
+      <!-- Step 1: 사용자 플로우 -->
+      <div id="pane1" style="display:none;">
+        <div class="placeholder-pane">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect x="4" y="18" width="12" height="12" rx="2" stroke="#aeaeae" stroke-width="2"/>
+            <rect x="28" y="8" width="12" height="12" rx="2" stroke="#aeaeae" stroke-width="2"/>
+            <rect x="28" y="28" width="12" height="12" rx="2" stroke="#aeaeae" stroke-width="2"/>
+            <path d="M16 24h6M22 14h3a3 3 0 013 3v7M22 34h3" stroke="#aeaeae" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p>사용자 플로우 다이어그램이 여기에 표시됩니다.</p>
+          <button class="btn-ghost-sm" onclick="enterEdit()">플로우 편집하기</button>
+        </div>
+      </div>
+      <!-- Step 2: 와이어프레임 -->
+      <div id="pane2" style="display:none;">
+        <div class="placeholder-pane">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect x="4" y="4" width="40" height="40" rx="4" stroke="#aeaeae" stroke-width="2"/>
+            <rect x="8" y="8" width="32" height="8" rx="2" stroke="#aeaeae" stroke-width="1.5"/>
+            <rect x="8" y="20" width="14" height="20" rx="2" stroke="#aeaeae" stroke-width="1.5"/>
+            <rect x="26" y="20" width="14" height="8" rx="2" stroke="#aeaeae" stroke-width="1.5"/>
+            <rect x="26" y="32" width="14" height="8" rx="2" stroke="#aeaeae" stroke-width="1.5"/>
+          </svg>
+          <p>와이어프레임이 여기에 표시됩니다.</p>
+          <button class="btn-primary-sm">✦ Figma에서 연결</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ── Node Data (Figma 322-5820 기준 PRS IA 구조) ── */
+const NODES = [
+  { id:'root',     type:'root', label:'PRS',            x:280, y:397, w:190, h:44 },
+  /* L1 */
+  { id:'home',     type:'l1',   label:'홈',             x:530, y:87,  w:175, h:40, icon:'home',     iconBg:'#f2f1fe', iconColor:'#6f64dd' },
+  { id:'proj',     type:'l1',   label:'프로젝트 홈',    x:530, y:247, w:175, h:40, icon:'folder',   iconBg:'#e0eeff', iconColor:'#174fde' },
+  { id:'docs',     type:'l1',   label:'기획 문서',      x:530, y:397, w:175, h:40, icon:'document', iconBg:'#e0eeff', iconColor:'#174fde' },
+  { id:'issues',   type:'l1',   label:'이슈 목록',      x:530, y:557, w:175, h:40, icon:'check',    iconBg:'#e0eeff', iconColor:'#174fde' },
+  { id:'settings', type:'l1',   label:'프로젝트 설정',  x:530, y:717, w:175, h:40, icon:'settings', iconBg:'#f0f0f0', iconColor:'#848484' },
+  /* Leaves */
+  { id:'h-add',    type:'leaf', label:'프로젝트 추가',  x:760, y:64,  w:140, h:36, parent:'home' },
+  { id:'h-search', type:'leaf', label:'프로젝트 검색',  x:760, y:108, w:140, h:36, parent:'home' },
+  { id:'p-prd',    type:'leaf', label:'프로젝트 PRD 생성', x:760, y:224, w:165, h:36, parent:'proj', starred:true },
+  { id:'p-status', type:'leaf', label:'진행 상태 수정/삭제', x:760, y:270, w:165, h:36, parent:'proj' },
+  { id:'d-func',   type:'leaf', label:'기능 설계',      x:760, y:376, w:120, h:36, parent:'docs' },
+  { id:'d-spec',   type:'leaf', label:'명세 생성',      x:760, y:416, w:120, h:36, parent:'docs' },
+  { id:'d-review', type:'leaf', label:'검토 및 수정',   x:760, y:456, w:130, h:36, parent:'docs' },
+  { id:'i-modal',  type:'leaf', label:'이슈 생성 모달', x:760, y:538, w:145, h:36, parent:'issues' },
+  { id:'i-detail', type:'leaf', label:'자세히 보기',    x:760, y:578, w:120, h:36, parent:'issues' },
+  { id:'s-general',type:'leaf', label:'일반 설정',      x:760, y:700, w:110, h:36, parent:'settings' },
+  /* Sub-leaf */
+  { id:'p-edit',   type:'leaf', label:'수정/삭제',      x:975, y:224, w:95,  h:36, parent:'p-prd' },
+];
+
+const EDGES = [
+  ['root','home'],['root','proj'],['root','docs'],['root','issues'],['root','settings'],
+  ['home','h-add'],['home','h-search'],
+  ['proj','p-prd'],['proj','p-status'],
+  ['docs','d-func'],['docs','d-spec'],['docs','d-review'],
+  ['issues','i-modal'],['issues','i-detail'],
+  ['settings','s-general'],
+  ['p-prd','p-edit'],
+];
+
+const FEATURE_DATA = {
+  root: { name:'PRS', parent:'inAX', status:'inprogress', slabel:'개발 중', users:'전체 팀원',
+    desc:'제품 기획 자동화 및 맥락 통합 플랫폼. PO·기획자·개발자·제품 리더가 같은 기준과 배경으로 협업합니다.',
+    feats:['프로젝트 맥락 통합 관리','AI 기반 PRD 자동 생성','기능 구조 설계 (노드뷰)','이슈 트래킹 연동','승인 워크플로우'] },
+  home: { name:'홈', parent:'PRS', status:'done', slabel:'개발 완료', users:'전체 팀원',
+    desc:'PRS 워크스페이스 진입점. 최근 프로젝트와 활동을 한눈에 확인합니다.',
+    feats:['최근 프로젝트 목록','빠른 액션 바로가기','활동 피드','공지사항'] },
+  proj: { name:'프로젝트 홈', parent:'PRS', status:'done', slabel:'개발 완료', users:'전체 팀원',
+    desc:'프로젝트 전반 현황을 대시보드로 확인합니다. 버전 현황·변경 로그·메타 정보를 한 화면에서 제공합니다.',
+    feats:['프로젝트 메타 정보 카드','버전 현황 3종 (진행중/최신/다음)','변경 로그 타임라인','PRD 미리보기'] },
+  docs: { name:'기획 문서', parent:'PRS', status:'inprogress', slabel:'개발 중', users:'PO, 기획자',
+    desc:'기능 구조를 시각적 노드 뷰로 설계하고 PRD 문서를 AI와 함께 작성합니다. AI 에이전트가 PRD를 분석하여 기능 구조 초안을 자동 생성합니다.',
+    feats:['기능 구조 노드뷰 설계','PRD 자동 생성 (AI 에이전트)','명세 섹션 단위 편집','팀원 검토 요청 및 승인','버전 이력 관리'] },
+  issues: { name:'이슈 목록', parent:'PRS', status:'done', slabel:'개발 완료', users:'전체 팀원',
+    desc:'프로젝트 이슈를 계층형 트리로 관리합니다. Epic → Story → SubTask 구조로 추적합니다.',
+    feats:['계층형 트리 뷰 (Epic/Story/SubTask)','상태·담당자·우선순위 필터','이슈 생성 및 상세 패널','버전별 이슈 그룹핑'] },
+  settings: { name:'프로젝트 설정', parent:'PRS', status:'todo', slabel:'미착수', users:'PO, 관리자',
+    desc:'프로젝트 기본 정보, 멤버 권한, 알림 설정을 관리합니다.',
+    feats:['프로젝트 정보 편집','멤버 초대 및 권한 관리','알림 설정','연동 서비스 관리'] },
+  'p-prd': { name:'프로젝트 PRD 생성', parent:'프로젝트 홈', status:'inprogress', slabel:'개발 중', users:'PO, 기획자',
+    desc:'AI 에이전트가 프로젝트 정보와 기존 이슈를 분석하여 PRD 초안을 자동 생성합니다.',
+    feats:['컨텍스트 자동 수집·분석','섹션별 PRD 초안 생성','스트리밍 표시','섹션 단위 재생성·편집','버전 저장 및 팀 공유'] },
+};
+
+function getNode(id) { return NODES.find(n => n.id === id); }
+
+/* ── Icon SVGs ── */
+function iconSVG(type, color) {
+  const c = color || '#848484';
+  const icons = {
+    home: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L12.5 5.5V13H9.5V9H4.5V13H1.5V5.5L7 1Z" stroke="${c}" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+    folder: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3.5C1 2.67 1.67 2 2.5 2H5L6.5 3.5H11.5C12.33 3.5 13 4.17 13 5V10.5C13 11.33 12.33 12 11.5 12H2.5C1.67 12 1 11.33 1 10.5V3.5Z" stroke="${c}" stroke-width="1.3"/></svg>`,
+    document: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 1h5.5L11 3.5V13H3V1Z" stroke="${c}" stroke-width="1.3"/><path d="M8.5 1v3H11" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/><path d="M5 6h4M5 8.5h3" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+    check: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="${c}" stroke-width="1.3"/><path d="M4 7l2 2 4-4" stroke="${c}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    settings: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="${c}" stroke-width="1.3"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.93 2.93l1.06 1.06M10.01 10.01l1.06 1.06M2.93 11.07l1.06-1.06M10.01 3.99l1.06-1.06" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+  };
+  return icons[type] || '';
+}
+
+function starOutline() {
+  return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5l1.5 3.3 3.6.4-2.6 2.5.8 3.5L7 9.5l-3.3 1.7.8-3.5L2 5.2l3.6-.4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+}
+
+function starFilled(color) {
+  return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5l1.5 3.3 3.6.4-2.6 2.5.8 3.5L7 9.5l-3.3 1.7.8-3.5L2 5.2l3.6-.4z" fill="${color||'#376cf2'}" stroke="${color||'#376cf2'}" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+}
+
+function plusSVG() {
+  return `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+}
+
+/* ── Bezier path ── */
+function bPath(n1, n2) {
+  const x1 = n1.x + n1.w, y1 = n1.y + n1.h / 2;
+  const x2 = n2.x,         y2 = n2.y + n2.h / 2;
+  const dx = (x2 - x1) * 0.55;
+  return `M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`;
+}
+
+/* ── Render canvas ── */
+function renderCanvas() {
+  const inner = document.getElementById('canvasInner');
+  const svg   = document.getElementById('connSvg');
+
+  // Size
+  let maxX = 0, maxY = 0;
+  NODES.forEach(n => { maxX = Math.max(maxX, n.x+n.w+80); maxY = Math.max(maxY, n.y+n.h+80); });
+  inner.style.width  = maxX + 'px';
+  inner.style.height = maxY + 'px';
+  svg.setAttribute('width', maxX); svg.setAttribute('height', maxY);
+  svg.setAttribute('viewBox', `0 0 ${maxX} ${maxY}`);
+
+  // Edges
+  EDGES.forEach(([fromId, toId]) => {
+    const n1 = getNode(fromId), n2 = getNode(toId);
+    if (!n1 || !n2) return;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', bPath(n1, n2));
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', '#dfdfdf'); /* $semantic-color-divider-default */
+    path.setAttribute('stroke-width', '1.5');
+    svg.appendChild(path);
+  });
+
+  // Nodes
+  NODES.forEach(n => {
+    const div = document.createElement('div');
+    div.className = `node-card ${n.type}`;
+    div.id = 'nc-' + n.id;
+    div.style.cssText = `left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px;`;
+
+    if (n.type === 'root') {
+      div.innerHTML = `<div class="root-badge">P</div>
+        <span class="nc-label">PRS</span>
+        <button class="nc-add" onclick="event.stopPropagation()" title="하위 추가">${plusSVG()}</button>`;
+    } else {
+      const iconHTML = n.icon
+        ? `<div class="nc-icon" style="background:${n.iconBg||'var(--gray-50)'}">${iconSVG(n.icon, n.iconColor)}</div>`
+        : '';
+      const starHTML = n.starred
+        ? `<span class="nc-star starred">${starFilled('#376cf2')}</span>`
+        : `<span class="nc-star">${starOutline()}</span>`;
+      div.innerHTML = `${iconHTML}
+        <span class="nc-label">${n.label}</span>
+        ${starHTML}
+        <button class="nc-add" onclick="event.stopPropagation()" title="하위 추가">${plusSVG()}</button>`;
+    }
+
+    div.addEventListener('click', () => openPanel(n));
+    inner.appendChild(div);
+  });
+}
+
+/* ── Show canvas ── */
+function showCanvas() {
+  document.getElementById('emptyState').style.display = 'none';
+  const nv = document.getElementById('nodeView');
+  nv.style.display = 'flex';
+  nv.style.flexDirection = 'column';
+  renderCanvas();
+}
+
+/* ── Open panel ── */
+let currentId = null;
+function openPanel(node) {
+  if (currentId) {
+    const prev = document.getElementById('nc-' + currentId);
+    if (prev) prev.classList.remove('selected');
+  }
+  currentId = node.id;
+  document.getElementById('nc-' + node.id).classList.add('selected');
+
+  const parent = NODES.find(n => n.id === node.parent);
+  document.getElementById('panelParent').textContent = parent ? parent.label : 'PRS';
+  document.getElementById('panelTitle').textContent = node.label;
+
+  const d = FEATURE_DATA[node.id];
+  if (d) {
+    document.getElementById('docStatus').innerHTML = `<span class="status-badge ${statusCls(d.status)}">${d.slabel}</span>`;
+    document.getElementById('docUsers').textContent = d.users;
+    document.getElementById('docDesc').textContent = d.desc;
+    document.getElementById('docFeats').innerHTML = d.feats.map(f => `<li>${f}</li>`).join('');
+  } else {
+    document.getElementById('docStatus').innerHTML = `<span class="status-badge s-todo">미착수</span>`;
+    document.getElementById('docUsers').textContent = '—';
+    document.getElementById('docDesc').textContent = `${node.label} 기능 상세 문서를 작성하세요.`;
+    document.getElementById('docFeats').innerHTML = '';
+  }
+
+  document.getElementById('detailPanel').classList.add('open');
+  switchStep(0);
+}
+
+function statusCls(s) {
+  return { done:'s-done', inprogress:'s-inprogress', planning:'s-review', todo:'s-todo' }[s] || 's-todo';
+}
+
+/* ── Close panel ── */
+function closePanel() {
+  document.getElementById('detailPanel').classList.remove('open');
+  if (currentId) {
+    const el = document.getElementById('nc-' + currentId);
+    if (el) el.classList.remove('selected');
+    currentId = null;
+  }
+}
+
+/* ── Switch step ── */
+function switchStep(idx) {
+  for (let i = 0; i < 3; i++) {
+    const item = document.getElementById('sn' + i);
+    const circ = document.getElementById('snc' + i);
+    item.classList.remove('active', 'done');
+    circ.textContent = i < idx ? '✓' : (i + 1);
+    if (i < idx) item.classList.add('done');
+    if (i === idx) item.classList.add('active');
+    document.getElementById('pane' + i).style.display = i === idx ? 'block' : 'none';
+  }
+}
+
+/* ── Edit mode (stub) ── */
+function enterEdit() { alert('편집 모드: AI 어시스턴트와 함께 수정합니다.'); }
+
+/* ── Close on backdrop ── */
+document.addEventListener('click', e => {
+  const panel = document.getElementById('detailPanel');
+  if (!panel.classList.contains('open')) return;
+  if (panel.contains(e.target)) return;
+  if (e.target.closest('.node-card')) return;
+  closePanel();
+});
+</script>
+
+<!-- Edge Case HTML — 노드뷰형 / prs-skill.md STEP 5 -->
+
+<!-- Loading: 캔버스 Skeleton -->
+<div id="skelCanvas" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;
+  background:#f0f0f0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <style>
+    @keyframes shimmer2{0%{background-position:-400px 0}100%{background-position:400px 0}}
+    .skel2{display:block;border-radius:10px;background:linear-gradient(90deg,#e0e0e0 25%,#eeeeee 50%,#e0e0e0 75%);background-size:400px 100%;animation:shimmer2 1.4s infinite linear;}
+    .ec-error2{display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:60px 24px;text-align:center;position:absolute;top:0;left:0;right:0;bottom:0;z-index:60;}
+    .ec-error2.show{display:flex;}
+    .proto-sw2{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;gap:3px;background:rgba(20,20,20,.85);border-radius:10px;padding:5px;backdrop-filter:blur(8px);}
+    .ps-btn2{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);font-family:var(--font);transition:all .12s;}
+    .ps-btn2:hover{color:#fff;background:rgba(255,255,255,.1);}
+    .ps-btn2.on{color:#fff;background:rgba(255,255,255,.2);}
+  </style>
+  <!-- 캔버스 Skeleton — 실제 노드 크기와 동일 -->
+  <div style="display:flex;gap:180px;align-items:center;">
+    <span class="skel2" style="width:180px;height:44px;"></span>
+    <div style="display:flex;flex-direction:column;gap:40px;">
+      <span class="skel2" style="width:160px;height:38px;"></span>
+      <span class="skel2" style="width:160px;height:38px;"></span>
+      <span class="skel2" style="width:160px;height:38px;"></span>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#848484;margin-top:8px;">기능 구조를 불러오는 중...</p>
+</div>
+
+<!-- Error State — prs-skill.md STEP 5 (에러 메시지 + 다시 시도) -->
+<div id="errorDocs" class="ec-error2">
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="color:#fd493f;">
+    <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
+    <path d="M24 14v14M24 32v2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+  <p style="font-size:16px;font-weight:600;color:#343434;">기능 구조를 불러오지 못했습니다</p>
+  <p style="font-size:14px;color:#848484;">네트워크 연결을 확인하고 다시 시도해주세요.</p>
+  <button style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:#fff;border:1px solid #d2d2d2;font-size:14px;font-weight:600;color:#343434;cursor:pointer;font-family:var(--font);"
+    onclick="setDocsState('default',document.querySelector('.ps-btn2'))">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7a5 5 0 009.9-1M2 7l2-2M2 7L4 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    다시 시도
+  </button>
+</div>
+
+<!-- Prototype State Switcher -->
+<div class="proto-sw2">
+  <span style="font-size:10px;color:rgba(255,255,255,.4);padding:4px 6px;">State</span>
+  <button class="ps-btn2 on" onclick="setDocsState('default',this)">기본</button>
+  <button class="ps-btn2" onclick="setDocsState('loading',this)">로딩</button>
+  <button class="ps-btn2" onclick="setDocsState('empty',this)">빈 상태</button>
+  <button class="ps-btn2" onclick="setDocsState('error',this)">오류</button>
+</div>
+
+<script>
+function setDocsState(state, btn) {
+  document.querySelectorAll('.ps-btn2').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+
+  const empty  = document.getElementById('emptyState');
+  const canvas = document.getElementById('nodeView');
+  const skel   = document.getElementById('skelCanvas');
+  const error  = document.getElementById('errorDocs');
+
+  empty.style.display = 'none'; canvas.style.display = 'none';
+  skel.style.display = 'none';  error.classList.remove('show');
+
+  if (state === 'default') {
+    // 현재 상태 유지 (캔버스가 열려있으면 캔버스, 아니면 빈 상태)
+    if (document.getElementById('canvasInner').children.length > 1) {
+      canvas.style.display = 'flex'; canvas.style.flexDirection = 'column';
+    } else {
+      empty.style.display = 'flex';
+    }
+  } else if (state === 'loading') {
+    skel.style.display = 'flex';
+  } else if (state === 'empty') {
+    empty.style.display = 'flex';
+  } else if (state === 'error') {
+    error.classList.add('show');
+  }
+}
+</script>
+<script src="lnb.js"></script>
+<script>renderLNB('docs');</script>
+</body>
+</html>

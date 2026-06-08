@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRS — 이슈 목록</title>
+<style>
+/* ── Tokens ── */
+:root {
+  --color-gray-50:#f0f0f0; --color-gray-100:#eaeaea; --color-gray-200:#dfdfdf;
+  --color-gray-300:#d2d2d2; --color-gray-400:#aeaeae; --color-gray-500:#848484;
+  --color-gray-700:#343434;
+  --color-violet-25:#f2f1fe; --color-violet-400:#6f64dd; --color-violet-500:#6358d5;
+  --color-blue-25:#eef5fb; --color-blue-50:#e0eeff; --color-blue-400:#33b2fe; --color-blue-600:#174fde;
+  --color-green-25:#e6fef0; --color-green-700:#077a36;
+  --color-yellow-25:#fffadb; --color-yellow-800:#a07800;
+  --color-red-25:#fff5f5; --color-red-500:#fd493f; --color-red-700:#c0251b;
+  --bg:#fff; --bg-sunken:#f5f5f5; --bg-hover:#f5f5f5;
+  --text:#343434; --text-sub:#848484; --text-hint:#aeaeae;
+  --border:#d2d2d2; --border-sub:#dfdfdf;
+  --shadow-0:0 1px 2px rgba(16,24,40,.05);
+  --shadow-1:0 1px 3px rgba(16,24,40,.10),0 1px 2px rgba(16,24,40,.06);
+  --shadow-2:0 4px 8px rgba(16,24,40,.10),0 2px 4px rgba(16,24,40,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:14px;line-height:20px;color:var(--text);background:var(--bg-sunken);min-height:100vh}
+a{text-decoration:none;color:inherit} button{font-family:inherit;cursor:pointer;border:none;background:none;padding:0} ul,li{list-style:none}
+
+/* ── App ── */
+.app{display:flex;min-height:100vh}
+
+/* ── LNB ── */
+.lnb{width:220px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border-sub);
+  display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto}
+.lnb-hd{height:56px;padding:0 8px 0 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-sub);flex-shrink:0}
+.lnb-logo{width:28px;height:28px;border-radius:6px;background:var(--color-violet-400);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-wname{font-size:14px;font-weight:600;color:var(--text);flex:1;display:flex;align-items:center;gap:4px}
+.lnb-body{flex:1;padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav-it{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--text);font-size:14px;transition:background .12s;user-select:none;white-space:nowrap;text-decoration:none;font-weight:600}
+.nav-it:hover{background:var(--bg-hover)} .nav-it.active{background:var(--color-violet-25);color:var(--color-violet-500)}
+.nav-ic{width:20px;height:20px;flex-shrink:0;color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.nav-ic svg{width:18px;height:18px}
+.lnb-div{height:1px;background:var(--border-sub);margin:4px 0}
+.lnb-proj{height:48px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;cursor:pointer;transition:background .12s}
+.lnb-proj:hover{background:var(--bg-hover)}
+.proj-badge{width:32px;height:32px;border-radius:8px;background:var(--color-blue-50);color:var(--color-blue-600);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-ft{padding:12px 16px;border-top:1px solid var(--border-sub);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.avatar{border-radius:50%;background:var(--color-blue-50);color:var(--color-blue-600);font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-user{flex:1;min-width:0}
+.lnb-uname{font-size:14px;font-weight:500}
+.lnb-uemail{font-size:12px;color:var(--text-hint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);transition:background .12s;cursor:pointer;flex-shrink:0}
+.icon-btn:hover{background:var(--bg-hover)} .icon-btn svg{width:18px;height:18px}
+
+/* ── Content ── */
+.content{flex:1;min-width:0;background:var(--bg-sunken);overflow-y:auto}
+.content-inner{width:100%;max-width:1200px;padding:48px 0;
+  margin:0 auto;display:flex;flex-direction:column;}
+
+/* ── Page header ── */
+.page-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:24px;flex-shrink:0}
+.page-title{font-size:22px;font-weight:600;color:var(--text)}
+.page-actions{display:flex;align-items:center;gap:8px}
+
+.btn-ghost{height:34px;padding:0 12px;border-radius:8px;font-size:13px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:border-color .12s}
+.btn-ghost:hover{border-color:var(--text-sub)}
+.btn-ghost svg{width:16px;height:16px}
+.btn-ghost .filter-count{background:var(--color-violet-400);color:#fff;font-size:11px;font-weight:700;
+  width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+
+.search-wrap{position:relative}
+.search-inp{height:34px;width:220px;border:1px solid var(--border);border-radius:8px;
+  padding:0 10px 0 32px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);
+  outline:none;transition:border-color .12s}
+.search-inp:focus{border-color:var(--color-violet-400)}
+.search-inp::placeholder{color:var(--text-hint)}
+.search-ic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-hint);pointer-events:none}
+.search-ic svg{width:15px;height:15px}
+
+.btn-primary{height:34px;padding:0 14px;border-radius:8px;font-size:13px;font-weight:600;
+  background:var(--color-gray-700);color:#fff;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:background .12s}
+.btn-primary:hover{background:#474747} .btn-primary svg{width:15px;height:15px}
+
+/* ── Main body ── */
+.body-wrap{display:flex;overflow:hidden;
+  background:var(--bg);border-radius:12px;border:1px solid var(--border-sub);
+  box-shadow:var(--shadow-0)}
+
+/* ── Issue table ── */
+.issue-area{flex:1;overflow:hidden;background:var(--bg);border-radius:12px}
+
+.table-wrap{background:var(--bg);border-radius:12px;overflow:hidden}
+
+/* Table header */
+.tbl-head{display:grid;grid-template-columns:32px 40px 90px 1fr 90px 80px 110px;
+  padding:0 16px;height:38px;background:var(--bg-sunken);border-bottom:1px solid var(--border-sub);
+  align-items:center;gap:8px;position:sticky;top:0;z-index:2;border-radius:12px 12px 0 0}
+.tbl-th{font-size:12px;font-weight:600;color:var(--text-sub);white-space:nowrap;user-select:none}
+
+/* Issue rows */
+.issue-row{display:grid;grid-template-columns:32px 40px 90px 1fr 90px 80px 110px;
+  padding:0 16px;min-height:44px;border-bottom:1px solid var(--border-sub);
+  align-items:center;gap:8px;cursor:pointer;transition:background .12s}
+.issue-row:last-child{border-bottom:none}
+.issue-row:hover{background:var(--bg-hover)}
+.issue-row.selected{background:var(--color-violet-25)}
+.issue-row.child{padding-left:48px;grid-template-columns:32px 40px 90px 1fr 90px 80px 110px}
+
+/* Expand toggle */
+.expand-btn{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-hint);transition:color .12s, transform .2s;flex-shrink:0;cursor:pointer}
+.expand-btn:hover{color:var(--text-sub)}
+.expand-btn.open svg{transform:rotate(90deg)}
+.expand-btn svg{width:14px;height:14px;transition:transform .2s}
+
+/* Type badge */
+.type-badge{width:28px;height:20px;border-radius:4px;font-size:11px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:-.3px}
+.type-epic  {background:#f2f1fe;color:#6f64dd}
+.type-story {background:#e6fef0;color:#077a36}
+.type-task  {background:#e0eeff;color:#174fde}
+.type-bug   {background:#fff5f5;color:#c0251b}
+.type-subtask{background:#f0f0f0;color:#848484}
+
+/* Issue key */
+.iss-key{font-size:12px;color:var(--text-hint);font-weight:500;white-space:nowrap;font-family:monospace}
+
+/* Issue title */
+.iss-title{font-size:13px;font-weight:500;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:20px}
+.iss-title-wrap{display:flex;align-items:center;gap:6px;min-width:0}
+
+/* Version */
+.ver-tag{font-size:12px;color:var(--text-sub);white-space:nowrap}
+
+/* Assignee */
+.assignee{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-sub)}
+.av{width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* Status */
+.stat{height:22px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:600;
+  display:inline-flex;align-items:center;white-space:nowrap;cursor:pointer}
+.stat-todo    {background:var(--color-gray-50);  color:var(--color-gray-500)}
+.stat-inprog  {background:var(--color-blue-50);  color:var(--color-blue-600)}
+.stat-review  {background:var(--color-yellow-25);color:var(--color-yellow-800)}
+.stat-done    {background:var(--color-green-25); color:var(--color-green-700)}
+.stat-blocking{background:var(--color-red-25);   color:var(--color-red-700)}
+
+/* Priority dot */
+.pri{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pri-high{background:#fd493f} .pri-mid{background:#f0b429} .pri-low{background:#aeaeae}
+
+/* ── Right Detail Panel — fixed overlay, full height ── */
+.detail-panel{
+  position:fixed;right:0;top:0;height:100vh;
+  width:400px;
+  background:var(--bg);border-left:1px solid var(--border-sub);
+  box-shadow:-4px 0 20px rgba(0,0,0,.08);
+  display:flex;flex-direction:column;
+  z-index:50;overflow:hidden;
+}
+.detail-panel.hidden{display:none}
+
+.dp-hd{height:52px;padding:0 16px;border-bottom:1px solid var(--border-sub);
+  display:flex;align-items:center;gap:8px;flex-shrink:0}
+.dp-key{font-size:12px;font-weight:600;color:var(--text-hint);font-family:monospace}
+.dp-actions{margin-left:auto;display:flex;gap:4px}
+
+.dp-body{flex:1;overflow-y:auto}
+
+/* Panel sections */
+.dp-sec{padding:16px 20px;border-bottom:1px solid var(--border-sub)}
+.dp-sec:last-child{border-bottom:none}
+.dp-sec-title{font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+
+.dp-title{font-size:16px;font-weight:600;color:var(--text);line-height:24px;margin-bottom:4px}
+.dp-type-row{display:flex;align-items:center;gap:6px;margin-top:8px}
+
+/* Meta rows */
+.meta-row{display:flex;align-items:center;gap:0;margin-bottom:4px;min-height:32px}
+.meta-label{width:100px;font-size:13px;color:var(--text-sub);flex-shrink:0}
+.meta-val{flex:1;font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px}
+.meta-val select{font-size:13px;font-family:inherit;border:1px solid transparent;border-radius:6px;
+  padding:3px 6px;cursor:pointer;background:var(--bg);color:var(--text);outline:none;
+  transition:border-color .12s}
+.meta-val select:hover{border-color:var(--border)}
+.meta-val select:focus{border-color:var(--color-violet-400)}
+
+/* Sub issues */
+.sub-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-sub);cursor:pointer;transition:background .12s;border-radius:4px;padding:5px 6px}
+.sub-row:hover{background:var(--bg-hover)}
+.sub-row:last-child{border-bottom:none}
+.sub-title{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.add-sub-btn{width:100%;height:32px;border:1px dashed var(--border);border-radius:6px;
+  font-size:13px;color:var(--text-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  background:none;transition:border-color .12s;margin-top:8px}
+.add-sub-btn:hover{border-color:var(--color-violet-400);color:var(--color-violet-400)}
+
+/* Description textarea */
+.desc-area{width:100%;border:1px solid transparent;border-radius:6px;font-size:13px;
+  font-family:inherit;color:var(--text);resize:none;min-height:80px;padding:6px 8px;
+  background:var(--bg);outline:none;transition:border-color .12s;line-height:22px}
+.desc-area:hover{border-color:var(--border)}
+.desc-area:focus{border-color:var(--color-violet-400)}
+
+/* Checklist */
+.check-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer}
+.check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--color-violet-400);cursor:pointer}
+.check-label{font-size:13px;color:var(--text);flex:1}
+.check-label.done{text-decoration:line-through;color:var(--text-hint)}
+.add-check-btn{width:100%;height:30px;border:none;background:none;font-size:13px;color:var(--text-sub);
+  cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-top:4px}
+.add-check-btn:hover{color:var(--text)}
+
+/* ── Filter panel (overlay) ── */
+.filter-overlay{position:fixed;inset:0;z-index:100;display:none}
+.filter-overlay.open{display:block}
+.filter-backdrop{position:absolute;inset:0}
+.filter-panel{position:absolute;top:56px;left:244px;width:520px;
+  background:var(--bg);border:1px solid var(--border-sub);border-radius:12px;
+  box-shadow:var(--shadow-2);overflow:hidden;display:flex}
+.filter-tabs{width:140px;border-right:1px solid var(--border-sub);padding:8px;
+  display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+.filter-tab{height:36px;padding:0 10px;border-radius:6px;font-size:13px;font-weight:500;
+  color:var(--text-sub);cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .12s}
+.filter-tab:hover{background:var(--bg-hover)}
+.filter-tab.active{background:var(--color-violet-25);color:var(--color-violet-500);font-weight:600}
+.filter-tab .active-dot{width:5px;height:5px;border-radius:50%;background:var(--color-violet-400);flex-shrink:0}
+.filter-content{flex:1;padding:16px;overflow-y:auto}
+.filter-label{font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.filter-opts{display:flex;flex-wrap:wrap;gap:6px}
+.filter-opt{height:30px;padding:0 12px;border-radius:20px;border:1px solid var(--border);
+  font-size:12px;font-weight:600;color:var(--text-sub);cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:all .12s;background:var(--bg)}
+.filter-opt:hover{border-color:var(--color-violet-400);color:var(--color-violet-400)}
+.filter-opt.on{background:var(--color-violet-25);border-color:var(--color-violet-400);color:var(--color-violet-500)}
+.filter-member{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.filter-member-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .12s}
+.filter-member-row:hover{background:var(--bg-hover)}
+.filter-member-row.on{background:var(--color-violet-25)}
+.filter-member-name{font-size:13px;color:var(--text);flex:1}
+.filter-footer{padding:10px 16px;border-top:1px solid var(--border-sub);display:flex;justify-content:flex-end}
+.btn-reset{height:30px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:600;
+  border:none;background:none;color:var(--text-sub);cursor:pointer;transition:color .12s}
+.btn-reset:hover{color:var(--text)}
+
+/* ── Version modal ── */
+.modal-bd{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;display:flex;align-items:center;justify-content:center}
+.modal-bd.hidden{display:none}
+.modal{background:var(--bg);border-radius:16px;box-shadow:var(--shadow-2);width:440px;overflow:hidden;display:flex;flex-direction:column;max-height:80vh}
+.modal-hd{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-size:16px;font-weight:600;color:var(--text)}
+.modal-body{flex:1;overflow-y:auto;padding:16px 20px}
+.modal-ft{padding:12px 20px 20px;border-top:1px solid var(--border-sub);flex-shrink:0}
+
+/* Version rows */
+.ver-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-sub)}
+.ver-row:last-child{border-bottom:none}
+.ver-name{font-size:14px;font-weight:600;color:var(--text);flex:1}
+.ver-select{height:26px;border:1px solid var(--border);border-radius:6px;font-size:12px;
+  font-family:inherit;padding:0 8px;outline:none;cursor:pointer;color:var(--text);background:var(--bg)}
+.ver-select:focus{border-color:var(--color-violet-400)}
+.del-btn{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-hint);cursor:pointer;transition:color .12s}
+.del-btn:hover{color:var(--color-red-500)}
+.del-btn svg{width:14px;height:14px}
+
+/* New version input */
+.new-ver-wrap{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-top:12px;
+  padding-top:12px;border-top:1px solid var(--border-sub)}
+.form-inp{height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;
+  font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .12s}
+.form-inp:focus{border-color:var(--color-violet-400)}
+.form-inp::placeholder{color:var(--text-hint)}
+.form-inp.error{border-color:var(--color-red-700)}
+.form-sel{height:34px;border:1px solid var(--border);border-radius:8px;padding:0 8px;
+  font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 5.5l4 4 4-4' stroke='%23aeaeae' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 6px center;padding-right:26px;transition:border-color .12s}
+.form-sel:focus{border-color:var(--color-violet-400)}
+.form-hint{font-size:11px;color:var(--text-hint);width:100%;margin-top:-4px}
+.form-error{font-size:11px;color:var(--color-red-700);width:100%}
+
+/* ── Create Issue modal ── */
+.ci-modal{width:560px}
+.ci-body{padding:20px}
+.ci-field{margin-bottom:14px}
+.ci-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px;display:block}
+.ci-req{color:var(--color-violet-400);margin-left:1px}
+.ci-input{width:100%;height:38px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px;font-size:14px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .12s}
+.ci-input:focus{border-color:var(--color-violet-400)}
+.ci-input::placeholder{color:var(--text-hint)}
+.ci-textarea{width:100%;border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);
+  outline:none;resize:none;min-height:70px;line-height:21px;transition:border-color .12s}
+.ci-textarea:focus{border-color:var(--color-violet-400)}
+.ci-textarea::placeholder{color:var(--text-hint)}
+.ci-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ci-select{width:100%;height:38px;border:1px solid var(--border);border-radius:8px;
+  padding:0 12px;font-size:13px;font-family:inherit;color:var(--text);background:var(--bg);
+  outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 5.5l4 4 4-4' stroke='%23aeaeae' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;transition:border-color .12s}
+.ci-select:focus{border-color:var(--color-violet-400)}
+.ci-ft{padding:12px 20px 20px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-sub)}
+.btn-cancel{height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+.btn-cancel:hover{border-color:var(--text-sub)}
+.btn-create{height:36px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;
+  background:var(--color-gray-700);color:#fff;border:none;cursor:pointer;transition:background .12s}
+.btn-create:hover:not(:disabled){background:#474747}
+.btn-create:disabled{background:var(--color-gray-300);cursor:not-allowed}
+
+/* ── Edge toggle ── */
+.proto-bar{position:fixed;bottom:20px;right:20px;display:flex;gap:6px;z-index:999}
+.proto-btn{height:28px;padding:0 10px;border-radius:8px;font-size:11px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text-sub);cursor:pointer;box-shadow:var(--shadow-1)}
+.proto-btn.on{background:var(--color-gray-700);color:#fff;border-color:var(--color-gray-700)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── LNB ── -->
+<nav class="lnb">
+  <div class="lnb-hd">
+    <div class="lnb-logo">P</div>
+    <span class="lnb-wname">PRS
+      <svg viewBox="0 0 14 14" fill="none" style="width:12px;height:12px;color:var(--text-hint)"><path d="M3.5 5.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <button class="icon-btn"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v3l-1.5 2H17.5L16 11V8a6 6 0 00-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 16.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="lnb-body">
+    <a href="prototype-home.html" class="nav-it">
+      <span class="nav-ic"><svg viewBox="0 0 20 20" fill="none"><path d="M3 8.5L10 3l7 5.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V8.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 18V12h5v6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>홈
+    </a>
+    <div class="lnb-div"></div>
+    <div class="lnb-proj">
+      <div class="proj-badge" style="background:#33b2fe;color:#fff">P</div>
+      <span style="flex:1;font-size:14px;font-weight:500;color:var(--text)">PRS</span>
+      <svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px;color:var(--text-hint);flex-shrink:0"><path d="M3.5 5.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <a href="prototype-project-home.html" class="nav-it">
+        <span class="nav-ic"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></span>프로젝트 홈
+      </a>
+      <a href="prototype-planning-doc.html" class="nav-it">
+        <span class="nav-ic"><svg viewBox="0 0 20 20" fill="none"><path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 3v4h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9h6M7 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>기획 문서
+      </a>
+      <div class="nav-it active">
+        <span class="nav-ic"><svg viewBox="0 0 20 20" fill="none"><circle cx="5" cy="5.5" r="1.5" fill="currentColor"/><path d="M9 5.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5" cy="10" r="1.5" fill="currentColor"/><path d="M9 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5" cy="14.5" r="1.5" fill="currentColor"/><path d="M9 14.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>이슈 목록
+      </div>
+      <div class="nav-it" style="opacity:.4;pointer-events:none;cursor:not-allowed">
+        <span class="nav-ic"><svg viewBox="0 0 20 20" fill="none"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"/><path d="M4.4 11.6l-.9 1.6 1.5 1.5 1.6-.9c.3.2.7.3 1 .4l.4 1.8h2l.4-1.8c.4-.1.7-.2 1-.4l1.6.9 1.5-1.5-.9-1.6c.1-.3.2-.7.2-1s-.1-.7-.2-1l.9-1.6-1.5-1.5-1.6.9c-.3-.2-.7-.3-1-.4l-.4-1.8h-2l-.4 1.8c-.4.1-.7.2-1 .4l-1.6-.9-1.5 1.5.9 1.6c-.1.3-.2.6-.2 1s.1.7.2 1z" stroke="currentColor" stroke-width="1.5"/></svg></span>프로젝트 설정
+      </div>
+    </div>
+  </div>
+  <div class="lnb-ft">
+    <div class="avatar" style="width:28px;height:28px;font-size:11px;background:var(--color-blue-50);color:var(--color-blue-600)">김</div>
+    <div class="lnb-user"><div class="lnb-uname">김승수</div><div class="lnb-uemail">kss0610@midasit.com</div></div>
+    <button class="icon-btn" style="width:24px;height:24px"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12" r="1.2" fill="currentColor"/></svg></button>
+  </div>
+</nav>
+
+<!-- ── Content ── -->
+<div class="content">
+<div class="content-inner">
+
+  <!-- Page header -->
+  <div class="page-hd">
+    <span class="page-title">이슈 목록</span>
+    <div class="page-actions">
+      <!-- Filter -->
+      <button class="btn-ghost" id="filterBtn" onclick="toggleFilter()">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        필터
+        <span class="filter-count" id="filterCount" style="display:none">2</span>
+      </button>
+      <!-- Search -->
+      <div class="search-wrap">
+        <span class="search-ic"><svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>
+        <input class="search-inp" type="text" placeholder="이슈 번호, 키워드 검색..." oninput="searchIssues(this.value)">
+      </div>
+      <!-- Version -->
+      <button class="btn-ghost" onclick="openVersionModal()">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        버전 관리
+      </button>
+      <!-- New issue -->
+      <button class="btn-primary" onclick="openCreateModal()">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        새 이슈
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body-wrap">
+    <!-- Issue table -->
+    <div class="issue-area" id="issueArea">
+      <div class="table-wrap">
+        <!-- Header -->
+        <div class="tbl-head">
+          <div></div>
+          <div class="tbl-th">유형</div>
+          <div class="tbl-th">번호</div>
+          <div class="tbl-th">제목</div>
+          <div class="tbl-th">버전</div>
+          <div class="tbl-th">담당자</div>
+          <div class="tbl-th">상태</div>
+        </div>
+
+        <!-- Epic 1: OKR 관리 -->
+        <div class="issue-row" id="row-1" onclick="selectIssue(1, event)" data-search="prs-1 OKR 관리 이상엽">
+          <div class="expand-btn open" onclick="toggleChildren('children-1', this, event)">
+            <svg viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><span class="type-badge type-epic">E</span></div>
+          <div class="iss-key">PRS-1</div>
+          <div class="iss-title-wrap">
+            <span class="iss-title">OKR 관리</span>
+          </div>
+          <div class="ver-tag">v8.4.0</div>
+          <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">이</div><span>이상엽</span></div>
+          <div><span class="stat stat-inprog" onclick="cycleStatus(this, event)">진행중</span></div>
+        </div>
+        <!-- Children of Epic 1 -->
+        <div id="children-1">
+          <div class="issue-row child" id="row-2" onclick="selectIssue(2, event)" data-search="prs-2 OKR 대시보드 개선 김승수">
+            <div class="expand-btn" onclick="toggleChildren('children-2', this, event)">
+              <svg viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div><span class="type-badge type-story">S</span></div>
+            <div class="iss-key">PRS-2</div>
+            <div class="iss-title-wrap"><span class="iss-title">OKR 대시보드 UI 개선</span></div>
+            <div class="ver-tag">v8.4.0</div>
+            <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">김</div><span>김승수</span></div>
+            <div><span class="stat stat-inprog" onclick="cycleStatus(this, event)">진행중</span></div>
+          </div>
+          <div id="children-2" style="display:none">
+            <div class="issue-row" style="padding-left:80px;grid-template-columns:32px 40px 90px 1fr 90px 80px 110px" id="row-3" onclick="selectIssue(3, event)">
+              <div></div>
+              <div><span class="type-badge type-task">T</span></div>
+              <div class="iss-key">PRS-3</div>
+              <div class="iss-title-wrap"><span class="iss-title">목표 달성률 퍼센트 표시</span></div>
+              <div class="ver-tag">v8.4.0</div>
+              <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">김</div><span>김승수</span></div>
+              <div><span class="stat stat-todo" onclick="cycleStatus(this, event)">할 일</span></div>
+            </div>
+            <div class="issue-row" style="padding-left:80px;grid-template-columns:32px 40px 90px 1fr 90px 80px 110px" id="row-4" onclick="selectIssue(4, event)">
+              <div></div>
+              <div><span class="type-badge type-task">T</span></div>
+              <div class="iss-key">PRS-4</div>
+              <div class="iss-title-wrap"><span class="iss-title">주간 리포트 다운로드 기능</span></div>
+              <div class="ver-tag">v8.4.0</div>
+              <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">김</div><span>김승수</span></div>
+              <div><span class="stat stat-review" onclick="cycleStatus(this, event)">검토 요청</span></div>
+            </div>
+          </div>
+          <div class="issue-row child" id="row-5" onclick="selectIssue(5, event)" data-search="prs-5 OKR 알림 박지현">
+            <div class="expand-btn" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 14 14" fill="none" style="opacity:.2"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div><span class="type-badge type-task">T</span></div>
+            <div class="iss-key">PRS-5</div>
+            <div class="iss-title-wrap"><span class="iss-title">OKR 달성 알림 설정</span></div>
+            <div class="ver-tag">v8.4.0</div>
+            <div class="assignee"><div class="av" style="background:#e6fef0;color:#077a36;width:20px;height:20px;font-size:9px">박</div><span>박지현</span></div>
+            <div><span class="stat stat-done" onclick="cycleStatus(this, event)">완료</span></div>
+          </div>
+        </div>
+
+        <!-- Epic 2: AI 회의록 -->
+        <div class="issue-row" id="row-6" onclick="selectIssue(6, event)" data-search="prs-6 AI 회의록 이상엽">
+          <div class="expand-btn open" onclick="toggleChildren('children-6', this, event)">
+            <svg viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><span class="type-badge type-epic">E</span></div>
+          <div class="iss-key">PRS-6</div>
+          <div class="iss-title-wrap"><span class="iss-title">AI 회의록 사용성 개선</span></div>
+          <div class="ver-tag">v8.4.0</div>
+          <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">이</div><span>이상엽</span></div>
+          <div><span class="stat stat-inprog" onclick="cycleStatus(this, event)">진행중</span></div>
+        </div>
+        <div id="children-6">
+          <div class="issue-row child" id="row-7" onclick="selectIssue(7, event)">
+            <div class="expand-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 14 14" fill="none" style="opacity:.2"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><span class="type-badge type-story">S</span></div>
+            <div class="iss-key">PRS-7</div>
+            <div class="iss-title-wrap"><span class="iss-title">회의록 자동 요약 정확도 향상</span></div>
+            <div class="ver-tag">v8.4.0</div>
+            <div class="assignee"><div class="av" style="background:#fffadb;color:#a07800;width:20px;height:20px;font-size:9px">최</div><span>최민준</span></div>
+            <div><span class="stat stat-review" onclick="cycleStatus(this, event)">검토 요청</span></div>
+          </div>
+          <div class="issue-row child" id="row-8" onclick="selectIssue(8, event)">
+            <div class="expand-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 14 14" fill="none" style="opacity:.2"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><span class="type-badge type-bug">B</span></div>
+            <div class="iss-key">PRS-8</div>
+            <div class="iss-title-wrap"><span class="iss-title">회의록 저장 시 간헐적 오류 발생</span></div>
+            <div class="ver-tag">v8.3.0</div>
+            <div class="assignee"><div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">김</div><span>김승수</span></div>
+            <div><span class="stat stat-blocking" onclick="cycleStatus(this, event)">블로킹</span></div>
+          </div>
+        </div>
+
+        <!-- Epic 3: 그라운드룰 -->
+        <div class="issue-row" id="row-9" onclick="selectIssue(9, event)" data-search="prs-9 그라운드룰 관리 홍길동">
+          <div class="expand-btn" onclick="toggleChildren('children-9', this, event)">
+            <svg viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div><span class="type-badge type-epic">E</span></div>
+          <div class="iss-key">PRS-9</div>
+          <div class="iss-title-wrap"><span class="iss-title">그라운드룰 관리 기능</span></div>
+          <div class="ver-tag">v8.5.0</div>
+          <div class="assignee"><div class="av" style="background:#e6fef0;color:#077a36;width:20px;height:20px;font-size:9px">홍</div><span>홍길동</span></div>
+          <div><span class="stat stat-todo" onclick="cycleStatus(this, event)">할 일</span></div>
+        </div>
+        <div id="children-9" style="display:none">
+          <div class="issue-row child" id="row-10" onclick="selectIssue(10, event)">
+            <div class="expand-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 14 14" fill="none" style="opacity:.2"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div><span class="type-badge type-story">S</span></div>
+            <div class="iss-key">PRS-10</div>
+            <div class="iss-title-wrap"><span class="iss-title">팀 그라운드룰 등록/수정 화면</span></div>
+            <div class="ver-tag">v8.5.0</div>
+            <div class="assignee"><div class="av" style="background:#e6fef0;color:#077a36;width:20px;height:20px;font-size:9px">홍</div><span>홍길동</span></div>
+            <div><span class="stat stat-todo" onclick="cycleStatus(this, event)">할 일</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right detail panel -->
+    <div class="detail-panel hidden" id="detailPanel">
+      <div class="dp-hd">
+        <span class="dp-key" id="dpKey">PRS-1</span>
+        <span class="type-badge type-epic" id="dpType">E</span>
+        <div class="dp-actions">
+          <button class="icon-btn" title="전체 화면으로 열기">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M3 7V3h4M11 3h4v4M15 11v4h-4M7 15H3v-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="icon-btn" title="닫기" onclick="closePanel()">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M5 5l8 8M13 5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="dp-body">
+        <!-- Title -->
+        <div class="dp-sec">
+          <div class="dp-title" id="dpTitle">OKR 관리</div>
+          <div class="dp-type-row">
+            <span class="stat stat-inprog" id="dpStatus">진행중</span>
+          </div>
+        </div>
+        <!-- Meta -->
+        <div class="dp-sec">
+          <div class="dp-sec-title">상세 정보</div>
+          <div class="meta-row">
+            <span class="meta-label">우선순위</span>
+            <div class="meta-val">
+              <div class="pri pri-mid"></div>
+              <select style="border:none;padding:0;background:none;font-size:13px;color:var(--text);cursor:pointer;outline:none">
+                <option>높음</option><option selected>보통</option><option>낮음</option>
+              </select>
+            </div>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">담당자</span>
+            <div class="meta-val">
+              <div class="av" style="background:#e0eeff;color:#174fde;width:20px;height:20px;font-size:9px">이</div>
+              <select style="border:none;padding:0;background:none;font-size:13px;color:var(--text);cursor:pointer;outline:none">
+                <option>이상엽</option><option>김승수</option><option>박지현</option><option>최민준</option><option>홍길동</option>
+              </select>
+            </div>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">버전</span>
+            <div class="meta-val">
+              <select style="border:none;padding:0;background:none;font-size:13px;color:var(--text);cursor:pointer;outline:none">
+                <option>v8.4.0</option><option>v8.3.0</option><option>v8.5.0</option>
+              </select>
+            </div>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">연결 기획서</span>
+            <div class="meta-val">
+              <select style="border:none;padding:0;background:none;font-size:13px;color:var(--text);cursor:pointer;outline:none">
+                <option value="">없음</option><option selected>AI 기획서 작성</option><option>PRS PRD v2.0</option>
+              </select>
+            </div>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">생성일</span>
+            <div class="meta-val" style="color:var(--text-sub)">7주 전</div>
+          </div>
+        </div>
+        <!-- Sub issues -->
+        <div class="dp-sec">
+          <div class="dp-sec-title">하위 이슈 <span style="font-weight:400;color:var(--text-hint)">(3)</span></div>
+          <div class="sub-row">
+            <span class="type-badge type-story" style="font-size:10px;width:22px;height:18px">S</span>
+            <span class="sub-title">OKR 대시보드 UI 개선</span>
+            <span class="stat stat-inprog" style="font-size:11px;height:18px;padding:0 6px">진행중</span>
+          </div>
+          <div class="sub-row">
+            <span class="type-badge type-task" style="font-size:10px;width:22px;height:18px">T</span>
+            <span class="sub-title">목표 달성률 퍼센트 표시</span>
+            <span class="stat stat-todo" style="font-size:11px;height:18px;padding:0 6px">할 일</span>
+          </div>
+          <div class="sub-row">
+            <span class="type-badge type-task" style="font-size:10px;width:22px;height:18px">T</span>
+            <span class="sub-title">OKR 달성 알림 설정</span>
+            <span class="stat stat-done" style="font-size:11px;height:18px;padding:0 6px">완료</span>
+          </div>
+          <button class="add-sub-btn">
+            <svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            하위 이슈 추가
+          </button>
+        </div>
+        <!-- Description -->
+        <div class="dp-sec">
+          <div class="dp-sec-title">설명</div>
+          <textarea class="desc-area" placeholder="이슈에 대한 설명을 입력하세요" rows="4">OKR 관리 기능 전반의 사용성을 개선하고, 팀 목표 달성률을 실시간으로 확인할 수 있도록 대시보드 UI를 업데이트한다.</textarea>
+        </div>
+        <!-- Checklist -->
+        <div class="dp-sec">
+          <div class="dp-sec-title">체크리스트 <span style="font-weight:400;color:var(--text-hint)" id="checkProgress">2/4</span></div>
+          <div>
+            <label class="check-item"><input type="checkbox" checked onchange="updateCheckProgress()"><span class="check-label done">기존 OKR 화면 분석 완료</span></label>
+            <label class="check-item"><input type="checkbox" checked onchange="updateCheckProgress()"><span class="check-label done">개선 방향 정의</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateCheckProgress()"><span class="check-label">디자인 시안 검토</span></label>
+            <label class="check-item"><input type="checkbox" onchange="updateCheckProgress()"><span class="check-label">QA 테스트 진행</span></label>
+          </div>
+          <button class="add-check-btn">
+            <svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            항목 추가
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /content-inner -->
+</div>
+
+<!-- ── Filter panel ── -->
+<div class="filter-overlay" id="filterOverlay" onclick="closeFilterOnBackdrop(event)">
+  <div class="filter-panel" onclick="event.stopPropagation()">
+    <!-- Tabs -->
+    <div class="filter-tabs">
+      <div class="filter-tab active" onclick="switchFilterTab(this, 'ft-type')">
+        <span>이슈 타입</span>
+      </div>
+      <div class="filter-tab" onclick="switchFilterTab(this, 'ft-status')">
+        <span>상태</span><span class="active-dot" id="dot-status"></span>
+      </div>
+      <div class="filter-tab" onclick="switchFilterTab(this, 'ft-priority')">
+        <span>우선순위</span>
+      </div>
+      <div class="filter-tab" onclick="switchFilterTab(this, 'ft-assignee')">
+        <span>담당자</span><span class="active-dot" id="dot-assignee" style="display:none"></span>
+      </div>
+      <div class="filter-tab" onclick="switchFilterTab(this, 'ft-version')">
+        <span>버전</span>
+      </div>
+    </div>
+    <!-- Content -->
+    <div style="flex:1;display:flex;flex-direction:column">
+      <div style="flex:1;padding:16px;overflow-y:auto">
+        <div id="ft-type">
+          <div class="filter-label">이슈 타입</div>
+          <div class="filter-opts">
+            <div class="filter-opt on" onclick="this.classList.toggle('on')"><span class="type-badge type-epic" style="width:22px;height:16px;font-size:10px">E</span>Epic</div>
+            <div class="filter-opt on" onclick="this.classList.toggle('on')"><span class="type-badge type-story" style="width:22px;height:16px;font-size:10px">S</span>Story</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="type-badge type-task" style="width:22px;height:16px;font-size:10px">T</span>Task</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="type-badge type-subtask" style="width:22px;height:16px;font-size:10px">ST</span>Sub-task</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="type-badge type-bug" style="width:22px;height:16px;font-size:10px">B</span>Bug</div>
+          </div>
+        </div>
+        <div id="ft-status" style="display:none">
+          <div class="filter-label">상태</div>
+          <div class="filter-opts">
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="stat stat-todo" style="height:18px;padding:0 6px;font-size:11px">할 일</span></div>
+            <div class="filter-opt on" onclick="this.classList.toggle('on')"><span class="stat stat-inprog" style="height:18px;padding:0 6px;font-size:11px">진행중</span></div>
+            <div class="filter-opt on" onclick="this.classList.toggle('on')"><span class="stat stat-review" style="height:18px;padding:0 6px;font-size:11px">검토 요청</span></div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="stat stat-done" style="height:18px;padding:0 6px;font-size:11px">완료</span></div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><span class="stat stat-blocking" style="height:18px;padding:0 6px;font-size:11px">블로킹</span></div>
+          </div>
+        </div>
+        <div id="ft-priority" style="display:none">
+          <div class="filter-label">우선순위</div>
+          <div class="filter-opts">
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><div class="pri pri-high"></div>높음</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><div class="pri pri-mid"></div>보통</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')"><div class="pri pri-low"></div>낮음</div>
+          </div>
+        </div>
+        <div id="ft-assignee" style="display:none">
+          <div class="filter-label">담당자</div>
+          <div class="filter-member">
+            <div class="filter-member-row on" onclick="this.classList.toggle('on')">
+              <div class="av" style="background:#e0eeff;color:#174fde;width:22px;height:22px;font-size:10px">이</div>
+              <span class="filter-member-name">이상엽</span>
+            </div>
+            <div class="filter-member-row" onclick="this.classList.toggle('on')">
+              <div class="av" style="background:#e0eeff;color:#174fde;width:22px;height:22px;font-size:10px">김</div>
+              <span class="filter-member-name">김승수</span>
+            </div>
+            <div class="filter-member-row" onclick="this.classList.toggle('on')">
+              <div class="av" style="background:#e6fef0;color:#077a36;width:22px;height:22px;font-size:10px">박</div>
+              <span class="filter-member-name">박지현</span>
+            </div>
+            <div class="filter-member-row" onclick="this.classList.toggle('on')">
+              <div class="av" style="background:#fffadb;color:#a07800;width:22px;height:22px;font-size:10px">최</div>
+              <span class="filter-member-name">최민준</span>
+            </div>
+            <div class="filter-member-row" onclick="this.classList.toggle('on')">
+              <div class="av" style="background:#e6fef0;color:#077a36;width:22px;height:22px;font-size:10px">홍</div>
+              <span class="filter-member-name">홍길동</span>
+            </div>
+          </div>
+        </div>
+        <div id="ft-version" style="display:none">
+          <div class="filter-label">버전</div>
+          <div class="filter-opts">
+            <div class="filter-opt on" onclick="this.classList.toggle('on')">v8.4.0</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')">v8.3.0</div>
+            <div class="filter-opt" onclick="this.classList.toggle('on')">v8.5.0</div>
+          </div>
+        </div>
+      </div>
+      <div class="filter-footer">
+        <button class="btn-reset" onclick="resetFilter()">초기화</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Version modal ── -->
+<div class="modal-bd hidden" id="versionModal" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hd">
+      <span class="modal-title">버전 관리</span>
+      <button class="icon-btn" onclick="document.getElementById('versionModal').classList.add('hidden')">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M5 5l8 8M13 5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="ver-list">
+        <div class="ver-row">
+          <span class="ver-name">v8.5.0</span>
+          <select class="ver-select"><option>예정</option><option selected>예정</option><option>진행중</option><option>완료</option></select>
+          <div class="del-btn" onclick="deleteVersion(this)"><svg viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="ver-row">
+          <span class="ver-name">v8.4.0</span>
+          <select class="ver-select"><option>예정</option><option selected>진행중</option><option>완료</option></select>
+          <div class="del-btn" title="연결된 이슈가 있어 삭제 불가" style="opacity:.3;cursor:not-allowed"><svg viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="ver-row">
+          <span class="ver-name">v8.3.0</span>
+          <select class="ver-select"><option>예정</option><option>진행중</option><option selected>완료</option></select>
+          <div class="del-btn" onclick="deleteVersion(this)"><svg viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        </div>
+      </div>
+      <!-- Add new -->
+      <div class="new-ver-wrap">
+        <input class="form-inp" id="newVerName" style="flex:1;min-width:100px" placeholder="예: 1.2, 2.0" oninput="validateNewVer()">
+        <select class="form-sel" id="newVerStatus" style="width:90px" onchange="validateNewVer()">
+          <option value="" selected disabled>상태</option>
+          <option>예정</option><option>진행중</option><option>완료</option>
+        </select>
+        <button class="btn-primary" id="addVerBtn" disabled onclick="addVersion()" style="height:34px;padding:0 12px;font-size:13px">추가</button>
+        <span class="form-hint">숫자.숫자 형식으로 입력하세요 (예: 1.2, 2.0)</span>
+        <span class="form-error" id="verError" style="display:none"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Create Issue modal ── -->
+<div class="modal-bd hidden" id="createModal" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal ci-modal" onclick="event.stopPropagation()">
+    <div class="modal-hd">
+      <span class="modal-title">새 이슈</span>
+      <button class="icon-btn" onclick="document.getElementById('createModal').classList.add('hidden')">
+        <svg viewBox="0 0 18 18" fill="none"><path d="M5 5l8 8M13 5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="ci-body">
+      <div class="ci-field">
+        <label class="ci-label">제목<span class="ci-req">*</span></label>
+        <input class="ci-input" id="issueTitle" type="text" placeholder="이슈 제목을 입력하세요" maxlength="100" oninput="validateCreate()">
+      </div>
+      <div class="ci-field">
+        <label class="ci-label">설명</label>
+        <textarea class="ci-textarea" placeholder="이슈에 대한 설명을 입력하세요" rows="3"></textarea>
+      </div>
+      <div class="ci-row">
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">이슈 타입</label>
+          <select class="ci-select">
+            <option selected>Task</option><option>Epic</option><option>Story</option><option>Bug</option>
+          </select>
+        </div>
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">우선순위</label>
+          <select class="ci-select">
+            <option>높음</option><option selected>보통</option><option>낮음</option>
+          </select>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="ci-row">
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">상위 이슈</label>
+          <select class="ci-select">
+            <option value="" selected>없음</option>
+            <option>PRS-1 OKR 관리</option>
+            <option>PRS-6 AI 회의록</option>
+            <option>PRS-9 그라운드룰</option>
+          </select>
+        </div>
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">담당자</label>
+          <select class="ci-select">
+            <option value="" selected>없음</option>
+            <option>김승수 (나)</option><option>이상엽</option><option>박지현</option><option>최민준</option><option>홍길동</option>
+          </select>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="ci-row">
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">버전</label>
+          <select class="ci-select">
+            <option value="" selected>미배정</option>
+            <option>v8.4.0</option><option>v8.3.0</option><option>v8.5.0</option>
+          </select>
+        </div>
+        <div class="ci-field" style="margin-bottom:0">
+          <label class="ci-label">연결 기획서</label>
+          <select class="ci-select">
+            <option value="" selected>없음</option>
+            <option>AI 기획서 작성</option><option>PRS PRD v2.0</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="ci-ft">
+      <button class="btn-cancel" onclick="document.getElementById('createModal').classList.add('hidden')">취소</button>
+      <button class="btn-create" id="createBtn" disabled onclick="submitCreate()">이슈 생성</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edge toggle -->
+<div class="proto-bar">
+  <button class="proto-btn on" onclick="showState('normal')">기본</button>
+  <button class="proto-btn" onclick="toggleFilter()">필터</button>
+  <button class="proto-btn" onclick="openVersionModal()">버전관리</button>
+  <button class="proto-btn" onclick="openCreateModal()">이슈생성</button>
+</div>
+
+<script>
+/* ── Issue selection & detail panel ── */
+let currentIssue = null;
+const issueData = {
+  1:  {key:'PRS-1',  type:'epic',   typeLbl:'E', title:'OKR 관리',              status:'진행중',   statClass:'stat-inprog'},
+  2:  {key:'PRS-2',  type:'story',  typeLbl:'S', title:'OKR 대시보드 UI 개선', status:'진행중',   statClass:'stat-inprog'},
+  3:  {key:'PRS-3',  type:'task',   typeLbl:'T', title:'목표 달성률 퍼센트 표시', status:'할 일',  statClass:'stat-todo'},
+  4:  {key:'PRS-4',  type:'task',   typeLbl:'T', title:'주간 리포트 다운로드',   status:'검토 요청', statClass:'stat-review'},
+  5:  {key:'PRS-5',  type:'task',   typeLbl:'T', title:'OKR 달성 알림 설정',    status:'완료',     statClass:'stat-done'},
+  6:  {key:'PRS-6',  type:'epic',   typeLbl:'E', title:'AI 회의록 사용성 개선', status:'진행중',   statClass:'stat-inprog'},
+  7:  {key:'PRS-7',  type:'story',  typeLbl:'S', title:'회의록 자동 요약 정확도 향상', status:'검토 요청', statClass:'stat-review'},
+  8:  {key:'PRS-8',  type:'bug',    typeLbl:'B', title:'회의록 저장 시 간헐적 오류', status:'블로킹', statClass:'stat-blocking'},
+  9:  {key:'PRS-9',  type:'epic',   typeLbl:'E', title:'그라운드룰 관리 기능',   status:'할 일',   statClass:'stat-todo'},
+  10: {key:'PRS-10', type:'story',  typeLbl:'S', title:'팀 그라운드룰 등록/수정', status:'할 일',  statClass:'stat-todo'},
+};
+const typeClass = {epic:'type-epic', story:'type-story', task:'type-task', bug:'type-bug', subtask:'type-subtask'};
+
+function selectIssue(id, e) {
+  if (e && e.target.closest('.expand-btn, .stat, select')) return;
+  document.querySelectorAll('.issue-row').forEach(r => r.classList.remove('selected'));
+  document.getElementById('row-'+id)?.classList.add('selected');
+  const d = issueData[id];
+  if (!d) return;
+  document.getElementById('dpKey').textContent    = d.key;
+  document.getElementById('dpType').textContent   = d.typeLbl;
+  document.getElementById('dpType').className     = 'type-badge ' + typeClass[d.type];
+  document.getElementById('dpTitle').textContent  = d.title;
+  const st = document.getElementById('dpStatus');
+  st.textContent = d.status; st.className = 'stat ' + d.statClass;
+  document.getElementById('detailPanel').classList.remove('hidden');
+  currentIssue = id;
+}
+function closePanel() {
+  document.getElementById('detailPanel').classList.add('hidden');
+  document.querySelectorAll('.issue-row').forEach(r => r.classList.remove('selected'));
+  currentIssue = null;
+}
+
+/* ── Expand/collapse ── */
+function toggleChildren(id, btn, e) {
+  e && e.stopPropagation();
+  const el = document.getElementById(id);
+  if (!el) return;
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : '';
+  btn.classList.toggle('open', !open);
+}
+
+/* ── Status cycle ── */
+const statuses = [
+  {t:'할 일',     c:'stat-todo'},
+  {t:'진행중',    c:'stat-inprog'},
+  {t:'검토 요청', c:'stat-review'},
+  {t:'완료',      c:'stat-done'},
+  {t:'블로킹',    c:'stat-blocking'},
+];
+function cycleStatus(el, e) {
+  e && e.stopPropagation();
+  const cur = statuses.findIndex(s => el.classList.contains(s.c));
+  const next = statuses[(cur + 1) % statuses.length];
+  el.textContent = next.t;
+  el.className = 'stat ' + next.c;
+}
+
+/* ── Search ── */
+function searchIssues(q) {
+  const kw = q.trim().toLowerCase();
+  document.querySelectorAll('.issue-row').forEach(r => {
+    const txt = (r.dataset.search || '').toLowerCase();
+    r.style.display = (!kw || txt.includes(kw)) ? '' : 'none';
+  });
+}
+
+/* ── Filter ── */
+function toggleFilter() {
+  const o = document.getElementById('filterOverlay');
+  o.classList.toggle('open');
+}
+function closeFilterOnBackdrop(e) {
+  if (e.target === document.getElementById('filterOverlay')) {
+    document.getElementById('filterOverlay').classList.remove('open');
+  }
+}
+function switchFilterTab(tab, contentId) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('#filterOverlay .filter-panel > div:last-child > div:first-child > div').forEach(c => c.style.display = 'none');
+  document.getElementById(contentId).style.display = '';
+}
+function resetFilter() {
+  document.querySelectorAll('.filter-opt, .filter-member-row').forEach(o => o.classList.remove('on'));
+}
+
+/* ── Version modal ── */
+function openVersionModal() {
+  document.getElementById('versionModal').classList.remove('hidden');
+}
+function deleteVersion(btn) {
+  if (confirm('이 버전을 삭제하시겠습니까?')) btn.closest('.ver-row').remove();
+}
+function validateNewVer() {
+  const name = document.getElementById('newVerName').value.trim();
+  const status = document.getElementById('newVerStatus').value;
+  const valid = /^\d+\.\d+$/.test(name) && status;
+  document.getElementById('addVerBtn').disabled = !valid;
+  if (name && !/^\d+\.\d+$/.test(name)) {
+    document.getElementById('verError').textContent = '숫자.숫자 형식으로 입력해주세요 (예: 1.2)';
+    document.getElementById('verError').style.display = '';
+    document.getElementById('newVerName').classList.add('error');
+  } else {
+    document.getElementById('verError').style.display = 'none';
+    document.getElementById('newVerName').classList.remove('error');
+  }
+}
+function addVersion() {
+  const name = document.getElementById('newVerName').value.trim();
+  const status = document.getElementById('newVerStatus').value;
+  const optMap = {예정:'예정', 진행중:'진행중', 완료:'완료'};
+  const row = document.createElement('div'); row.className = 'ver-row';
+  row.innerHTML = `<span class="ver-name">v${name}</span>
+    <select class="ver-select"><option>예정</option><option>진행중</option><option>완료</option></select>
+    <div class="del-btn" onclick="deleteVersion(this)"><svg viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>`;
+  row.querySelector('select').value = status;
+  document.getElementById('ver-list').prepend(row);
+  document.getElementById('newVerName').value = '';
+  document.getElementById('newVerStatus').value = '';
+  document.getElementById('addVerBtn').disabled = true;
+}
+
+/* ── Create issue ── */
+function openCreateModal() { document.getElementById('createModal').classList.remove('hidden'); }
+function validateCreate() {
+  const v = document.getElementById('issueTitle').value.trim();
+  document.getElementById('createBtn').disabled = !v;
+}
+function submitCreate() {
+  const title = document.getElementById('issueTitle').value.trim();
+  if (!title) return;
+  document.getElementById('createModal').classList.add('hidden');
+  document.getElementById('issueTitle').value = '';
+  document.getElementById('createBtn').disabled = true;
+}
+
+/* Checklist progress */
+function updateCheckProgress() {
+  const items = document.querySelectorAll('.check-item input[type=checkbox]');
+  const done = [...items].filter(i => i.checked).length;
+  document.getElementById('checkProgress').textContent = `${done}/${items.length}`;
+  items.forEach(i => {
+    i.nextElementSibling.classList.toggle('done', i.checked);
+  });
+}
+
+/* ── State toggle ── */
+function showState(s) {
+  document.querySelectorAll('.proto-btn').forEach((b,i)=>b.classList.toggle('on',i===0));
+}
+
+/* ESC */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closePanel();
+    document.getElementById('filterOverlay').classList.remove('open');
+    document.getElementById('versionModal').classList.add('hidden');
+    document.getElementById('createModal').classList.add('hidden');
+  }
+});
+</script>
+</body>
+</html>

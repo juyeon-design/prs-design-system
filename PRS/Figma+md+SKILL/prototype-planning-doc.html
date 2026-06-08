@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRS — 기획 문서</title>
+<style>
+:root {
+  --gray-50:  #f0f0f0; --gray-100:#eaeaea; --gray-200:#dfdfdf;
+  --gray-300: #d2d2d2; --gray-400:#aeaeae; --gray-500:#848484; --gray-700:#343434;
+  --violet-25:#f2f1fe; --violet-400:#6f64dd; --violet-500:#6358d5;
+  --blue-50:#e0eeff; --blue-400:#33b2fe; --blue-600:#174fde;
+  --bg:#fff; --bg-sunken:#f5f5f5; --text:#343434; --text-sub:#848484; --text-hint:#aeaeae;
+  --border:#d2d2d2; --border-sub:#dfdfdf;
+  --shadow-node:0 4px 8px -2px rgba(16,24,40,.10),0 2px 4px -2px rgba(16,24,40,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:14px;line-height:20px;color:var(--text);background:var(--bg-sunken);min-height:100vh}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;padding:0}
+
+/* ── App ── */
+.app{display:flex;min-height:100vh}
+
+/* ── LNB ── */
+.lnb{width:220px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border-sub);
+  display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto}
+.lnb-header{height:56px;padding:0 8px 0 12px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border-sub);flex-shrink:0}
+.lnb-logo{width:28px;height:28px;border-radius:6px;background:var(--violet-400);color:#fff;
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-wname{font-size:14px;font-weight:600;color:var(--text);flex:1;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.icon-btn{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-sub);transition:background .12s}
+.icon-btn:hover{background:var(--bg-sunken)}
+.icon-btn svg{width:18px;height:18px}
+.lnb-body{flex:1;padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav-item{height:40px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;
+  cursor:pointer;color:var(--text);font-size:14px;transition:background .12s;
+  user-select:none;white-space:nowrap;text-decoration:none}
+.nav-item:hover{background:var(--bg-sunken)}
+.nav-item.active{background:var(--violet-25);color:var(--violet-500)}
+.nav-item.disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.nav-icon{width:20px;height:20px;flex-shrink:0;color:var(--text-sub);display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px}
+.nav-label{flex:1}
+.lnb-div{height:1px;background:var(--border-sub);margin:4px 0}
+.lnb-proj{height:48px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:8px;cursor:pointer;transition:background .12s}
+.lnb-proj:hover{background:var(--bg-sunken)}
+.proj-badge{width:32px;height:32px;border-radius:8px;background:var(--blue-50);color:var(--blue-600);
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-sub{display:flex;flex-direction:column;gap:2px}
+.lnb-footer{padding:12px 16px;border-top:1px solid var(--border-sub);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.avatar{width:24px;height:24px;border-radius:50%;background:var(--blue-50);color:var(--blue-600);
+  font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lnb-ui{flex:1;min-width:0}
+.lnb-un{font-size:14px;font-weight:500}
+.lnb-ue{font-size:12px;color:var(--text-hint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Content wrap ── */
+.content-wrap{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+/* ══════════════════════════════
+   VIEW 1 — 첫 진입 (Empty)
+   ══════════════════════════════ */
+#view-empty{flex:1;display:flex;align-items:center;justify-content:center;background:var(--bg-sunken)}
+.empty-box{display:flex;flex-direction:column;align-items:center;gap:20px}
+.empty-icon svg{width:56px;height:56px}
+.empty-txt{text-align:center}
+.empty-txt p{font-size:14px;font-weight:500;color:var(--text-sub);line-height:20px}
+.btn-go{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;
+  border-radius:6px;background:var(--violet-400);color:#fff;
+  font-size:14px;font-weight:600;border:none;cursor:pointer;transition:background .12s}
+.btn-go:hover{background:var(--violet-500)}
+
+/* ══════════════════════════════
+   VIEW 2 / 3 — 노드뷰
+   ══════════════════════════════ */
+#view-node,#view-panel{flex:1;display:flex;overflow:hidden;position:relative}
+
+/* Left toolbar */
+.ntoolbar{width:52px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border-sub);
+  display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;z-index:2}
+.tbtn{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-sub);cursor:pointer;transition:background .12s}
+.tbtn:hover{background:var(--bg-sunken)}
+.tbtn.on{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.tbtn svg{width:18px;height:18px}
+
+/* Canvas area — scrollable, grab */
+.canvas-area{flex:1;overflow-x:auto;overflow-y:hidden;position:relative;cursor:grab;
+  background-color:#f5f5f5;
+  background-image:radial-gradient(circle,#c4c4c4 1px,transparent 1px);
+  background-size:24px 24px;background-position:12px 12px;
+  user-select:none;
+  scrollbar-width:none;-ms-overflow-style:none;}
+.canvas-area::-webkit-scrollbar{display:none}
+.canvas-area.grabbing{cursor:grabbing}
+.canvas-inner{position:relative;width:2400px;height:100%;min-height:828px}
+
+/* SVG connector lines */
+.cssvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+
+/* ── Node card ── */
+.nc{
+  position:absolute;width:240px;height:44px;
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  box-shadow:var(--shadow-node);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px 0 12px;gap:10px;
+  cursor:pointer;user-select:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.nc:hover{border-color:var(--violet-400);box-shadow:0 0 0 3px rgba(111,100,221,.10),var(--shadow-node)}
+.nc.selected{border-color:var(--violet-400);background:var(--violet-25)}
+.nc-l{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.nc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nc-icon svg{width:16px;height:16px}
+.ic-blue{background:var(--blue-400);color:#fff;font-size:14px;font-weight:700}
+.ic-v{background:var(--violet-25);color:var(--violet-400)}
+.nc-lbl{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:20px}
+.nc-r{flex-shrink:0;display:flex;align-items:center;gap:8px}
+
+/* ── Star (즐겨찾기) ── */
+.nc-star{cursor:pointer;display:flex;align-items:center}
+.nc-star svg{width:16px;height:16px;color:var(--gray-300);transition:color .1s}
+.nc-star:hover svg{color:var(--violet-400)}
+.nc-star.on svg{color:var(--violet-400);fill:var(--violet-400)}
+
+/* ── + Add button ── */
+/* 디폴트: 회색, 항상 노출 / 호버: 블랙 + 툴팁 */
+.nc-add{
+  position:absolute;right:-28px;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;border-radius:50%;
+  background:var(--gray-400);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:5;
+  transition:background .12s;
+}
+.nc-add svg{width:12px;height:12px;color:#fff;flex-shrink:0}
+.nc-add:hover{background:var(--gray-700)}
+
+/* tooltip above + button */
+.nc-add .tip{
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--gray-700);color:#fff;
+  font-size:12px;font-weight:500;line-height:1;
+  white-space:nowrap;padding:5px 8px;border-radius:4px;
+  pointer-events:none;opacity:0;transition:opacity .1s;
+}
+.nc-add:hover .tip{opacity:1}
+
+/* ══════════════════════════════
+   VIEW 3 — 우측 패널 (800px)
+   ══════════════════════════════ */
+.right-panel{
+  position:fixed;right:0;top:0;height:100vh;width:800px;
+  background:var(--bg);border-left:1px solid var(--border-sub);
+  box-shadow:-4px 0 24px rgba(0,0,0,.10);
+  display:flex;flex-direction:column;z-index:100;overflow:hidden;
+}
+.rp-hd{height:64px;padding:0 16px 0 24px;border-bottom:1px solid var(--border-sub);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0}
+.rp-title{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;flex-shrink:0}
+.rp-steps{display:flex;align-items:center;gap:0}
+.rp-step{display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;cursor:pointer}
+.step-n{width:24px;height:24px;border-radius:4px;font-size:12px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-n.on{background:var(--gray-700);color:#fff}
+.step-n.off{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.step-lbl{font-size:14px;font-weight:500;color:var(--text)}
+.rp-acts{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.rp-ibtn{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;border:none}
+.rp-ibtn svg{width:18px;height:18px}
+.rp-edit{background:var(--violet-500)}
+.rp-close{background:var(--gray-50)}
+.rp-body{flex:1;overflow-y:auto}
+.rp-sec{padding:24px;border-bottom:1px solid var(--border-sub)}
+.rp-sec:last-child{border-bottom:none}
+.rp-sh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rp-sn{width:24px;height:24px;border-radius:4px;background:var(--bg-sunken);
+  font-size:12px;font-weight:700;color:var(--text);
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.rp-st{font-size:16px;font-weight:600;color:var(--text)}
+.rp-p{font-size:14px;font-weight:500;color:var(--text);line-height:24px}
+.rp-ul,.rp-ol{padding-left:20px;font-size:14px;font-weight:500;color:var(--text);line-height:24px}
+.rp-ul li{list-style:disc;margin:0}
+.rp-ol li{list-style:decimal;margin:0}
+
+/* ── Proto toggle ── */
+.proto-bar{position:fixed;bottom:20px;right:20px;display:flex;gap:8px;z-index:999}
+.pb{height:30px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text-sub);cursor:pointer;
+  box-shadow:0 1px 3px rgba(16,24,40,.10),0 1px 2px rgba(16,24,40,.06);transition:background .12s}
+.pb:hover{background:var(--bg-sunken)}
+.pb.on{background:var(--gray-700);color:#fff;border-color:var(--gray-700)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ LNB ══ -->
+<nav class="lnb">
+  <div class="lnb-header">
+    <div class="lnb-logo">P</div>
+    <span class="lnb-wname">PRS
+      <svg viewBox="0 0 16 16" fill="none" style="width:13px;height:13px;color:var(--text-hint)"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <div style="margin-left:auto">
+      <button class="icon-btn"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v3l-1.5 2H17.5L16 11V8a6 6 0 00-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 16.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="lnb-body">
+    <a href="prototype-home.html" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 8.5L10 3l7 5.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V8.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 18V12h5v6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+      <span class="nav-label">홈</span>
+    </a>
+    <div class="lnb-div"></div>
+    <div class="lnb-proj">
+      <div class="proj-badge">P</div>
+      <span style="flex:1;font-size:14px;font-weight:500;color:var(--text)">PRS</span>
+      <svg viewBox="0 0 16 16" fill="none" style="width:13px;height:13px;color:var(--text-hint);flex-shrink:0"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="lnb-sub">
+      <a href="prototype-project-home.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></span>
+        <span class="nav-label">프로젝트 홈</span>
+      </a>
+      <div class="nav-item active">
+        <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 3v4h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9h6M7 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        <span class="nav-label">기획 문서</span>
+      </div>
+      <a href="prototype-issue-list.html" class="nav-item">
+        <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="5" cy="5.5" r="1.5" fill="currentColor"/><path d="M9 5.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5" cy="10" r="1.5" fill="currentColor"/><path d="M9 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="5" cy="14.5" r="1.5" fill="currentColor"/><path d="M9 14.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+        <span class="nav-label">이슈 목록</span>
+      </a>
+      <div class="nav-item disabled">
+        <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.5"/><path d="M4.4 11.6l-.9 1.6 1.5 1.5 1.6-.9c.3.2.7.3 1 .4l.4 1.8h2l.4-1.8c.4-.1.7-.2 1-.4l1.6.9 1.5-1.5-.9-1.6c.1-.3.2-.7.2-1s-.1-.7-.2-1l.9-1.6-1.5-1.5-1.6.9c-.3-.2-.7-.3-1-.4l-.4-1.8h-2l-.4 1.8c-.4.1-.7.2-1 .4l-1.6-.9-1.5 1.5.9 1.6c-.1.3-.2.6-.2 1s.1.7.2 1z" stroke="currentColor" stroke-width="1.5"/></svg></span>
+        <span class="nav-label">프로젝트 설정</span>
+      </div>
+    </div>
+  </div>
+  <div class="lnb-footer">
+    <div class="avatar" style="width:28px;height:28px;font-size:11px">김</div>
+    <div class="lnb-ui"><div class="lnb-un">김승수</div><div class="lnb-ue">kss0610@midasit.com</div></div>
+    <button class="icon-btn" style="width:24px;height:24px;flex-shrink:0"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1.2" fill="currentColor"/><circle cx="8" cy="8" r="1.2" fill="currentColor"/><circle cx="8" cy="12" r="1.2" fill="currentColor"/></svg></button>
+  </div>
+</nav>
+
+<!-- ══ CONTENT ══ -->
+<div class="content-wrap">
+
+  <!-- ─── VIEW 1: 첫 진입 ─── -->
+  <div id="view-empty">
+    <div class="empty-box">
+      <div class="empty-icon">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <path d="M10 48V18l10-10h26a2 2 0 012 2v38a2 2 0 01-2 2H12a2 2 0 01-2-2z" fill="#efefef" stroke="#c8c8c8" stroke-width="1.5"/>
+          <path d="M10 18h8a2 2 0 002-2V8" stroke="#c8c8c8" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M19 30h18M19 36h12" stroke="#c8c8c8" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="empty-txt">
+        <p>프로젝트 PRS를 바탕으로</p>
+        <p>에이전트와 기능 구조를 설계해보세요.</p>
+      </div>
+      <button class="btn-go" onclick="switchView('node')">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l1.6 3.8L14.5 7l-3.8 1.6L9 14l-1.7-5.4L3.5 7l4.8-1.2L9 2z" fill="white"/></svg>
+        기능 설계하기
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── VIEW 2: 노드뷰 ─── -->
+  <div id="view-node" style="display:none">
+    <div class="ntoolbar">
+      <button class="tbtn" title="대시보드"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg></button>
+      <button class="tbtn on" title="트리 뷰"><svg viewBox="0 0 18 18" fill="none"><rect x="1" y="7" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="2" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="12" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M6 9h3.5V4h2.5M9.5 9v5h2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="tbtn" title="목록"><svg viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="tbtn" title="즐겨찾기"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l1.8 4.2L15 7l-3.2 3.1.8 4.4L9 12.2l-3.6 2.3.8-4.4L3 7l4.2-.8L9 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="canvas-area" id="ca2">
+      <div class="canvas-inner" id="ci2">
+        <svg class="cssvg" id="svg2"><!-- paths inserted by JS --></svg>
+        <!-- nodes inserted by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── VIEW 3: 노드 클릭 + 패널 ─── -->
+  <div id="view-panel" style="display:none">
+    <div class="ntoolbar">
+      <button class="tbtn"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg></button>
+      <button class="tbtn on"><svg viewBox="0 0 18 18" fill="none"><rect x="1" y="7" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="2" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="12" y="12" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M6 9h3.5V4h2.5M9.5 9v5h2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="tbtn"><svg viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+      <button class="tbtn"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2l1.8 4.2L15 7l-3.2 3.1.8 4.4L9 12.2l-3.6 2.3.8-4.4L3 7l4.2-.8L9 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="canvas-area" id="ca3">
+      <div class="canvas-inner" id="ci3">
+        <svg class="cssvg" id="svg3"></svg>
+      </div>
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <div class="rp-hd">
+          <span class="rp-title">기능 설계</span>
+          <div class="rp-steps">
+            <div class="rp-step"><span class="step-n on">1</span><span class="step-lbl">기능 상세</span></div>
+            <div class="rp-step"><span class="step-n off">2</span><span class="step-lbl">사용자 플로우</span></div>
+            <div class="rp-step"><span class="step-n off">3</span><span class="step-lbl">와이어 프레임</span></div>
+          </div>
+          <div class="rp-acts">
+            <button class="rp-ibtn rp-edit" title="편집"><svg viewBox="0 0 18 18" fill="none"><path d="M3 15l2-1 7.5-7.5-1.5-1.5L4 13l-1 2z" fill="white" stroke="white" stroke-width="0.5"/><path d="M12.5 2.5l2 2" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+            <button class="rp-ibtn rp-close" onclick="switchView('node')" title="닫기"><svg viewBox="0 0 18 18" fill="none"><path d="M5 5l8 8M13 5l-8 8" stroke="#343434" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+          </div>
+        </div>
+        <div class="rp-body">
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">1</span><span class="rp-st">기능 개요</span></div>
+            <p class="rp-p">AI 기획서 작성 기능은 사내 기획자가 웹 브라우저에서 AI를 활용해 기획서 초안을 쉽고 빠르게 작성할 수 있도록 지원하는 기능입니다. 사용자는 기획서 작성에 필요한 정보를 입력하고, AI는 이를 바탕으로 PRD, 기능 명세서, 유저 플로우, 화면 구성 또는 와이어프레임 초안을 생성합니다. 생성된 문서는 사용자가 자유롭게 수정할 수 있어야 합니다.</p>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">2</span><span class="rp-st">배경 및 문제 정의</span></div>
+            <p class="rp-p">사내 기획자는 기획서를 작성할 때 단순히 문장을 작성하는 것뿐 아니라, 기획 내용을 구조화하고 구체화하는 데 많은 시간을 사용합니다. 특히 기획 내용을 문서 형태로 정리하는 데 시간이 오래 걸리고, PRD·기능 명세서·유저 플로우·화면 구성 등 여러 산출물을 각각 작성해야 하는 부담이 있습니다.</p>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">3</span><span class="rp-st">목표</span></div>
+            <ul class="rp-ul">
+              <li>기획서 초안 작성 시간 단축</li>
+              <li>기획 내용의 구체화 지원</li>
+              <li>PRD, 기능 명세서, 유저 플로우, 화면 구성 초안 생성</li>
+              <li>생성된 문서를 자유롭게 수정할 수 있는 환경 제공</li>
+            </ul>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">4</span><span class="rp-st">주요 사용자</span></div>
+            <p class="rp-p">주요 사용자는 사내 기획자입니다. 사내 기획자는 업무 과정에서 기획서, PRD, 기능 명세서, 유저 플로우, 화면 구성도 등을 작성해야 하며, 이를 빠르게 초안화하고 수정할 수 있는 도구가 필요합니다.</p>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">5</span><span class="rp-st">사용 환경</span></div>
+            <p class="rp-p">웹 브라우저</p>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">6</span><span class="rp-st">핵심 사용자 시나리오</span></div>
+            <ol class="rp-ol">
+              <li>사내 기획자가 웹 브라우저에서 기획서 작성 기능에 진입합니다.</li>
+              <li>사용자는 기획서 작성을 위한 정보를 입력합니다.</li>
+              <li>AI는 입력된 정보를 바탕으로 기획서 초안을 생성합니다.</li>
+              <li>사용자는 생성된 산출물 중 필요한 문서를 확인합니다.</li>
+              <li>사용자는 생성된 문서를 자유롭게 수정합니다.</li>
+              <li>필요 시 외부 툴 연동을 고려할 수 있습니다.</li>
+            </ol>
+          </div>
+          <div class="rp-sec">
+            <div class="rp-sh"><span class="rp-sn">7</span><span class="rp-st">생성 산출물</span></div>
+            <ol class="rp-ol">
+              <li>PRD — 제품 또는 기능 요구사항을 정리한 문서</li>
+              <li>기능 명세서 — 기능의 동작과 요구사항을 구체화한 문서</li>
+              <li>유저 플로우 — 사용자가 기능을 이용하는 흐름을 정리한 문서</li>
+              <li>화면 구성 / 와이어프레임 — 화면에 필요한 구성 요소를 표현한 초안</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-wrap -->
+</div><!-- /app -->
+
+<!-- Proto toggle -->
+<div class="proto-bar">
+  <button class="pb on" onclick="switchView('empty')">① 첫 진입</button>
+  <button class="pb"    onclick="switchView('node')">② 노드뷰</button>
+  <button class="pb"    onclick="switchView('panel')">③ 노드 클릭</button>
+</div>
+
+<script>
+/* ─────────────────────────────────────
+   Tree data
+───────────────────────────────────── */
+// Canvas 2400×1600, tree centered around (1200, 800)
+// Card: 240×44, gap between nodes = 20px, group gap = 48px
+
+const CW = 240, CH = 44, VGAP = 20, GGAP = 48;
+
+// Columns x (left edge)
+const X0 = 600;   // PRS
+const X1 = 880;   // branches
+const X2 = 1160;  // leaves
+const X3 = 1440;  // sub-leaf
+
+// Helper: right edge
+function re(x){return x+CW}
+// Helper: center-y
+function cy(top){return top+CH/2}
+
+// Vertical positions (top of card)
+// Leaf groups:
+const L_HOME_1 = 48,  L_HOME_2 = L_HOME_1+CH+VGAP;           // 394, 458
+const L_PHO_1  = L_HOME_2+CH+GGAP;                             // 550
+const L_PHO_2  = L_PHO_1+CH+VGAP;                              // 614
+const L_DOC_1  = L_PHO_2+CH+GGAP;                              // 706
+const L_DOC_2  = L_DOC_1+CH+VGAP;                              // 770
+const L_DOC_3  = L_DOC_2+CH+VGAP;                              // 834
+const L_ISS_1  = L_DOC_3+CH+GGAP;                              // 926
+const L_ISS_2  = L_ISS_1+CH+VGAP;                              // 990
+const L_SET_1  = L_ISS_2+CH+GGAP;                              // 1082
+
+// Branch center-y (midpoint of leaf group)
+function mid(t1,t2){return (cy(t1)+cy(t2))/2}
+const B_HOME_CY = mid(L_HOME_1, L_HOME_2);   // 448
+const B_PHO_CY  = mid(L_PHO_1,  L_PHO_2);    // 604
+const B_DOC_CY  = mid(L_DOC_1,  L_DOC_3);    // 792
+const B_ISS_CY  = mid(L_ISS_1,  L_ISS_2);    // 960
+const B_SET_CY  = cy(L_SET_1);               // 1104
+
+function bTop(c){return c-CH/2}
+
+const B_HOME = bTop(B_HOME_CY);   // 426
+const B_PHO  = bTop(B_PHO_CY);    // 582
+const B_DOC  = bTop(B_DOC_CY);    // 770
+const B_ISS  = bTop(B_ISS_CY);    // 938
+const B_SET  = bTop(B_SET_CY);    // 1082
+
+// PRS center-y = midpoint of all branch centers
+const PRS_CY = (B_HOME_CY+B_SET_CY)/2;  // ~776
+const PRS_TOP = bTop(PRS_CY);
+
+/* ─────────────────────────────────────
+   Build node HTML
+───────────────────────────────────── */
+function starSvg(filled=false){
+  const f = filled ? 'var(--violet-400)' : 'none';
+  const s = filled ? 'var(--violet-400)' : 'var(--gray-300)';
+  return `<svg viewBox="0 0 16 16" width="16" height="16" fill="${f}"><path d="M8 1.5l1.6 3.8 4 .4-3 2.7.9 4-3.5-2-3.5 2 .9-4-3-2.7 4-.4L8 1.5z" stroke="${s}" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
+}
+function addBtn(){
+  return `<div class="nc-add"><svg viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg><span class="tip">하위 기능 추가</span></div>`;
+}
+function iconSvg(type){
+  const icons = {
+    home:`<svg viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2l6 5v7H2V7z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 14V10h4v4" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>`,
+    grid:`<svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>`,
+    doc:`<svg viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v9H3V2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 9h6M5 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+    list:`<svg viewBox="0 0 16 16" fill="none"><circle cx="4" cy="4.5" r="1" fill="currentColor"/><path d="M7 4.5h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="4" cy="8" r="1" fill="currentColor"/><path d="M7 8h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="4" cy="11.5" r="1" fill="currentColor"/><path d="M7 11.5h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+    set:`<svg viewBox="0 0 16 16" fill="none"><path d="M8 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="1.3"/><path d="M3 9l-.6 1.2 1 1 1.2-.6c.2.1.4.2.6.3l.3 1.4h1.4l.3-1.4c.2-.1.4-.2.6-.3l1.2.6 1-1-.6-1.2c.1-.2.1-.4.1-.6s0-.4-.1-.6l.6-1.2-1-1-1.2.6c-.2-.1-.4-.2-.6-.3l-.3-1.4H5.9l-.3 1.4c-.2.1-.4.2-.6.3L3.8 6l-1 1L3 8.4c-.1.2-.1.4-.1.6s0 .4.1.6z" stroke="currentColor" stroke-width="1.3"/></svg>`,
+  };
+  return icons[type]||'';
+}
+
+function makeCard(id,left,top,label,icon,hasIcon,isClick,starred=false,cls=''){
+  const icHtml = hasIcon ? `<div class="nc-icon ic-v">${iconSvg(icon)}</div>` : '';
+  const onc = isClick ? `onclick="switchView('panel')"` : '';
+  const selCls = cls ? ` ${cls}` : '';
+  return `<div class="nc${selCls}" style="left:${left}px;top:${top}px" ${onc}>
+  <div class="nc-l">${icHtml}<span class="nc-lbl">${label}</span></div>
+  <div class="nc-r"><span class="nc-star${starred?' on':''}">${starSvg(starred)}</span></div>
+  ${addBtn()}
+</div>`;
+}
+function makePRS(left,top){
+  return `<div class="nc" style="left:${left}px;top:${top}px">
+  <div class="nc-l"><div class="nc-icon ic-blue">P</div><span class="nc-lbl">PRS</span></div>
+  <div class="nc-r"><span class="nc-star">${starSvg()}</span></div>
+  ${addBtn()}
+</div>`;
+}
+function makeLeaf(left,top,label,starred=false,cls=''){
+  const selCls = cls ? ` ${cls}` : '';
+  return `<div class="nc${selCls}" style="left:${left}px;top:${top}px;width:${CW}px">
+  <div class="nc-l"><span class="nc-lbl">${label}</span></div>
+  <div class="nc-r"><span class="nc-star${starred?' on':''}">${starSvg(starred)}</span></div>
+  ${addBtn()}
+</div>`;
+}
+
+function buildTree(selected=false){
+  const sc = selected ? ' selected' : '';
+  let h = '';
+  h += makePRS(X0, PRS_TOP);
+  h += makeCard('b_home', X1, B_HOME, '홈', 'home', true, false);
+  h += makeCard('b_pho',  X1, B_PHO,  '프로젝트 홈', 'grid', true, false);
+  h += makeCard('b_doc',  X1, B_DOC,  '기획 문서', 'doc', true, selected, false, sc.trim());
+  h += makeCard('b_iss',  X1, B_ISS,  '이슈 목록', 'list', true, false);
+  h += makeCard('b_set',  X1, B_SET,  '프로젝트 설정', 'set', true, false);
+  // Leaves
+  h += makeLeaf(X2, L_HOME_1, '프로젝트 추가');
+  h += makeLeaf(X2, L_HOME_2, '프로젝트 검색');
+  h += makeLeaf(X2, L_PHO_1,  '프로젝트 PRD 생성', true); // starred violet
+  h += makeLeaf(X2, L_PHO_2,  '진행 상태 수정 / 삭제');
+  h += makeLeaf(X3, L_PHO_1,  '수정 / 삭제');   // sub-leaf
+  h += makeLeaf(X2, L_DOC_1,  '기능 설계', false, sc.trim());
+  h += makeLeaf(X2, L_DOC_2,  '명세 생성');
+  h += makeLeaf(X2, L_DOC_3,  '검토 및 수정');
+  h += makeLeaf(X2, L_ISS_1,  '이슈 생성 모달');
+  h += makeLeaf(X2, L_ISS_2,  '자세히 보기');
+  h += makeLeaf(X2, L_SET_1,  '일반 설정');
+  return h;
+}
+
+/* ─────────────────────────────────────
+   Build SVG paths
+───────────────────────────────────── */
+function bezier(x1,y1,x2,y2){
+  const mx=(x1+x2)/2;
+  return `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;
+}
+function buildPaths(selected=false){
+  const col = (s)=> s ? '#6f64dd' : '#d2d2d2';
+  const N = '#d2d2d2';
+  const S = col(selected);
+  let p='';
+  // PRS → branches
+  p+=`<path d="${bezier(re(X0),PRS_CY, X1,B_HOME_CY)}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X0),PRS_CY, X1,B_PHO_CY)}"  fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X0),PRS_CY, X1,B_DOC_CY)}"  fill="none" stroke="${S}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X0),PRS_CY, X1,B_ISS_CY)}"  fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X0),PRS_CY, X1,B_SET_CY)}"  fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  // 홈 → leaves
+  p+=`<path d="${bezier(re(X1),B_HOME_CY, X2,cy(L_HOME_1))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X1),B_HOME_CY, X2,cy(L_HOME_2))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  // 프로젝트 홈 → leaves
+  p+=`<path d="${bezier(re(X1),B_PHO_CY, X2,cy(L_PHO_1))}"  fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X1),B_PHO_CY, X2,cy(L_PHO_2))}"  fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  // PRD 생성 → sub-leaf
+  p+=`<path d="${bezier(re(X2),cy(L_PHO_1), X3,cy(L_PHO_1))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  // 기획 문서 → leaves
+  p+=`<path d="${bezier(re(X1),B_DOC_CY, X2,cy(L_DOC_1))}" fill="none" stroke="${S}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X1),B_DOC_CY, X2,cy(L_DOC_2))}" fill="none" stroke="${S}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X1),B_DOC_CY, X2,cy(L_DOC_3))}" fill="none" stroke="${S}" stroke-width="1.5"/>`;
+  // 이슈 목록 → leaves
+  p+=`<path d="${bezier(re(X1),B_ISS_CY, X2,cy(L_ISS_1))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  p+=`<path d="${bezier(re(X1),B_ISS_CY, X2,cy(L_ISS_2))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  // 프로젝트 설정 → leaf
+  p+=`<path d="${bezier(re(X1),B_SET_CY, X2,cy(L_SET_1))}" fill="none" stroke="${N}" stroke-width="1.5"/>`;
+  return p;
+}
+
+/* ─────────────────────────────────────
+   Init canvases
+───────────────────────────────────── */
+function initCanvas(ci, svg, selected=false){
+  ci.innerHTML = `<svg class="cssvg">${buildPaths(selected)}</svg>${buildTree(selected)}`;
+}
+
+/* ─────────────────────────────────────
+   Centering on load
+───────────────────────────────────── */
+function centerCanvas(ca, extraX=0){
+  const treeLeft   = X0;
+  const treeRight  = X3 + CW;
+  const treeTop    = L_HOME_1;
+  const treeBottom = L_SET_1 + CH;
+  const treeCX = (treeLeft + treeRight) / 2;
+  const treeCY = (treeTop  + treeBottom) / 2;
+
+  const doScroll = () => {
+    const w = ca.offsetWidth || 800;
+    ca.scrollLeft = Math.max(0, treeCX - w / 2 + extraX);
+    ca.scrollTop  = 0; // overflow-y:hidden이므로 수직 스크롤 불필요
+  };
+  requestAnimationFrame(() => { doScroll(); setTimeout(doScroll, 50); });
+}
+
+/* ─────────────────────────────────────
+   Drag to pan
+───────────────────────────────────── */
+function initDrag(ca){
+  let down=false,sx=0,sy=0,sl=0,st=0;
+  ca.addEventListener('mousedown',e=>{
+    if(e.target.closest('.nc')||e.target.closest('.right-panel')) return;
+    down=true;sx=e.clientX;sy=e.clientY;sl=ca.scrollLeft;st=ca.scrollTop;
+    ca.classList.add('grabbing');
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!down) return;
+    ca.scrollLeft=sl-(e.clientX-sx);
+    ca.scrollTop =st-(e.clientY-sy);
+  });
+  document.addEventListener('mouseup',()=>{down=false;ca.classList.remove('grabbing')});
+}
+
+/* ─────────────────────────────────────
+   View switching
+───────────────────────────────────── */
+let initialized = {node:false, panel:false};
+
+function switchView(v){
+  ['empty','node','panel'].forEach(id=>{
+    document.getElementById('view-'+id).style.display = (v===id)?'flex':'none';
+  });
+  document.querySelectorAll('.pb').forEach((b,i)=>{
+    b.classList.toggle('on',['empty','node','panel'][i]===v);
+  });
+
+  if(v==='node' && !initialized.node){
+    initialized.node=true;
+    const ci=document.getElementById('ci2');
+    const ca=document.getElementById('ca2');
+    initCanvas(ci, null, false);
+    initDrag(ca);
+    centerCanvas(ca);
+    // 어떤 노드 카드든 클릭하면 패널 오픈
+    ca.addEventListener('click', e=>{
+      if(e.target.closest('.nc')) switchView('panel');
+    });
+  }
+  if(v==='panel' && !initialized.panel){
+    initialized.panel=true;
+    const ci=document.getElementById('ci3');
+    const ca=document.getElementById('ca3');
+    initCanvas(ci, null, true);
+    initDrag(ca);
+    // 패널(800px) 만큼 우측이 가려지므로 +200px 오프셋
+    centerCanvas(ca, 200);
+  }
+}
+</script>
+</body>
+</html>

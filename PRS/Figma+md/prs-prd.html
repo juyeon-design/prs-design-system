@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRS PRD — 기획 문서</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── 토큰 ── */
+    :root {
+      /* Neutral */
+      --white:    #ffffff; /* $base-color-neutral-coolgray-white */
+      --gray-25:  #f5f5f5; /* $semantic-color-background-sunken */
+      --gray-50:  #f0f0f0; /* $base-color-neutral-coolgray-50 */
+      --gray-100: #eaeaea; /* $base-color-neutral-coolgray-100 */
+      --gray-200: #dfdfdf; /* $semantic-color-border-thin / divider */
+      --gray-300: #d2d2d2; /* $semantic-color-border-default */
+      --gray-400: #aeaeae; /* $semantic-color-text-subtlest */
+      --gray-500: #848484; /* $semantic-color-text-subtle */
+      --gray-600: #474747; /* $base-color-neutral-coolgray-600 */
+      --gray-700: #343434; /* $semantic-color-text-default */
+      --gray-800: #191919; /* $semantic-color-text-bolder */
+      /* Violet (PRS accent) */
+      --violet-25:  #f2f1fe; /* $base-color-accent-violet-25 */
+      --violet-50:  #dfdcfd; /* $base-color-accent-violet-50 */
+      --violet-400: #6f64dd; /* $base-color-accent-violet-400 — Primary CTA */
+      --violet-500: #6358d5; /* $base-color-accent-violet-500 — hover */
+      /* Cobalt (공통 브랜드) */
+      --cobalt-500: #174fde; /* $base-color-cobalt-500 */
+      --cobalt-25:  #e8f0fe; /* $base-color-cobalt-25 */
+      /* Status */
+      --red-500:    #fd493f; /* Error / 블로킹 */
+      --red-25:     #fff5f5;
+      /* Shadow */
+      --shadow-card: 0 1px 2px rgba(16,24,40,.05);
+      --shadow-btn:  0 1px 3px rgba(16,24,40,.10), 0 1px 2px rgba(16,24,40,.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 14px;        /* Body2 */
+      line-height: 20px;
+      color: var(--gray-700);
+      background: var(--gray-25); /* $semantic-color-background-sunken */
+      display: flex;
+      overflow: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: 'Pretendard', sans-serif; cursor: pointer; border: none; background: none; }
+
+    /* ═══════════════════════════════
+       LNB — Figma 기준
+    ═══════════════════════════════ */
+    .lnb {
+      width: 220px;
+      min-width: 220px;
+      background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .lnb-inner {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* Brand row */
+    .lnb-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 4px 8px 8px;
+      margin: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lnb-brand:hover { background: var(--gray-25); }
+    .brand-logo {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset -0.25px -0.25px 0.25px rgba(0,0,0,0.1), inset 0.25px 0.25px 0.25px rgba(255,255,255,0.3);
+    }
+    .brand-logo img { width: 32px; height: 32px; object-fit: cover; }
+    .brand-text {
+      flex: 1;
+      font-size: 16px; font-weight: 600; line-height: 24px;
+      color: var(--text-default);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .brand-bell {
+      position: relative;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; flex-shrink: 0;
+    }
+    .bell-badge-dot {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #fd493f;
+      border: 1.5px solid var(--white);
+    }
+
+    /* Home row */
+    .lnb-home { padding: 0 10px; }
+    .lnb-home-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px; font-weight: 600; line-height: 20px;
+      color: var(--text-default);
+      opacity: 0.8;
+    }
+    .lnb-home-item:hover { background: var(--gray-25); opacity: 1; }
+
+    /* Divider */
+    .lnb-divider { border: none; border-top: 1px solid var(--gray-100); margin: 8px 0; }
+
+    /* Project section */
+    .lnb-projects { flex: 1; overflow-y: auto; padding: 0 10px; display: flex; flex-direction: column; gap: 4px; }
+    .lnb-proj-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 4px 8px 8px;
+      border-radius: 6px; cursor: pointer;
+    }
+    .lnb-proj-header:hover { background: var(--gray-25); }
+    .proj-badge {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600; color: var(--white);
+      flex-shrink: 0;
+    }
+    .badge-prs { background: var(--violet-400); }
+    .proj-header-name { flex: 1; font-size: 16px; font-weight: 600; line-height: 24px; color: var(--text-default); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Sub-menu items */
+    .lnb-sub-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px; border-radius: 6px; cursor: pointer;
+      font-size: 14px; font-weight: 600; line-height: 20px;
+      color: var(--text-default); opacity: 0.8;
+      text-decoration: none; transition: background .12s;
+    }
+    .lnb-sub-item:hover { background: var(--gray-25); opacity: 1; }
+    .lnb-sub-item.active { background: var(--violet-25); opacity: 1; color: var(--violet-500); }
+
+    /* User row */
+    .lnb-user {
+      border-top: 1px solid var(--gray-100);
+      padding: 10px 14px;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .lnb-user:hover { background: var(--gray-25); }
+    .user-photo { width: 24px; height: 24px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 0.75px solid var(--border-default); }
+    .user-photo > * { width: 100%; height: 100%; }
+    .user-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .user-name  { font-size: 12px; font-weight: 500; line-height: 16px; color: #333436; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-email { font-size: 12px; font-weight: 500; line-height: 16px; color: #838486; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-more  { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ═══════════════════════════
+       MAIN
+    ═══════════════════════════ */
+    .main {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--gray-25); /* $semantic-color-background-sunken */
+    }
+
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 40px 64px; /* 콘텐츠 40px 패딩 */
+    }
+
+    /* 페이지 헤더 */
+    .page-back {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 500;
+      color: var(--gray-500); /* $semantic-color-text-subtle */
+      padding: 0;
+      margin-bottom: 10px;
+    }
+    .page-back:hover { color: var(--gray-700); }
+
+    .page-title-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 22px; font-weight: 700; line-height: 32px; /* Title1 */
+      color: var(--gray-800);
+    }
+    .icon-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-400);
+      transition: background .12s, color .12s;
+    }
+    .icon-btn:hover { background: var(--gray-100); color: var(--gray-700); }
+
+    /* 2컬럼 레이아웃 */
+    .doc-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      width: 200px;
+      min-width: 200px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toc-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .toc-item:hover { background: var(--gray-50); }
+    .toc-item.active { background: var(--gray-25); }
+    .toc-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .toc-icon-gray { background: var(--gray-50); color: var(--gray-400); }
+    .toc-icon-violet { background: var(--violet-400); color: var(--white); /* $base-color-accent-violet-400 */ }
+    .toc-label {
+      font-size: 14px; font-weight: 500; color: var(--gray-500); /* Body2 500 */
+      line-height: 20px;
+    }
+    .toc-label.active { font-weight: 600; color: var(--gray-700); }
+
+    /* ─── Doc body ─── */
+    .doc-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 섹션 카드 */
+    .section-card {
+      background: var(--white);
+      border-radius: 12px; /* 카드(중) */
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    /* 섹션 헤더 */
+    .sec-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 24px;
+    }
+    .sec-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sec-icon-blue { background: var(--cobalt-25); } /* 개요 */
+    .sec-icon-red  { background: #fff0ef; }           /* 페인포인트 */
+    .sec-icon-teal { background: #e6f7f5; }           /* 고객 */
+    .sec-icon-amber { background: #fff8e1; }          /* 지표 */
+    .sec-title { font-size: 16px; font-weight: 600; color: var(--gray-800); /* Body1 600 */ }
+
+    /* KV row */
+    .kv-divider { border: none; border-top: 1px solid var(--gray-200); /* $semantic-color-divider-default */ }
+    .kv-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 0;
+      padding: 20px 24px;
+      align-items: flex-start;
+    }
+    .kv-label {
+      font-size: 14px; font-weight: 600; line-height: 20px; /* Body2 600 */
+      color: var(--gray-700);
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+    .kv-value {
+      font-size: 14px; line-height: 24px; /* Paragraph2 */
+      color: var(--gray-700);
+    }
+    .kv-value p + p { margin-top: 14px; }
+
+    /* 번호 목록 */
+    .num-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .num-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px; line-height: 22px;
+      color: var(--gray-700);
+    }
+    .num-badge {
+      min-width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gray-100); /* $base-color-neutral-coolgray-100 */
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--gray-500);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ═══════════════════════════
+       EDGE CASES
+    ═══════════════════════════ */
+
+    /* 상태 탭 (데모용) */
+    .state-bar {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: 100px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+      z-index: 100;
+    }
+    .state-btn {
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px; font-weight: 600;
+      color: var(--gray-500);
+      transition: all .15s;
+    }
+    .state-btn:hover { background: var(--gray-50); color: var(--gray-700); }
+    .state-btn.on { background: var(--gray-800); color: var(--white); }
+
+    /* 뷰 전환 */
+    #view-default {}
+    #view-loading, #view-empty, #view-error { display: none; }
+
+    /* ── LOADING: Skeleton shimmer ── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+    .sk-line { height: 14px; }
+    .sk-line-sm { height: 12px; }
+    .sk-title { height: 22px; }
+    .sk-icon { width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0; }
+    .sk-card {
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .sk-card-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 24px;
+    }
+    .sk-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      padding: 20px 24px;
+      gap: 0;
+      border-top: 1px solid var(--gray-200);
+    }
+    .sk-col { display: flex; flex-direction: column; gap: 8px; }
+    .sk-w-40 { width: 40%; }
+    .sk-w-60 { width: 60%; }
+    .sk-w-80 { width: 80%; }
+    .sk-w-full { width: 100%; }
+
+    /* ── EMPTY STATE ── */
+    .empty-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+    .empty-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .empty-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: var(--gray-50); /* $base-color-neutral-coolgray-50 */
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-title {
+      font-size: 16px; font-weight: 600; color: var(--gray-700); /* Body1 600 */
+    }
+    .empty-desc {
+      font-size: 14px; color: var(--gray-500); /* Body2 / $semantic-color-text-subtle */
+      max-width: 280px;
+      line-height: 22px;
+    }
+    .btn-accent {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 20px;
+      border-radius: 8px; /* 버튼/입력 */
+      background: var(--violet-400); /* $base-color-accent-violet-400 — AI 강조 */
+      color: var(--white);
+      font-size: 14px; font-weight: 600;
+      box-shadow: var(--shadow-btn);
+      transition: background .12s;
+    }
+    .btn-accent:hover { background: var(--violet-500); }
+
+    /* ── ERROR STATE ── */
+    .error-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+    .error-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .error-icon-wrap {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: #fff0ef;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .error-title {
+      font-size: 16px; font-weight: 600; color: var(--gray-700); /* Body1 600 */
+    }
+    .error-desc {
+      font-size: 14px; color: var(--gray-500); /* $semantic-color-text-subtle */
+      max-width: 280px; line-height: 22px;
+    }
+    .btn-retry {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 20px;
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--gray-700);
+      font-size: 14px; font-weight: 600;
+      border: 1px solid var(--gray-300); /* $semantic-color-border-default */
+      box-shadow: var(--shadow-btn);
+      transition: background .12s;
+    }
+    .btn-retry:hover { background: var(--gray-50); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ LNB ══════════ -->
+<aside class="lnb">
+  <div class="lnb-inner">
+
+    <div class="lnb-brand">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAA7lJREFUeAHtm89KG1EUxr+ZKiHBxBGKBK04iBBaEEchC1emQndqLF224NA+gPoAJWmX3Uh33RT0BUy6LjRJd6WbdCHtwpIU2q6KmUQXBpuk9yRNaoKTSeI4f/uDQ+LcyTDnO+fee+bEcOiBjY2NSKVSkc7OzuZPT0/Fcrksnp+fg+M4gb0XYCLsvhSv16vQq8/nU6rVqiIIQiYQCGSTyWQaV2F9fT22tLRUmJmZqbGL19gh29jo6GhtfHw8t7i4KKNfWMSllZWVXDAYtJXTakZCsFcRvcCivklRHx4ebo2DvRhlsN/v34SW85Ik2capAW3zUudZ2ovhcNguTlzFCsykpt98802pVEodHh7CBdCulWg7sra2Jk9NTdkpinpYvCUArfg2uOHrmArA6upqxIXRb1qEZ9WcxOY/XIrEs1J2uVgswqXM88fHx6bW8iYj0hRwtwDsCc/NAsDtGSAMDfo8z0pnRKPRrucoioKdnR30dUeCgN3dXdXx/f19pNNp6ISAUCg00B4aj8drWuRyub6vG4lEul5TlmVdawEeFoMyy0gsJ4DWtNIbSwnA0huiKMJILCVALBaD0VhGAHLe6OgTlhCAteHAdhWYgekCkPOpVApmYaoAtOWR81T8mIUpAjSrvUQiYarzxBAMhJzd2trC9va26Y43MUwASneKuNUwbApYJeKdWK4UNpr/AsDlWEYAap6QGY0lBKAOz8LCArLZLIzG0DrgIhRtam8lk0k9W1x9Y6gA+Xy+7mwmk6k7bkbKd2KYAHt7e3WzGo7cBbiJQM/nmrYG6A0X8IB/KIF7xMzvqR+rvvmM6qsPqP1Q//LXEQKQ8zdePwAXutl2nI/eBheeROXJgaoIjpgCHEW+w/nWGJsON57fU/2sIwTgo3e6jlMWqK0LzsiACb/2OZMOFgAnZQyKIwSoffnV/QS2AFY/fr90yBECVJ6+7ZoFFbYVquGMDPhZwu/HByzSJ+0DTJTKi/f1ekANbnZ2tnB0dNR3v4paXL20uaj+1/OaWo/NXPhWa8WvvfuKWvf1QcHc3FwOOn7fbjPLub0jpJAAebgXhfd6vd/gXor8yMiI8X0o65DmfT5flhlcSiP409PT9K/jdlq9ddkByPf6LuDxeF7CfTxr+2tsbIwUsUPkdIs+0aoD2DpwH1QZuYO7lx4NBoMy7BXJQUyGBrIFbvI6rIAenG8iojFP7OKcluVw4beC/SDD3kJQ1ONd/AOH3oigoeAyGj887DQzUfBv8c7/tU9oFDlprQ//AbpDswuHeDl3AAAAAElFTkSuQmCC" style="width:32px;height:32px;border-radius:7px;flex-shrink:0;" />
+      <span class="brand-text">PRS</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0">
+        <path d="M6 8l4 4 4-4" stroke="#848484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-bell">
+        <svg width="24" height="24" viewBox="-5.501 -4.075 24 24" fill="none">
+          <path d="M11.85 11.15V6.5C11.847 5.23 11.393 4.002 10.569 3.036C9.745 2.07 8.604 1.428 7.35 1.225V0H5.65V1.225C4.396 1.428 3.255 2.07 2.431 3.036C1.607 4.002 1.153 5.23 1.15 6.5V11.15H0V12.85H4.15V13.5C4.15 14.123 4.398 14.721 4.838 15.162C5.279 15.602 5.877 15.85 6.5 15.85C7.123 15.85 7.721 15.602 8.162 15.162C8.602 14.721 8.85 14.123 8.85 13.5V12.85H13V11.15H11.85ZM7.15 13.5C7.15 13.672 7.082 13.838 6.96 13.96C6.838 14.082 6.672 14.15 6.5 14.15C6.328 14.15 6.162 14.082 6.04 13.96C5.918 13.838 5.85 13.672 5.85 13.5V12.85H7.15V13.5ZM8 11.15H2.85V6.5C2.85 5.532 3.235 4.604 3.919 3.919C4.604 3.235 5.532 2.85 6.5 2.85C7.468 2.85 8.396 3.235 9.081 3.919C9.765 4.604 10.15 5.532 10.15 6.5V11.15H8Z" fill="#343434"/>
+        </svg>
+        <span class="bell-badge-dot"></span>
+      </div>
+    </div>
+
+    <div class="lnb-home">
+      <div class="lnb-home-item">
+        <svg width="24" height="24" viewBox="-4.651 -4.644 24 24" fill="none">
+          <path d="M13.705 4.34L9.005 0.585C8.03 -0.195 6.67 -0.195 5.695 0.585L0.995 4.34C0.36 4.845 0 5.6 0 6.41V12.055C0 13.515 1.19 14.705 2.65 14.705H12.05C13.51 14.705 14.7 13.515 14.7 12.055V6.41C14.7 5.6 14.335 4.845 13.705 4.34ZM6.45 13.005V10.205H8.25V13.005H6.45ZM13 12.055C13 12.58 12.575 13.005 12.05 13.005H9.95V9.955C9.95 9.155 9.3 8.505 8.5 8.505H6.2C5.4 8.505 4.75 9.155 4.75 9.955V13.005H2.65C2.125 13.005 1.7 12.58 1.7 12.055V6.41C1.7 6.12 1.83 5.85 2.055 5.67L6.755 1.915C6.93 1.775 7.14 1.705 7.35 1.705C7.56 1.705 7.77 1.775 7.945 1.915L12.645 5.67C12.87 5.85 13 6.12 13 6.41V12.055Z" fill="#848484"/>
+        </svg>
+        홈
+      </div>
+    </div>
+
+    <hr class="lnb-divider"/>
+
+    <div class="lnb-projects">
+      <div class="lnb-proj-header">
+        <div class="proj-badge badge-prs">P</div>
+        <span class="proj-header-name">PRS</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0">
+          <path d="M6 8l4 4 4-4" stroke="#848484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <a href="prototype-project-home.html" class="lnb-sub-item active">
+        <svg width="24" height="24" viewBox="-4.150 -5.150 24 24" fill="none">
+          <path d="M13.05 13.7H2.65C1.19 13.7 0 12.51 0 11.05V2.65C0 1.19 1.19 0 2.65 0H4.7C5.32 0 5.92 0.22 6.395 0.615L8.66 2.5H13.055C14.515 2.5 15.705 3.69 15.705 5.15V11.05C15.705 12.51 14.515 13.7 13.055 13.7H13.05ZM2.65 1.7C2.125 1.7 1.7 2.125 1.7 2.65V11.05C1.7 11.575 2.125 12 2.65 12H13.05C13.575 12 14 11.575 14 11.05V5.15C14 4.625 13.575 4.2 13.05 4.2H8.35C8.15 4.2 7.96 4.13 7.805 4.005L5.305 1.92C5.135 1.78 4.92 1.7 4.695 1.7H2.645H2.65Z" fill="#848484"/>
+        </svg>
+        프로젝트 홈
+      </a>
+      <a href="prs-docs.html" class="lnb-sub-item">
+        <svg width="24" height="24" viewBox="-5.150 -4.150 24 24" fill="none">
+          <path d="M13.685 4.685C13.67 4.61 13.645 4.545 13.61 4.48C13.6 4.465 13.595 4.445 13.585 4.43C13.55 4.365 13.505 4.305 13.45 4.25L9.45 0.25C9.395 0.195 9.335 0.155 9.27 0.115C9.11 0.035 8.985 0 8.85 0H2.65C1.19 0 0 1.19 0 2.65V13.05C0 14.51 1.19 15.7 2.65 15.7H11.05C12.51 15.7 13.7 14.51 13.7 13.05V4.85C13.7 4.795 13.695 4.74 13.685 4.685ZM10.8 4H9.7V2.9L10.8 4ZM11.05 14H2.65C2.125 14 1.7 13.575 1.7 13.05V2.65C1.7 2.125 2.125 1.7 2.65 1.7H8V4.25C8 5.05 8.65 5.7 9.45 5.7H12V13.05C12 13.575 11.575 14 11.05 14Z" fill="#848484"/>
+          <path d="M9.85 7H3.85V8.7H9.85V7Z" fill="#848484"/>
+          <path d="M9.85 10.5H3.85V12.2H9.85V10.5Z" fill="#848484"/>
+        </svg>
+        기획 문서
+      </a>
+      <a href="prs-issues.html" class="lnb-sub-item">
+        <svg width="24" height="24" viewBox="-4.901 -4.901 24 24" fill="none">
+          <path d="M6.145 9.9H6.12C5.755 9.895 5.415 9.74 5.165 9.47L3.23 7.38L4.475 6.225L6.155 8.035L9.755 4.45L10.955 5.655L7.09 9.505C6.835 9.76 6.5 9.895 6.145 9.895V9.9Z" fill="#848484"/>
+          <path d="M11.55 14.2H2.65C1.19 14.2 0 13.01 0 11.55V2.65C0 1.19 1.19 0 2.65 0H11.55C13.01 0 14.2 1.19 14.2 2.65V11.55C14.2 13.01 13.01 14.2 11.55 14.2ZM2.65 1.7C2.125 1.7 1.7 2.125 1.7 2.65V11.55C1.7 12.075 2.125 12.5 2.65 12.5H11.55C12.075 12.5 12.5 12.075 12.5 11.55V2.65C12.5 2.125 12.075 1.7 11.55 1.7H2.65Z" fill="#848484"/>
+        </svg>
+        이슈 목록
+      </a>
+      <div class="lnb-sub-item">
+        <svg width="24" height="24" viewBox="-4.651 -4.270 24 24" fill="none">
+          <path d="M8.27 15.435H6.425C6.111 15.433 5.806 15.33 5.556 15.141C5.305 14.952 5.122 14.687 5.035 14.385L4.77 13.46C4.702 13.225 4.546 13.024 4.335 12.9C4.138 12.786 3.905 12.754 3.685 12.81L2.72 13.05C2.414 13.124 2.093 13.097 1.804 12.974C1.515 12.85 1.273 12.637 1.115 12.365L0.195 10.77C0.038 10.497 -0.026 10.18 0.012 9.868C0.05 9.555 0.188 9.263 0.405 9.035L1.085 8.34C1.249 8.169 1.34 7.942 1.34 7.705C1.341 7.468 1.25 7.24 1.085 7.07L0.405 6.37C0.187 6.143 0.048 5.85 0.011 5.538C-0.027 5.225 0.037 4.908 0.195 4.635L1.115 3.04C1.273 2.767 1.516 2.553 1.806 2.43C2.097 2.307 2.419 2.283 2.725 2.36L3.645 2.595C3.886 2.656 4.141 2.62 4.355 2.495C4.55 2.387 4.695 2.208 4.76 1.995L5.035 1.05C5.122 0.748 5.304 0.482 5.555 0.293C5.806 0.104 6.111 0.001 6.425 0H8.27C8.585 0.001 8.891 0.103 9.143 0.292C9.394 0.482 9.577 0.748 9.665 1.05L9.935 1.985C9.999 2.213 10.15 2.406 10.355 2.525C10.564 2.656 10.909 2.65 11.02 2.62L11.975 2.385C12.281 2.308 12.604 2.332 12.894 2.455C13.185 2.578 13.427 2.792 13.585 3.065L14.505 4.66C14.661 4.934 14.725 5.251 14.686 5.563C14.647 5.876 14.508 6.168 14.29 6.395L13.615 7.095C13.45 7.265 13.359 7.493 13.36 7.73C13.36 7.967 13.452 8.194 13.615 8.365L14.29 9.06C14.508 9.287 14.647 9.579 14.686 9.892C14.725 10.205 14.661 10.521 14.505 10.795L13.585 12.39C13.427 12.663 13.184 12.877 12.894 13C12.604 13.124 12.281 13.15 11.975 13.075L11.04 12.84C10.801 12.78 10.548 12.816 10.335 12.94C10.144 13.05 10.002 13.229 9.94 13.44L9.665 14.4C9.573 14.699 9.389 14.96 9.138 15.147C8.887 15.333 8.583 15.434 8.27 15.435ZM6.615 13.735H8.08L8.305 12.96C8.487 12.327 8.909 11.789 9.48 11.46C10.076 11.111 10.785 11.009 11.455 11.175L12.205 11.365L12.94 10.095L12.395 9.53C11.924 9.042 11.66 8.391 11.66 7.712C11.66 7.034 11.924 6.383 12.395 5.895L12.94 5.335L12.205 4.065L11.435 4.255C10.779 4.417 10.086 4.318 9.501 3.98C8.917 3.641 8.486 3.089 8.3 2.44L8.08 1.685H6.615L6.395 2.45C6.206 3.083 5.782 3.62 5.21 3.95C4.911 4.125 4.581 4.239 4.237 4.287C3.894 4.334 3.545 4.313 3.21 4.225L2.48 4.04L1.75 5.31L2.295 5.875C2.766 6.362 3.029 7.013 3.029 7.69C3.029 8.367 2.766 9.018 2.295 9.505L1.75 10.07L2.485 11.34L3.265 11.145C3.914 10.982 4.601 11.079 5.18 11.415C5.772 11.757 6.207 12.317 6.39 12.975L6.615 13.735Z" fill="#848484"/>
+          <path d="M7.35 11.056C6.687 11.056 6.04 10.859 5.489 10.491C4.938 10.123 4.509 9.6 4.255 8.987C4.001 8.375 3.935 7.702 4.064 7.052C4.194 6.402 4.513 5.805 4.981 5.337C5.45 4.868 6.047 4.549 6.696 4.42C7.346 4.291 8.02 4.357 8.632 4.611C9.244 4.864 9.767 5.293 10.135 5.844C10.504 6.395 10.7 7.043 10.7 7.705C10.699 8.594 10.345 9.445 9.717 10.073C9.089 10.701 8.238 11.054 7.35 11.056ZM7.35 6.056C7.024 6.056 6.705 6.152 6.433 6.334C6.162 6.515 5.951 6.773 5.826 7.074C5.701 7.376 5.668 7.707 5.732 8.027C5.795 8.347 5.953 8.641 6.183 8.872C6.414 9.103 6.708 9.26 7.028 9.324C7.348 9.387 7.68 9.355 7.981 9.23C8.283 9.105 8.541 8.893 8.722 8.622C8.903 8.351 9 8.032 9 7.705C9 7.268 8.826 6.848 8.517 6.539C8.207 6.229 7.788 6.056 7.35 6.056Z" fill="#848484"/>
+        </svg>
+        프로젝트 설정
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lnb-user">
+    <div class="user-photo">
+      <div style="width:100%;height:100%;border-radius:50%;background:#6f64dd;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;">김</div>
+    </div>
+    <div class="user-info">
+      <div class="user-name">김승수</div>
+      <div class="user-email">kss0610@midasit.com</div>
+    </div>
+    <div class="user-more">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="4" cy="10" r="1.5" fill="#848484"/>
+        <circle cx="10" cy="10" r="1.5" fill="#848484"/>
+        <circle cx="16" cy="10" r="1.5" fill="#848484"/>
+      </svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main" id="main-scroll">
+
+  <!-- ── 기본 뷰 ── -->
+  <div id="view-default">
+    <div class="page-wrap">
+
+      <!-- 페이지 헤더 -->
+      <button class="page-back" onclick="history.back()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        돌아가기
+      </button>
+
+      <div class="page-title-row">
+        <h1 class="page-title">PRS PRD</h1>
+        <button class="icon-btn" title="편집">
+          <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+            <path d="M12.5 2.5a2 2 0 012.83 2.83L5.5 15.17H2.83v-2.67L12.5 2.5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M1.5 17h15" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 2컬럼 doc 레이아웃 -->
+      <div class="doc-layout">
+
+        <!-- TOC -->
+        <aside class="toc" id="toc">
+          <div class="toc-item active" onclick="scrollTo('s1',0)">
+            <div class="toc-icon toc-icon-violet">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M5 6h6M5 9h5M5 12h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="toc-label active">개요</span>
+          </div>
+          <div class="toc-item" onclick="scrollTo('s2',1)">
+            <div class="toc-icon toc-icon-gray">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M8 7v2M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="toc-label">페인포인트</span>
+          </div>
+          <div class="toc-item" onclick="scrollTo('s3',2)">
+            <div class="toc-icon toc-icon-gray">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <circle cx="6" cy="6" r="2.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="5.5" r="2" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M1.5 13.5c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 9.5c1.8.3 3 1.3 3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="toc-label">고객 및 시나리오</span>
+          </div>
+          <div class="toc-item" onclick="scrollTo('s4',3)">
+            <div class="toc-icon toc-icon-gray">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path d="M2 11L5.5 7.5 8.5 10 13 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M1 13.5h14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="toc-label">성공 지표 및 분석</span>
+          </div>
+        </aside>
+
+        <!-- 문서 본문 -->
+        <div class="doc-body">
+
+          <!-- ① 개요 -->
+          <div class="section-card" id="s1">
+            <div class="sec-head">
+              <div class="sec-icon sec-icon-blue">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <rect x="2.5" y="1.5" width="11" height="13" rx="1.5" stroke="var(--cobalt-500)" stroke-width="1.4"/>
+                  <path d="M5 6h6M5 9h5M5 12h3" stroke="var(--cobalt-500)" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="sec-title">개요</span>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">정의</div>
+              <div class="kv-value">
+                <p>PRS는 흩어진 제품 히스토리와 기획 맥락을 연결해, 누구나 빠르게 제품을 이해하고 이어서 판단할 수 있도록 돕는 제품 맥락 관리 서비스이다.</p>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">목표</div>
+              <div class="kv-value">
+                <p>흩어진 정보를 하나의 제품 맥락 안에서 연결함으로써 PO, 기획자, 개발자, 제품 리더가 같은 기준과 배경을 바탕으로 협업할 수 있게 한다.</p>
+                <p>또한 PRD 작성, 문서 탐색, 히스토리 확인, 승인 요청 등 기획 과정에서 반복적으로 발생하는 업무를 AI와 함께 처리하여 기획 생산성을 높이고, 기획 의도와 개발 결과물이 어긋나지 않도록 추적한다.</p>
+                <p>궁극적으로 PRS는 제품이 왜 만들어졌고, 어떤 방향으로 발전해야 하며, 현재 실행 결과가 그 방향과 잘 연결되어 있는지를 확인함으로써 제품의 상품성을 높이는 것을 목적으로 한다.</p>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">배경</div>
+              <div class="kv-value">
+                <p>현재 제품 관련 정보는 Confluence, Jira, Linear, 문서 파일, 회의 기록 등 여러 도구에 분산되어 있다. 이로 인해 제품을 새로 맡은 담당자나 협업자는 제품의 현재 상태와 과거 판단 근거를 파악하기 위해 여러 도구를 이동해야 한다. 또한 기획 의도와 개발 결과물 사이의 연결이 약해져, 시간이 지나면 왜 그렇게 만들었는지 알기 어려운 문제가 발생한다.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② 페인포인트 -->
+          <div class="section-card" id="s2">
+            <div class="sec-head">
+              <div class="sec-icon sec-icon-red">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="5.5" stroke="var(--red-500)" stroke-width="1.4"/>
+                  <path d="M8 5.5V8.5M8 10v.5" stroke="var(--red-500)" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="sec-title">페인포인트</span>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">문제 정의</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>제품별 기획 문서와 히스토리가 흩어져 있어 맥락 파악 비용이 크다.</li>
+                  <li><span class="num-badge">2</span>신규 담당자나 협업자가 제품을 이해하는 데 시간이 오래 걸린다.</li>
+                  <li><span class="num-badge">3</span>기존 논의와 판단 근거를 찾기 어려워 중복 논의가 발생한다.</li>
+                  <li><span class="num-badge">4</span>기획 의도가 개발-운영 과정에서 손상 없이 이어지는지 추적하기 어렵다.</li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">해결 방안</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>제품 맥락 연결 : 흩어진 문서, 이슈, 회의, 히스토리를 제품 단위로 연결해 필요한 맥락을 빠르게 찾을 수 있게 한다.</li>
+                  <li><span class="num-badge">2</span>기획 업무 생산성 향상 : PRD 작성, 문서 탐색, 히스토리 확인, 승인 요청 과정을 AI와 함께 처리해 기획 업무 시간을 줄인다.</li>
+                  <li><span class="num-badge">3</span>상품성 관리 : 기획 의도와 개발 결과물이 연결되어 있는지 추적하고, 시장 방향과 제품 방향이 어긋나지 않도록 관리한다.</li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">주요 기능</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>PRS 홈 : 전사 제품들을 한 곳에서 조망하고 필요한 제품 홈으로 빠르게 진입한다.</li>
+                  <li><span class="num-badge">2</span>제품 홈 : 제품의 목적, 담당 조직, 리더, 현재 상태, PRD 요약, 최근 히스토리를 확인한다.</li>
+                  <li><span class="num-badge">3</span>PRD 작성 및 관리 : 신규 PRD를 작성하고 기존 PRD를 수정하며, 문서 버전과 승인 상태를 관리한다.</li>
+                  <li><span class="num-badge">4</span>AI 채팅 : 제품 문서, 이슈, 히스토리를 기반으로 질문에 답하고, 기획 문서 작성과 수정을 지원한다.</li>
+                  <li><span class="num-badge">5</span>이슈 연동 : Jira 이슈를 제품 맥락과 연결해 기획 의도와 개발 실행 흐름을 함께 확인한다.</li>
+                  <li><span class="num-badge">6</span>승인 요청 : 작성된 문서를 게시하고 관리자 또는 제품 리더에게 승인 요청을 보낸다.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ③ 고객 및 시나리오 -->
+          <div class="section-card" id="s3">
+            <div class="sec-head">
+              <div class="sec-icon sec-icon-teal">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <circle cx="6" cy="6" r="2.5" stroke="#00897b" stroke-width="1.4"/>
+                  <circle cx="11" cy="5.5" r="2" stroke="#00897b" stroke-width="1.4"/>
+                  <path d="M1.5 13.5c0-2.2 2-3.5 4.5-3.5s4.5 1.3 4.5 3.5" stroke="#00897b" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M11 9.5c1.8.3 3 1.3 3 2.5" stroke="#00897b" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="sec-title">고객 및 시나리오</span>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">주요 사용자</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>PO / 기획자 — PRD 작성, 기능 구조 설계, 승인 요청</li>
+                  <li><span class="num-badge">2</span>개발자 — 이슈 확인, 기획 의도 추적, 변경 로그 조회</li>
+                  <li><span class="num-badge">3</span>제품 리더 — 전체 맥락 파악, 버전 승인, 우선순위 조정</li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">핵심 시나리오</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>신규 PO가 기존 제품의 맥락을 빠르게 파악하고 PRD를 이어서 작성한다.</li>
+                  <li><span class="num-badge">2</span>기획자가 AI와 함께 PRD 초안을 생성하고 이슈로 분해하여 개발팀에 전달한다.</li>
+                  <li><span class="num-badge">3</span>제품 리더가 분기 회고 시 기획 의도 대비 개발 결과를 추적한다.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ④ 성공 지표 및 분석 -->
+          <div class="section-card" id="s4">
+            <div class="sec-head">
+              <div class="sec-icon sec-icon-amber">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 11L5.5 7.5 8.5 10 13 4.5" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1 13.5h14" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="sec-title">성공 지표 및 분석</span>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">핵심 지표</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>PRD 작성 소요 시간 30% 단축 (AI 자동 생성 도입 후)</li>
+                  <li><span class="num-badge">2</span>이슈-PRD 연결율 80% 이상 유지</li>
+                  <li><span class="num-badge">3</span>팀 내 기획 맥락 공유 만족도 4.0/5.0 이상 (분기별 설문)</li>
+                </ul>
+              </div>
+            </div>
+
+            <hr class="kv-divider"/>
+            <div class="kv-row">
+              <div class="kv-label">측정 방식</div>
+              <div class="kv-value">
+                <ul class="num-list">
+                  <li><span class="num-badge">1</span>PRD 생성·수정 이벤트 로그 기반 소요 시간 집계</li>
+                  <li><span class="num-badge">2</span>이슈-PRD 링크 연결 여부 DB 집계</li>
+                  <li><span class="num-badge">3</span>분기별 팀 내 설문 (5점 척도)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /doc-body -->
+      </div><!-- /doc-layout -->
+    </div><!-- /page-wrap -->
+  </div><!-- /view-default -->
+
+
+  <!-- ── LOADING 뷰 (Skeleton) ── -->
+  <div id="view-loading">
+    <div class="page-wrap">
+      <!-- 헤더 skeleton -->
+      <div class="skeleton sk-line-sm" style="width:80px; margin-bottom:14px;"></div>
+      <div class="skeleton sk-title" style="width:160px; margin-bottom:28px;"></div>
+
+      <div class="doc-layout">
+        <!-- TOC skeleton -->
+        <div style="width:200px; min-width:200px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;">
+            <div class="skeleton sk-icon" style="border-radius:7px;"></div>
+            <div class="skeleton sk-line" style="flex:1;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;">
+            <div class="skeleton sk-icon" style="border-radius:7px;"></div>
+            <div class="skeleton sk-line" style="flex:1;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;">
+            <div class="skeleton sk-icon" style="border-radius:7px;"></div>
+            <div class="skeleton sk-line" style="flex:1;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;">
+            <div class="skeleton sk-icon" style="border-radius:7px;"></div>
+            <div class="skeleton sk-line" style="flex:1;"></div>
+          </div>
+        </div>
+
+        <!-- Content skeleton -->
+        <div style="flex:1;">
+          <div class="sk-card">
+            <div class="sk-card-head">
+              <div class="skeleton sk-icon"></div>
+              <div class="skeleton sk-line" style="width:60px;"></div>
+            </div>
+            <div class="sk-row">
+              <div class="skeleton sk-line sk-w-60"></div>
+              <div class="sk-col">
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-80"></div>
+              </div>
+            </div>
+            <div class="sk-row" style="border-top:1px solid var(--gray-200);">
+              <div class="skeleton sk-line sk-w-60"></div>
+              <div class="sk-col">
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-60"></div>
+              </div>
+            </div>
+            <div class="sk-row" style="border-top:1px solid var(--gray-200);">
+              <div class="skeleton sk-line sk-w-60"></div>
+              <div class="sk-col">
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-80"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sk-card">
+            <div class="sk-card-head">
+              <div class="skeleton sk-icon"></div>
+              <div class="skeleton sk-line" style="width:80px;"></div>
+            </div>
+            <div class="sk-row">
+              <div class="skeleton sk-line sk-w-60"></div>
+              <div class="sk-col">
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-80"></div>
+                <div class="skeleton sk-line sk-w-full"></div>
+                <div class="skeleton sk-line sk-w-60"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-loading -->
+
+
+  <!-- ── EMPTY 뷰 ── -->
+  <div id="view-empty">
+    <div class="page-wrap">
+      <button class="page-back">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        돌아가기
+      </button>
+      <div class="page-title-row" style="margin-bottom:40px;">
+        <h1 class="page-title">PRS PRD</h1>
+      </div>
+      <div class="empty-wrap">
+        <div class="empty-box">
+          <div class="empty-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M8 6h12l5 5v17a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2z" stroke="var(--gray-400)" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M20 6v6h6" stroke="var(--gray-400)" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M12 16h8M12 20h5" stroke="var(--gray-400)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="empty-title">아직 작성된 내용이 없어요</div>
+          <div class="empty-desc">AI와 함께 PRD를 빠르게 작성해 보세요. 제품 맥락을 분석해 섹션별 초안을 자동으로 생성합니다.</div>
+          <button class="btn-accent">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1.5L8.5 5H12L9.5 7.5 10.5 11 7 9 3.5 11 4.5 7.5 2 5h3.5L7 1.5z" fill="currentColor"/>
+            </svg>
+            ✦ AI로 PRD 초안 생성
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-empty -->
+
+
+  <!-- ── ERROR 뷰 ── -->
+  <div id="view-error">
+    <div class="page-wrap">
+      <button class="page-back">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        돌아가기
+      </button>
+      <div class="page-title-row" style="margin-bottom:40px;">
+        <h1 class="page-title">PRS PRD</h1>
+      </div>
+      <div class="error-wrap">
+        <div class="error-box">
+          <div class="error-icon-wrap">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="11" stroke="var(--red-500)" stroke-width="1.8"/>
+              <path d="M16 10v7M16 20v1.5" stroke="var(--red-500)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="error-title">문서를 불러오지 못했어요</div>
+          <div class="error-desc" style="color:var(--gray-500);">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
+          <button class="btn-retry" onclick="setView('default')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7a5 5 0 019-3M12 7a5 5 0 01-9 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M11 4l1-1.5v2H10.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            다시 시도
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /view-error -->
+
+</main>
+
+<!-- ── Edge Case 상태 전환 탭 (데모용) ── -->
+<div class="state-bar">
+  <button class="state-btn on" id="btn-default" onclick="setView('default')">기본</button>
+  <button class="state-btn" id="btn-loading" onclick="setView('loading')">로딩</button>
+  <button class="state-btn" id="btn-empty" onclick="setView('empty')">비어있음</button>
+  <button class="state-btn" id="btn-error" onclick="setView('error')">오류</button>
+</div>
+
+<script>
+  /* ── 상태 전환 ── */
+  function setView(name) {
+    ['default','loading','empty','error'].forEach(v => {
+      document.getElementById('view-' + v).style.display = v === name ? 'block' : 'none';
+      document.getElementById('btn-' + v).classList.toggle('on', v === name);
+    });
+  }
+
+  /* ── TOC 스크롤 연동 ── */
+  function scrollTo(id, idx) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setToc(idx);
+  }
+
+  function setToc(activeIdx) {
+    document.querySelectorAll('.toc-item').forEach((el, i) => {
+      const isActive = i === activeIdx;
+      el.classList.toggle('active', isActive);
+      const icon = el.querySelector('.toc-icon');
+      icon.className = 'toc-icon ' + (isActive ? 'toc-icon-violet' : 'toc-icon-gray');
+      const label = el.querySelector('.toc-label');
+      label.classList.toggle('active', isActive);
+    });
+  }
+
+  /* ── 스크롤 시 TOC 자동 업데이트 ── */
+  document.getElementById('main-scroll').addEventListener('scroll', function () {
+    const ids = ['s1','s2','s3','s4'];
+    const scrollTop = this.scrollTop + 120;
+    let active = 0;
+    ids.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollTop) active = i;
+    });
+    setToc(active);
+  });
+</script>
+</body>
+</html>

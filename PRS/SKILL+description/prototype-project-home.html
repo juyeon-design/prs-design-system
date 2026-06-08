@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRS — 프로젝트 홈</title>
+<style>
+/* ===== PRS Design Tokens ===== */
+:root {
+  --white: #ffffff;
+  --gray-25: #f5f5f5;   /* $base-color-neutral-coolgray-25 */
+  --gray-50: #f0f0f0;   /* $base-color-neutral-coolgray-50 */
+  --gray-100: #eaeaea;  /* $base-color-neutral-coolgray-100 */
+  --gray-200: #dfdfdf;  /* $base-color-neutral-coolgray-200 */
+  --gray-300: #d2d2d2;  /* $base-color-neutral-coolgray-300 */
+  --gray-400: #aeaeae;  /* $base-color-neutral-coolgray-400 */
+  --gray-500: #848484;  /* $base-color-neutral-coolgray-500 */
+  --gray-600: #474747;
+  --gray-700: #343434;  /* $base-color-neutral-coolgray-700 */
+  --gray-800: #191919;
+
+  --violet-25: #f2f1fe;  /* $base-color-accent-violet-25 */
+  --violet-50: #dfdcfd;  /* $base-color-accent-violet-50 */
+  --violet-100: #d0cbfb;
+  --violet-400: #6f64dd; /* $base-color-accent-violet-400 */
+  --violet-500: #6358d5; /* $base-color-accent-violet-500 */
+  --violet-600: #574ccd;
+
+  --blue-25: #eef5fb;
+  --blue-50: #e0eeff;   /* $base-color-accent-cobaltblue-50 */
+  --blue-300: #3982ef;  /* $base-color-accent-cobaltblue-300 */
+  --blue-600: #174fde;  /* $base-color-accent-cobaltblue-600 */
+
+  --red-25: #fff5f5;
+  --red-500: #fd493f;   /* $base-color-accent-red-500 */
+  --green-25: #e6fef0;
+  --green-500: #08bf52;
+  --yellow-25: #fffadb;
+  --yellow-500: #f5c000;
+  --orange-25: #fff4e5;
+  --orange-500: #f57c00;
+
+  --bg: #ffffff;
+  --bg-sub: #f5f5f5;    /* $semantic-color-background-sunken */
+  --bg-hover: #f5f5f5;
+  --bg-blanket: rgba(51,52,54,0.5);
+  --text: #343434;
+  --text-sub: #848484;
+  --text-hint: #aeaeae;
+  --border: #d2d2d2;
+  --border-sub: #dfdfdf;
+  --border-focus: #3982ef;
+  --border-error: #fd493f;
+  --status-done-text: #077a36;
+  --status-review-text: #a07800;
+  --status-blocked-text: #c0251b;
+
+  --shadow-0: 0 1px 2px rgba(16,24,40,0.05);
+  --shadow-1: 0 1px 3px rgba(16,24,40,0.10), 0 1px 2px rgba(16,24,40,0.06);
+  --shadow-2: 0 4px 8px rgba(16,24,40,0.10), 0 2px 4px rgba(16,24,40,0.06);
+  --shadow-3: 0 12px 16px rgba(16,24,40,0.08), 0 4px 6px rgba(16,24,40,0.03);
+  --shadow-4: 0 20px 24px rgba(16,24,40,0.08), 0 8px 8px rgba(16,24,40,0.03);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px; line-height: 20px;
+  color: var(--text); background: var(--bg-sub); min-height: 100vh;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; }
+
+/* ===== LAYOUT ===== */
+.app { display: flex; min-height: 100vh; }
+
+.lnb-header {
+  height: 56px; flex-shrink: 0; padding: 0 8px 0 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border-sub);
+}
+.lnb-logo {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; min-width: 0;
+}
+.lnb-logo-mark {
+  width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+  background: var(--violet-400); color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.lnb-workspace { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.lnb-header-right { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.icon-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-sub); transition: background 0.12s;
+}
+.icon-btn:hover { background: var(--bg-hover); }
+.icon-btn svg { width: 20px; height: 20px; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--blue-50); color: var(--blue-600);
+  font-size: 11px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+
+/* LNB */
+.lnb {
+  width: 220px; flex-shrink: 0; background: var(--bg);
+  border-right: 1px solid var(--border-sub);
+  display: flex; flex-direction: column;
+  height: 100vh; position: sticky; top: 0; overflow-y: auto;
+}
+.lnb-inner { padding: 8px; flex: 1; }
+.nav-item {
+  height: 40px; display: flex; align-items: center; gap: 8px;
+  padding: 0 8px; border-radius: 8px; cursor: pointer;
+  color: var(--text); font-size: 14px; transition: background 0.12s; user-select: none;
+}
+.nav-item:hover { background: var(--bg-hover); }
+.nav-item.active { background: var(--violet-25); color: var(--violet-500); }
+.nav-item.active svg { color: var(--violet-500); }
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--text-sub); }
+.nav-count { margin-left: auto; font-size: 12px; color: var(--text-hint); }
+.nav-item-disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.lnb-divider { height: 1px; background: var(--border-sub); margin: 8px 8px; }
+.lnb-footer {
+  padding: 12px 16px; border-top: 1px solid var(--border-sub);
+  display: flex; align-items: center; gap: 8px;
+}
+.lnb-footer-info { flex: 1; min-width: 0; }
+.lnb-footer-name { font-size: 14px; font-weight: 500; }
+.lnb-footer-email { font-size: 12px; color: var(--text-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Content */
+.content {
+  flex: 1; background: var(--bg-sub); min-width: 0;
+  display: flex; flex-direction: column; align-items: center;
+}
+/* max-width 1200px 중앙 정렬 — prs-tokens.md §12 콘텐츠 영역 중앙 정렬 규칙 */
+.content-inner {
+  width: 100%; max-width: 1200px;
+  padding: 40px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  height: 36px; padding: 0 16px; border-radius: 8px;
+  font-size: 14px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background 0.14s, border-color 0.14s; white-space: nowrap; cursor: pointer;
+}
+.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn-primary { background: var(--gray-700); color: #fff; border: 1px solid transparent; }
+.btn-primary:hover { background: var(--gray-800); }
+.btn-primary:disabled { background: var(--gray-300); cursor: not-allowed; }
+.btn-accent { background: var(--violet-400); color: #fff; border: 1px solid transparent; }
+.btn-accent:hover { background: var(--violet-500); }
+.btn-ghost { background: var(--white); color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--gray-500); }
+.btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.btn-xs { height: 28px; padding: 0 10px; font-size: 12px; font-weight: 500; }
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.page-header-left { display: flex; flex-direction: column; gap: 6px; }
+.page-title-row { display: flex; align-items: center; gap: 10px; }
+.page-title { font-size: 20px; font-weight: 600; line-height: 30px; } /* Title2 */
+.page-header-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+/* Badges */
+.badge {
+  height: 22px; padding: 0 8px; border-radius: 4px;
+  font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.badge svg { width: 10px; height: 10px; }
+.badge-active { background: var(--green-25); color: var(--status-done-text); }
+.badge-hold { background: var(--yellow-25); color: var(--status-review-text); }
+.badge-plan { background: var(--gray-50); color: var(--gray-500); }
+.badge-inprog { background: var(--blue-50); color: var(--blue-600); }
+
+/* ===== SECTION ===== */
+.section { margin-bottom: 24px; } /* $base-dimen-space-300 */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.section-title {
+  font-size: 14px; font-weight: 600; color: var(--text); /* Body2 600 */
+  display: flex; align-items: center; gap: 6px;
+}
+.section-title svg { width: 16px; height: 16px; color: var(--text-sub); }
+
+/* ===== SUMMARY CARD ===== */
+.summary-card {
+  background: var(--white); border-radius: 12px;
+  border: 1px solid var(--border-sub); box-shadow: var(--shadow-0);
+  padding: 24px; margin-bottom: 24px;
+}
+.summary-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  margin-bottom: 20px;
+}
+.summary-title-area { flex: 1; min-width: 0; }
+.summary-name { font-size: 18px; font-weight: 600; margin-bottom: 6px; } /* Title3 */
+.summary-desc { font-size: 14px; color: var(--text-sub); line-height: 20px; }
+.summary-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  padding-top: 20px; border-top: 1px solid var(--border-sub);
+}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-label { font-size: 12px; color: var(--text-hint); font-weight: 500; } /* Body3 */
+.meta-value { font-size: 14px; color: var(--text); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.meta-value a { color: var(--blue-600); text-decoration: none; }
+.meta-value a:hover { text-decoration: underline; }
+.av-sm {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--blue-50); color: var(--blue-600);
+  font-size: 10px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.recent-users { display: flex; align-items: center; }
+.recent-users .av-sm { margin-left: -6px; border: 2px solid #fff; }
+.recent-users .av-sm:first-child { margin-left: 0; }
+
+/* ===== PROGRESS CARDS ===== */
+.progress-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.progress-card {
+  background: var(--white); border-radius: 12px;
+  border: 1px solid var(--border-sub); box-shadow: var(--shadow-0);
+  padding: 20px; display: flex; flex-direction: column; gap: 12px;
+  transition: box-shadow 0.14s;
+}
+.progress-card:hover { box-shadow: var(--shadow-2); }
+.progress-card-label {
+  font-size: 12px; font-weight: 600; color: var(--text-hint);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.progress-card-version {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.progress-card-date { font-size: 12px; color: var(--text-sub); }
+.progress-items { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.progress-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--text-sub); line-height: 18px;
+}
+.progress-item::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gray-300); flex-shrink: 0; margin-top: 6px;
+}
+.progress-item.done { color: var(--text-hint); }
+.progress-item.done::before { background: var(--green-500); }
+.progress-item.active::before { background: var(--blue-300); }
+.progress-item.next::before { background: var(--gray-200); border: 1px dashed var(--gray-400); }
+.progress-card-footer {
+  padding-top: 12px; border-top: 1px solid var(--border-sub);
+}
+.progress-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.progress-bar {
+  flex: 1; height: 6px; background: var(--gray-100); border-radius: 32px; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 32px; background: var(--violet-400); transition: width 0.3s; }
+.progress-pct { font-size: 12px; font-weight: 600; color: var(--text-sub); white-space: nowrap; }
+
+/* current state card */
+.progress-card.current { border-color: var(--violet-100); }
+.progress-card.current .progress-card-label { color: var(--violet-500); }
+
+/* ===== NOTICES ===== */
+.notice-list { display: flex; flex-direction: column; gap: 0; background: var(--white); border-radius: 12px; border: 1px solid var(--border-sub); box-shadow: var(--shadow-0); overflow: hidden; }
+.notice-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-bottom: 1px solid var(--border-sub);
+  cursor: pointer; transition: background 0.1s;
+}
+.notice-row:last-child { border-bottom: none; }
+.notice-row:hover { background: var(--bg-hover); }
+.notice-type-badge {
+  height: 20px; padding: 0 6px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
+  display: flex; align-items: center;
+}
+.nt-notice { background: var(--blue-50); color: var(--blue-600); }
+.nt-update { background: var(--violet-25); color: var(--violet-500); }
+.nt-delivery { background: var(--yellow-25); color: var(--status-review-text); }
+.notice-content { flex: 1; min-width: 0; }
+.notice-title { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notice-preview { font-size: 12px; color: var(--text-hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notice-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.notice-date { font-size: 12px; color: var(--text-hint); }
+.notice-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.1s; }
+.notice-row:hover .notice-actions { opacity: 1; }
+
+/* ===== CONCEPT SECTION ===== */
+.concept-card {
+  background: var(--white); border-radius: 12px;
+  border: 1px solid var(--border-sub); box-shadow: var(--shadow-0);
+  overflow: hidden;
+}
+.concept-card-header {
+  padding: 16px 20px; border-bottom: 1px solid var(--border-sub);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.concept-card-title {
+  font-size: 14px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+}
+.concept-card-actions { display: flex; gap: 8px; align-items: center; }
+.concept-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* Read mode field */
+.concept-field { display: flex; flex-direction: column; gap: 6px; }
+.concept-field-label {
+  font-size: 12px; font-weight: 600; color: var(--text-sub); /* Body3 600 */
+  display: flex; align-items: center; gap: 4px;
+}
+.concept-field-num {
+  font-size: 11px; font-weight: 700; color: var(--violet-400);
+  background: var(--violet-25); padding: 1px 5px; border-radius: 3px;
+}
+.concept-field-value {
+  font-size: 14px; color: var(--text); line-height: 22px;
+  padding: 10px 12px; background: var(--bg-sub); border-radius: 8px;
+  min-height: 44px;
+}
+.concept-field-value.empty { color: var(--text-hint); font-style: italic; }
+
+/* Edit mode field */
+.concept-field-textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--border); font-size: 14px; color: var(--text);
+  outline: none; resize: none; background: var(--white); line-height: 22px;
+  transition: border-color 0.14s; min-height: 80px;
+}
+.concept-field-textarea:focus { border-color: var(--border-focus); }
+.char-hint { font-size: 12px; color: var(--text-hint); text-align: right; margin-top: 2px; }
+.edit-footer {
+  padding: 16px 20px; border-top: 1px solid var(--border-sub);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-sub);
+}
+.edit-footer-left { font-size: 12px; color: var(--text-sub); }
+
+/* Edit mode highlight */
+.concept-card.edit-mode { border-color: var(--violet-400); }
+.concept-card.edit-mode .concept-card-header { background: var(--violet-25); border-bottom-color: var(--violet-100); }
+.edit-mode-tag {
+  height: 22px; padding: 0 8px; border-radius: 4px;
+  background: var(--violet-400); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center;
+}
+
+/* ===== SKELETON ===== */
+@keyframes shimmer {
+  0% { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+.sk {
+  background: linear-gradient(90deg, var(--gray-100) 25%, #f5f5f5 50%, var(--gray-100) 75%);
+  background-size: 1600px 100%; animation: shimmer 1.5s infinite linear; border-radius: 4px;
+}
+
+/* ===== EMPTY STATE ===== */
+.center-state {
+  padding: 60px 40px; display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 16px;
+}
+.state-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.state-icon.empty { background: var(--violet-25); color: var(--violet-400); }
+.state-icon.error { background: var(--red-25); color: var(--red-500); }
+.state-icon svg { width: 28px; height: 28px; }
+.state-title { font-size: 16px; font-weight: 600; }
+.state-title.error { color: var(--red-500); }
+.state-desc { font-size: 14px; color: var(--text-sub); max-width: 300px; }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; top: 72px; right: 24px; z-index: 9000;
+  background: var(--gray-800); color: #fff;
+  padding: 12px 16px; border-radius: 10px;
+  font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow-3);
+  transform: translateX(calc(100% + 32px));
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 320px;
+}
+.toast.show { transform: translateX(0); }
+.toast svg { width: 18px; height: 18px; color: var(--green-500); flex-shrink: 0; }
+.toast-close { cursor: pointer; color: var(--gray-400); margin-left: 4px; }
+.toast-close:hover { color: #fff; }
+
+/* ===== AI AGENT MODAL (Full) ===== */
+.agent-blanket {
+  position: fixed; inset: 0; background: var(--bg-blanket);
+  z-index: 500; display: none; align-items: stretch; justify-content: center;
+}
+.agent-blanket.open { display: flex; }
+.agent-modal {
+  width: 100%; max-width: 1200px; margin: 0 auto;
+  background: linear-gradient(135deg, var(--violet-25) 0%, var(--violet-50) 100%);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.agent-header {
+  height: 56px; background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; border-bottom: 1px solid rgba(111,100,221,0.15);
+}
+.agent-header-left { display: flex; align-items: center; gap: 12px; }
+.agent-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.agent-sub { font-size: 13px; color: var(--text-sub); }
+.agent-header-right { display: flex; gap: 8px; }
+.agent-body { flex: 1; display: flex; overflow: hidden; }
+
+/* Chat */
+.chat-panel {
+  width: 50%; display: flex; flex-direction: column;
+  border-right: 1px solid rgba(111,100,221,0.2);
+  background: rgba(255,255,255,0.65); backdrop-filter: blur(8px);
+}
+.chat-ph { padding: 20px 24px 14px; border-bottom: 1px solid rgba(111,100,221,0.12); flex-shrink: 0; }
+.chat-ph-title { font-size: 15px; font-weight: 600; }
+.chat-ph-sub { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+.chat-msgs {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.msg { display: flex; flex-direction: column; gap: 4px; max-width: 85%; }
+.msg.ai { align-self: flex-start; }
+.msg.user { align-self: flex-end; align-items: flex-end; }
+.msg-sender { font-size: 11px; font-weight: 600; color: var(--text-hint); display: flex; align-items: center; gap: 4px; }
+.msg-sender svg { width: 12px; height: 12px; color: var(--violet-400); }
+.msg-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 20px; }
+.msg.ai .msg-bubble { background: var(--white); border: 1px solid var(--border-sub); border-bottom-left-radius: 4px; box-shadow: var(--shadow-0); }
+.msg.user .msg-bubble { background: var(--violet-400); color: #fff; border-bottom-right-radius: 4px; }
+.msg-typing { display: flex; gap: 4px; padding: 12px 14px; background: var(--white); border: 1px solid var(--border-sub); border-radius: 12px; border-bottom-left-radius: 4px; width: 52px; box-shadow: var(--shadow-0); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gray-300); animation: bounce 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0);background:var(--gray-300)} 30%{transform:translateY(-5px);background:var(--violet-400)} }
+.chat-input-area { padding: 14px 24px; border-top: 1px solid rgba(111,100,221,0.12); flex-shrink: 0; }
+.chat-input-wrap {
+  display: flex; gap: 8px; align-items: flex-end;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 10px 10px 14px; box-shadow: var(--shadow-1);
+  transition: border-color 0.14s;
+}
+.chat-input-wrap:focus-within { border-color: var(--violet-400); }
+.chat-input { flex: 1; border: none; outline: none; resize: none; font-size: 14px; color: var(--text); line-height: 20px; max-height: 100px; min-height: 20px; background: transparent; }
+.chat-input::placeholder { color: var(--text-hint); }
+.send-btn {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: var(--violet-400); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.14s; border: none;
+}
+.send-btn:hover { background: var(--violet-500); }
+.send-btn svg { width: 16px; height: 16px; }
+
+/* Concept editor in agent */
+.concept-editor-panel {
+  width: 50%; display: flex; flex-direction: column;
+  background: rgba(255,255,255,0.8); backdrop-filter: blur(8px);
+}
+.cep-header {
+  padding: 20px 24px 14px; border-bottom: 1px solid rgba(111,100,221,0.12);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.cep-title { font-size: 15px; font-weight: 600; }
+.cep-sub { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+.cep-body { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; }
+.cep-field { display: flex; flex-direction: column; gap: 6px; }
+.cep-field-label { font-size: 12px; font-weight: 600; color: var(--text-sub); display: flex; align-items: center; gap: 4px; }
+.cep-textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid rgba(111,100,221,0.2); font-size: 13px; color: var(--text);
+  outline: none; resize: none; background: rgba(255,255,255,0.8); line-height: 20px;
+  transition: border-color 0.14s; min-height: 64px;
+}
+.cep-textarea:focus { border-color: var(--violet-400); }
+.cep-textarea.ai-filled { border-color: rgba(111,100,221,0.4); background: rgba(242,241,254,0.5); }
+.cep-footer {
+  padding: 12px 24px; border-top: 1px solid rgba(111,100,221,0.12);
+  display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.85);
+}
+
+/* ===== MODAL (confirm) ===== */
+.blanket {
+  position: fixed; inset: 0; background: var(--bg-blanket);
+  z-index: 400; display: none; align-items: center; justify-content: center;
+}
+.blanket.open { display: flex; }
+.modal-sm {
+  width: 400px; background: var(--white); border-radius: 16px;
+  box-shadow: var(--shadow-4);
+}
+.modal-header {
+  padding: 20px 20px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border-sub);
+}
+.modal-title { font-size: 18px; font-weight: 600; }
+.modal-close { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); cursor: pointer; }
+.modal-close:hover { background: var(--bg-hover); }
+.modal-close svg { width: 20px; height: 20px; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.modal-footer { padding: 16px 20px; border-top: 1px solid var(--border-sub); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ===== SIDE PANEL (notice detail) ===== */
+.side-panel {
+  position: fixed; top: 0; right: -480px; bottom: 0; width: 480px;
+  background: var(--white); border-left: 1px solid var(--border-sub);
+  box-shadow: var(--shadow-3); z-index: 150;
+  display: flex; flex-direction: column; transition: right 0.25s ease;
+}
+.side-panel.open { right: 0; }
+.sp-header {
+  height: 52px; flex-shrink: 0; border-bottom: 1px solid var(--border-sub);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
+}
+.sp-body { flex: 1; overflow-y: auto; padding: 20px; }
+.sp-notice-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.sp-notice-meta { font-size: 12px; color: var(--text-hint); margin-bottom: 16px; display: flex; gap: 12px; }
+.sp-notice-body { font-size: 14px; color: var(--text); line-height: 22px; }
+.sp-footer { padding: 14px 16px; border-top: 1px solid var(--border-sub); display: flex; gap: 8px; }
+
+/* Demo bar */
+.demo-bar {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--gray-800); border-radius: 12px;
+  padding: 8px 12px; display: flex; align-items: center; gap: 6px;
+  z-index: 9999; box-shadow: var(--shadow-2);
+}
+.demo-bar span { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+.demo-pill {
+  height: 28px; padding: 0 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  border: none; color: #fff; background: var(--gray-600); transition: background 0.1s;
+}
+.demo-pill:hover { background: var(--gray-500); }
+.demo-pill.on { background: var(--violet-400); }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LNB -->
+  <nav class="lnb">
+    <div class="lnb-header">
+      <div class="lnb-logo" onclick="window.location.href='prototype-home.html'">
+        <div class="lnb-logo-mark">P</div>
+        <div class="lnb-workspace">PRS
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+      </div>
+      <div class="lnb-header-right">
+        <button class="icon-btn" title="알림">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="lnb-inner">
+        <div class="nav-item" onclick="window.location.href='prototype-home.html'">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>홈
+        </div>
+        <div class="lnb-divider"></div>
+        <div class="nav-item active">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>프로젝트 홈
+        </div>
+        <div class="nav-item nav-item-disabled">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>기획 문서
+        </div>
+        <div class="nav-item" onclick="window.location.href='prototype-issue-list.html'">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>이슈 목록
+        </div>
+        <div class="nav-item nav-item-disabled">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>프로젝트 설정
+        </div>
+      </div>
+      <div class="lnb-footer">
+        <div class="avatar" style="width:32px;height:32px;flex-shrink:0;">JS</div>
+        <div class="lnb-footer-info">
+          <div class="lnb-footer-name">정서연</div>
+          <div class="lnb-footer-email">seoyeon@company.com</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <div class="content-inner">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <div class="page-title-row">
+              <h1 class="page-title">PRS 개발 플랫폼</h1>
+              <span class="badge badge-active">
+                <svg viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="3"/></svg>
+                운영중
+              </span>
+            </div>
+          </div>
+          <div class="page-header-right">
+            <button class="btn btn-ghost btn-sm" onclick="enterEditMode()">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              프로젝트 컨셉 수정
+            </button>
+          </div>
+        </div>
+
+        <!-- Normal State -->
+        <div id="state-normal">
+
+          <!-- 프로젝트 요약 정보 -->
+          <div class="summary-card">
+            <div class="summary-top">
+              <div class="summary-title-area">
+                <div class="summary-name">PRS 개발 플랫폼</div>
+                <div class="summary-desc">제품 기획 자동화 SaaS — 이슈 관리, 기획 문서, AI 기획 지원을 하나의 워크스페이스에서 통합 제공하는 플랫폼입니다. PM과 기획자가 PRD 작성부터 이슈 관리까지 컨텍스트를 잃지 않고 수행할 수 있도록 설계되었습니다.</div>
+              </div>
+            </div>
+            <div class="summary-meta">
+              <div class="meta-item">
+                <div class="meta-label">담당자</div>
+                <div class="meta-value">
+                  <div class="av-sm">JS</div>
+                  <a href="mailto:seoyeon@company.com">정서연</a>
+                  <span style="font-size:12px;color:var(--text-hint);">플랫폼개발팀</span>
+                </div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">최근 접속</div>
+                <div class="meta-value">
+                  <div class="recent-users">
+                    <div class="av-sm">JS</div>
+                    <div class="av-sm" style="background:#fffadb;color:#a07800;">이</div>
+                    <div class="av-sm" style="background:#e6fef0;color:#077a36;">박</div>
+                    <div class="av-sm" style="background:#f2f1fe;color:#6358d5;">최</div>
+                  </div>
+                  <span style="font-size:12px;color:var(--text-hint);">+2</span>
+                </div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">최종 배포 버전</div>
+                <div class="meta-value" style="font-weight:600;">v1.1.3</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">배포일</div>
+                <div class="meta-value">2026.05.28</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 진행 상태 -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                진행 상태
+              </div>
+            </div>
+            <div class="progress-grid">
+              <!-- 진행 중인 사항 -->
+              <div class="progress-card">
+                <div class="progress-card-label">진행 중인 사항</div>
+                <div class="progress-card-version">
+                  <span>v1.2.0</span>
+                  <span class="badge badge-inprog" style="font-size:11px;height:20px;">진행중</span>
+                </div>
+                <div class="progress-card-date">목표 배포일 · 2026.07.15</div>
+                <div class="progress-items">
+                  <div class="progress-item done">이슈 상세 사이드 패널 구현</div>
+                  <div class="progress-item done">버전 관리 모달 완성</div>
+                  <div class="progress-item active">필터 패널 다중 선택 로직</div>
+                </div>
+                <div class="progress-card-footer">
+                  <div class="progress-bar-wrap">
+                    <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+                    <span class="progress-pct">65%</span>
+                  </div>
+                  <button class="btn btn-ghost btn-xs" style="margin-top:10px;width:100%;justify-content:center;" onclick="openSidePanel('진행 중인 사항 — v1.2.0','현재 스프린트의 상세 진행 현황입니다.\n\n완료: 이슈 상세 사이드 패널, 버전 관리 모달\n진행중: 필터 패널 다중 선택 로직\n대기: 이슈 일괄 수정 기능, 검색 자동완성')">자세히 보기</button>
+                </div>
+              </div>
+              <!-- 현재 상태 -->
+              <div class="progress-card current">
+                <div class="progress-card-label">현재 상태</div>
+                <div class="progress-card-version">
+                  <span>v1.1.3</span>
+                  <span class="badge badge-active" style="font-size:11px;height:20px;">배포됨</span>
+                </div>
+                <div class="progress-card-date">배포일 · 2026.05.28</div>
+                <div class="progress-items">
+                  <div class="progress-item done">이슈 생성 모달 v2</div>
+                  <div class="progress-item done">LNB 내비게이션 연결</div>
+                  <div class="progress-item done">콘텐츠 1200px 중앙 정렬</div>
+                </div>
+                <div class="progress-card-footer">
+                  <div class="progress-bar-wrap">
+                    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                    <span class="progress-pct">완료</span>
+                  </div>
+                  <button class="btn btn-ghost btn-xs" style="margin-top:10px;width:100%;justify-content:center;" onclick="openSidePanel('현재 상태 — v1.1.3','최신 배포 버전의 릴리즈 노트입니다.\n\n이슈 생성 모달 전체 필드 구현, LNB 공통 내비게이션, 콘텐츠 영역 max-width 1200px 중앙 정렬 규칙 적용')">자세히 보기</button>
+                </div>
+              </div>
+              <!-- 다음 목표 -->
+              <div class="progress-card">
+                <div class="progress-card-label">다음 목표</div>
+                <div class="progress-card-version">
+                  <span>v2.0.0</span>
+                  <span class="badge badge-plan" style="font-size:11px;height:20px;">계획중</span>
+                </div>
+                <div class="progress-card-date">목표 일정 · 2026 Q3</div>
+                <div class="progress-items">
+                  <div class="progress-item next">✦ AI 기획 자동화 에이전트</div>
+                  <div class="progress-item next">노드뷰 기능 구조도</div>
+                  <div class="progress-item next">실시간 협업 (멀티 커서)</div>
+                </div>
+                <div class="progress-card-footer">
+                  <div class="progress-bar-wrap">
+                    <div class="progress-bar"><div class="progress-fill" style="width:8%"></div></div>
+                    <span class="progress-pct">준비중</span>
+                  </div>
+                  <button class="btn btn-ghost btn-xs" style="margin-top:10px;width:100%;justify-content:center;" onclick="openSidePanel('다음 목표 — v2.0.0','v2.0.0 로드맵 항목입니다.\n\nAI 기획 자동화 에이전트: PRD 자동 생성, 이슈 트리 자동 분해\n노드뷰: 기능 구조도 캔버스 뷰\n실시간 협업: 멀티 커서, 코멘트, 알림')">자세히 보기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 프로젝트 컨셉 (읽기 모드) -->
+          <div class="section" id="concept-section">
+            <div class="section-header">
+              <div class="section-title">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                프로젝트 컨셉
+              </div>
+              <button class="btn btn-ghost btn-xs" onclick="enterEditMode()">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                수정
+              </button>
+            </div>
+            <div class="concept-card" id="concept-card">
+              <div class="concept-card-header">
+                <div class="concept-card-title">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  제품 컨셉 정의
+                </div>
+                <span style="font-size:12px;color:var(--text-hint);">마지막 수정 · 3일 전</span>
+              </div>
+
+              <!-- Read mode body -->
+              <div class="concept-body" id="concept-read-body">
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">01</span> 프로젝트 목적</div>
+                  <div class="concept-field-value">PM들이 이슈 관리, 기획 문서, AI 초안 작성을 별도 툴에서 각각 처리하는 비효율을 해결하고, 제품 기획의 전 과정을 하나의 통합된 워크스페이스에서 수행할 수 있도록 지원합니다.</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">02</span> 해결하려는 문제</div>
+                  <div class="concept-field-value">Jira·Notion·Figma 등 여러 툴 간 컨텍스트 스위칭으로 인한 업무 단절, PRD 초안 작성에 소요되는 과도한 시간, 이슈-문서-구조도 간 연계 부재로 인한 정합성 오류.</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">03</span> 핵심 사용자</div>
+                  <div class="concept-field-value">스타트업 PM 및 IT 기업 기획자. 특히 1~5인 규모의 소규모 기획팀으로 기획부터 이슈 관리까지 단독으로 처리해야 하는 사용자.</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">04</span> 핵심 가치</div>
+                  <div class="concept-field-value empty">아직 작성되지 않았습니다.</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">05</span> MVP 범위</div>
+                  <div class="concept-field-value empty">아직 작성되지 않았습니다.</div>
+                </div>
+              </div>
+
+              <!-- Edit mode body (hidden by default) -->
+              <div class="concept-body hidden" id="concept-edit-body">
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">01</span> 프로젝트 목적</div>
+                  <textarea class="concept-field-textarea" id="cf-01" oninput="checkDirty()">PM들이 이슈 관리, 기획 문서, AI 초안 작성을 별도 툴에서 각각 처리하는 비효율을 해결하고, 제품 기획의 전 과정을 하나의 통합된 워크스페이스에서 수행할 수 있도록 지원합니다.</textarea>
+                  <div class="char-hint"><span id="cnt-01">0</span> / 10,000</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">02</span> 해결하려는 문제</div>
+                  <textarea class="concept-field-textarea" id="cf-02" oninput="checkDirty()">Jira·Notion·Figma 등 여러 툴 간 컨텍스트 스위칭으로 인한 업무 단절, PRD 초안 작성에 소요되는 과도한 시간, 이슈-문서-구조도 간 연계 부재로 인한 정합성 오류.</textarea>
+                  <div class="char-hint"><span id="cnt-02">0</span> / 10,000</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">03</span> 핵심 사용자</div>
+                  <textarea class="concept-field-textarea" id="cf-03" oninput="checkDirty()">스타트업 PM 및 IT 기업 기획자. 특히 1~5인 규모의 소규모 기획팀으로 기획부터 이슈 관리까지 단독으로 처리해야 하는 사용자.</textarea>
+                  <div class="char-hint"><span id="cnt-03">0</span> / 10,000</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">04</span> 핵심 가치</div>
+                  <textarea class="concept-field-textarea" id="cf-04" placeholder="핵심 가치를 입력하세요..." oninput="checkDirty()"></textarea>
+                  <div class="char-hint"><span id="cnt-04">0</span> / 10,000</div>
+                </div>
+                <div class="concept-field">
+                  <div class="concept-field-label"><span class="concept-field-num">05</span> MVP 범위</div>
+                  <textarea class="concept-field-textarea" id="cf-05" placeholder="MVP 범위를 입력하세요..." oninput="checkDirty()"></textarea>
+                  <div class="char-hint"><span id="cnt-05">0</span> / 10,000</div>
+                </div>
+              </div>
+
+              <!-- Edit footer (hidden by default) -->
+              <div class="edit-footer hidden" id="edit-footer">
+                <div class="edit-footer-left">변경사항이 있을 때 저장 버튼이 활성화됩니다.</div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-accent btn-sm" onclick="openAgentModal()">✦ 에이전트와 함께 설계하기</button>
+                  <button class="btn btn-ghost btn-sm" onclick="cancelEdit()">취소</button>
+                  <button class="btn btn-primary btn-sm" id="save-btn" disabled onclick="saveEdit()">저장</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 주요 전달사항 -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                프로젝트 주요 전달사항
+              </div>
+              <button class="btn btn-ghost btn-xs">전체 보기</button>
+            </div>
+            <div class="notice-list">
+              <div class="notice-row" onclick="openNoticePanel(0)">
+                <span class="notice-type-badge nt-update">업데이트</span>
+                <div class="notice-content">
+                  <div class="notice-title">v1.1.3 배포 완료 — LNB 내비게이션 연결 및 1200px 중앙 정렬 적용</div>
+                  <div class="notice-preview">프로토타입 홈·이슈 목록·프로젝트 홈 간 LNB 이동 연결 완료. 콘텐츠 영역 max-width 1200px 규칙 prs-tokens.md 반영 및 GitHub push 완료.</div>
+                </div>
+                <div class="notice-right">
+                  <span class="notice-date">방금 전</span>
+                  <div class="notice-actions">
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();">PRD 바로가기</button>
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openNoticePanel(0)">상세 보기</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notice-row" onclick="openNoticePanel(1)">
+                <span class="notice-type-badge nt-notice">공지</span>
+                <div class="notice-content">
+                  <div class="notice-title">v2.0 AI 기획 자동화 에이전트 개발 착수 예정</div>
+                  <div class="notice-preview">2026 Q3 목표로 AI 에이전트 기반 PRD 자동 생성, 이슈 트리 분해 기능 개발을 시작합니다. 기획 검토 요청 예정.</div>
+                </div>
+                <div class="notice-right">
+                  <span class="notice-date">2일 전</span>
+                  <div class="notice-actions">
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();">PRD 바로가기</button>
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openNoticePanel(1)">상세 보기</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notice-row" onclick="openNoticePanel(2)">
+                <span class="notice-type-badge nt-delivery">전달사항</span>
+                <div class="notice-content">
+                  <div class="notice-title">필터 패널 UX 개선 요청 — 담당자 검색 정확도 이슈</div>
+                  <div class="notice-preview">담당자 필터에서 한글 초성 검색이 되지 않는 문제 보고. v1.2.0 스프린트에 포함하여 수정 예정.</div>
+                </div>
+                <div class="notice-right">
+                  <span class="notice-date">3일 전</span>
+                  <div class="notice-actions">
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openNoticePanel(2)">상세 보기</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notice-row" onclick="openNoticePanel(3)">
+                <span class="notice-type-badge nt-update">업데이트</span>
+                <div class="notice-content">
+                  <div class="notice-title">디자인 시스템 GitHub 레포 연동 완료</div>
+                  <div class="notice-preview">prs-design-system 레포를 로컬 ~/claude 경로에 클론하고 git 원격 연결 완료. 이제 파일 수정 시 바로 push 가능.</div>
+                </div>
+                <div class="notice-right">
+                  <span class="notice-date">오늘</span>
+                  <div class="notice-actions">
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openNoticePanel(3)">상세 보기</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notice-row" onclick="openNoticePanel(4)">
+                <span class="notice-type-badge nt-notice">공지</span>
+                <div class="notice-content">
+                  <div class="notice-title">스프린트 회고 — v1.1 완료 및 v1.2 킥오프</div>
+                  <div class="notice-preview">v1.1 스프린트 완료 회고 진행. 이슈 생성 모달, 버전 관리, 사이드 패널 구현 완료. v1.2 킥오프 일정 및 우선순위 공유.</div>
+                </div>
+                <div class="notice-right">
+                  <span class="notice-date">1주 전</span>
+                  <div class="notice-actions">
+                    <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openNoticePanel(4)">상세 보기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /state-normal -->
+
+        <!-- Loading -->
+        <div id="state-loading" class="hidden">
+          <div class="summary-card">
+            <div class="sk" style="width:200px;height:22px;margin-bottom:10px;"></div>
+            <div class="sk" style="width:100%;height:14px;margin-bottom:6px;"></div>
+            <div class="sk" style="width:80%;height:14px;margin-bottom:20px;"></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:20px;border-top:1px solid var(--border-sub);">
+              <div><div class="sk" style="width:60px;height:12px;margin-bottom:6px;"></div><div class="sk" style="width:100px;height:16px;"></div></div>
+              <div><div class="sk" style="width:60px;height:12px;margin-bottom:6px;"></div><div class="sk" style="width:80px;height:16px;"></div></div>
+              <div><div class="sk" style="width:60px;height:12px;margin-bottom:6px;"></div><div class="sk" style="width:60px;height:16px;"></div></div>
+              <div><div class="sk" style="width:60px;height:12px;margin-bottom:6px;"></div><div class="sk" style="width:80px;height:16px;"></div></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+            <div class="progress-card"><div class="sk" style="width:80px;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100px;height:18px;margin-bottom:6px;"></div><div class="sk" style="width:60%;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:85%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:70%;height:12px;"></div></div>
+            <div class="progress-card"><div class="sk" style="width:80px;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100px;height:18px;margin-bottom:6px;"></div><div class="sk" style="width:60%;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:85%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:70%;height:12px;"></div></div>
+            <div class="progress-card"><div class="sk" style="width:80px;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100px;height:18px;margin-bottom:6px;"></div><div class="sk" style="width:60%;height:12px;margin-bottom:8px;"></div><div class="sk" style="width:100%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:85%;height:12px;margin-bottom:4px;"></div><div class="sk" style="width:70%;height:12px;"></div></div>
+          </div>
+        </div>
+
+        <!-- Empty -->
+        <div id="state-empty" class="hidden">
+          <div style="background:var(--white);border-radius:12px;border:1px solid var(--border-sub);">
+            <div class="center-state">
+              <div class="state-icon empty"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776"/></svg></div>
+              <p class="state-title">아직 프로젝트 정보가 없어요</p>
+              <p class="state-desc">프로젝트 컨셉을 작성하거나 AI 에이전트와 함께 설계해 보세요.</p>
+              <div style="display:flex;gap:8px;margin-top:4px;">
+                <button class="btn btn-ghost" onclick="enterEditMode();setPageState('normal')">직접 작성하기</button>
+                <button class="btn btn-accent" onclick="openAgentModal();setPageState('normal')">✦ AI와 함께 설계하기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="state-error" class="hidden">
+          <div style="background:var(--white);border-radius:12px;border:1px solid var(--border-sub);">
+            <div class="center-state">
+              <div class="state-icon error"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+              <p class="state-title error">데이터를 불러올 수 없어요</p>
+              <p class="state-desc">서버 연결에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.</p>
+              <button class="btn btn-ghost" style="margin-top:4px;" onclick="setPageState('normal')">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                다시 시도
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content-inner -->
+    </main>
+</div>
+
+<!-- ===== SIDE PANEL (전달사항 상세) ===== -->
+<div class="side-panel" id="side-panel">
+  <div class="sp-header">
+    <span style="font-size:14px;font-weight:600;" id="sp-type-label">전달사항</span>
+    <button class="icon-btn" style="width:32px;height:32px;" onclick="closeSidePanel()">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sp-body">
+    <div class="sp-notice-title" id="sp-title">제목</div>
+    <div class="sp-notice-meta"><span id="sp-date">날짜</span><span id="sp-type">유형</span></div>
+    <div class="sp-notice-body" id="sp-body">내용</div>
+  </div>
+  <div class="sp-footer">
+    <button class="btn btn-ghost btn-sm" id="sp-prd-btn">PRD 바로가기</button>
+    <button class="btn btn-primary btn-sm" onclick="closeSidePanel()">닫기</button>
+  </div>
+</div>
+
+<!-- ===== AI 에이전트 풀모달 ===== -->
+<div class="agent-blanket" id="agent-blanket">
+  <div class="agent-modal">
+    <div class="agent-header">
+      <div class="agent-header-left">
+        <div>
+          <div class="agent-title">✦ 에이전트와 함께 프로젝트 컨셉 설계하기</div>
+          <div class="agent-sub">PRS 개발 플랫폼 — 기존 내용을 바탕으로 AI와 함께 수정합니다.</div>
+        </div>
+      </div>
+      <div class="agent-header-right">
+        <button class="btn btn-ghost btn-sm" onclick="closeAgentModal()">나중에 계속하기</button>
+        <button class="btn btn-accent btn-sm" onclick="saveFromAgent()">✦ 저장하고 닫기</button>
+      </div>
+    </div>
+    <div class="agent-body">
+      <!-- 채팅 -->
+      <div class="chat-panel">
+        <div class="chat-ph">
+          <div class="chat-ph-title">✦ AI 에이전트</div>
+          <div class="chat-ph-sub">기존 컨셉 내용을 분석하고 더 나은 방향을 제안해 드려요.</div>
+        </div>
+        <div class="chat-msgs" id="agent-msgs">
+          <div class="msg ai">
+            <div class="msg-sender"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg> AI 에이전트</div>
+            <div class="msg-bubble">안녕하세요! 현재 작성된 프로젝트 컨셉을 확인했습니다. 🎯<br><br><strong>프로젝트 목적, 해결 문제, 핵심 사용자</strong>는 잘 정의되어 있어요. <strong>핵심 가치와 MVP 범위</strong>가 아직 비어 있는데, 채워드릴까요?</div>
+          </div>
+          <div class="msg typing hidden" id="agent-typing">
+            <div class="msg-sender"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg> AI 에이전트</div>
+            <div class="msg-typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-wrap">
+            <textarea class="chat-input" id="agent-input" rows="1" placeholder="에이전트에게 메시지를 보내세요..." onkeydown="handleAgentKey(event)" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+            <button class="send-btn" onclick="sendAgentMsg()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <!-- 컨셉 에디터 -->
+      <div class="concept-editor-panel">
+        <div class="cep-header">
+          <div>
+            <div class="cep-title">프로젝트 컨셉 편집</div>
+            <div class="cep-sub">AI가 채운 항목은 파란 테두리로 표시됩니다. 직접 수정도 가능해요.</div>
+          </div>
+        </div>
+        <div class="cep-body">
+          <div class="cep-field">
+            <div class="cep-field-label"><span class="concept-field-num">01</span> 프로젝트 목적</div>
+            <textarea class="cep-textarea" id="ag-cf-01">PM들이 이슈 관리, 기획 문서, AI 초안 작성을 별도 툴에서 각각 처리하는 비효율을 해결하고, 제품 기획의 전 과정을 하나의 통합된 워크스페이스에서 수행할 수 있도록 지원합니다.</textarea>
+          </div>
+          <div class="cep-field">
+            <div class="cep-field-label"><span class="concept-field-num">02</span> 해결하려는 문제</div>
+            <textarea class="cep-textarea" id="ag-cf-02">Jira·Notion·Figma 등 여러 툴 간 컨텍스트 스위칭으로 인한 업무 단절, PRD 초안 작성에 소요되는 과도한 시간, 이슈-문서-구조도 간 연계 부재로 인한 정합성 오류.</textarea>
+          </div>
+          <div class="cep-field">
+            <div class="cep-field-label"><span class="concept-field-num">03</span> 핵심 사용자</div>
+            <textarea class="cep-textarea" id="ag-cf-03">스타트업 PM 및 IT 기업 기획자. 특히 1~5인 규모의 소규모 기획팀으로 기획부터 이슈 관리까지 단독으로 처리해야 하는 사용자.</textarea>
+          </div>
+          <div class="cep-field">
+            <div class="cep-field-label"><span class="concept-field-num">04</span> 핵심 가치</div>
+            <textarea class="cep-textarea" id="ag-cf-04" placeholder="AI가 채워드릴 수 있어요..."></textarea>
+          </div>
+          <div class="cep-field">
+            <div class="cep-field-label"><span class="concept-field-num">05</span> MVP 범위</div>
+            <textarea class="cep-textarea" id="ag-cf-05" placeholder="AI가 채워드릴 수 있어요..."></textarea>
+          </div>
+        </div>
+        <div class="cep-footer">
+          <button class="btn btn-ghost btn-sm" onclick="closeAgentModal()">취소</button>
+          <button class="btn btn-primary btn-sm" onclick="saveFromAgent()">저장하고 닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+  <span id="toast-msg">저장이 완료됐어요.</span>
+  <span class="toast-close" onclick="hideToast()"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></span>
+</div>
+
+<!-- Demo bar -->
+<div class="demo-bar">
+  <span>상태</span>
+  <button class="demo-pill on" id="pill-normal" onclick="setPageState('normal')">Normal</button>
+  <button class="demo-pill" id="pill-loading" onclick="setPageState('loading')">Loading</button>
+  <button class="demo-pill" id="pill-empty" onclick="setPageState('empty')">Empty</button>
+  <button class="demo-pill" id="pill-error" onclick="setPageState('error')">Error</button>
+</div>
+
+<script>
+// ===== Page state =====
+function setPageState(s) {
+  ['normal','loading','empty','error'].forEach(k => {
+    document.getElementById('state-'+k).classList.toggle('hidden', k !== s);
+    document.getElementById('pill-'+k).classList.toggle('on', k === s);
+  });
+}
+
+// ===== Edit mode =====
+let isDirty = false;
+const originals = {};
+
+function enterEditMode() {
+  // store originals
+  ['01','02','03','04','05'].forEach(n => {
+    const ta = document.getElementById('cf-'+n);
+    if (ta) originals[n] = ta.value;
+    updateCharCount(n);
+  });
+  isDirty = false;
+  document.getElementById('concept-card').classList.add('edit-mode');
+  document.getElementById('concept-read-body').classList.add('hidden');
+  document.getElementById('concept-edit-body').classList.remove('hidden');
+  document.getElementById('edit-footer').classList.remove('hidden');
+  // add edit mode tag to header
+  const header = document.querySelector('.concept-card-header .concept-card-actions');
+  // update header
+  const cardHeader = document.querySelector('#concept-card .concept-card-header');
+  let tag = cardHeader.querySelector('.edit-mode-tag');
+  if (!tag) {
+    tag = document.createElement('span');
+    tag.className = 'edit-mode-tag';
+    tag.textContent = '수정 중';
+    cardHeader.appendChild(tag);
+  }
+  document.getElementById('save-btn').disabled = true;
+}
+
+function checkDirty() {
+  let dirty = false;
+  ['01','02','03','04','05'].forEach(n => {
+    const ta = document.getElementById('cf-'+n);
+    if (ta && ta.value !== (originals[n] || '')) dirty = true;
+    updateCharCount(n);
+  });
+  isDirty = dirty;
+  document.getElementById('save-btn').disabled = !dirty;
+}
+
+function updateCharCount(n) {
+  const ta = document.getElementById('cf-'+n);
+  const cnt = document.getElementById('cnt-'+n);
+  if (ta && cnt) cnt.textContent = ta.value.length.toLocaleString();
+}
+
+function cancelEdit() {
+  ['01','02','03','04','05'].forEach(n => {
+    const ta = document.getElementById('cf-'+n);
+    if (ta) ta.value = originals[n] || '';
+  });
+  exitEditMode();
+}
+
+function saveEdit() {
+  // update read view
+  const labels = {
+    '01': '프로젝트 목적', '02': '해결하려는 문제',
+    '03': '핵심 사용자', '04': '핵심 가치', '05': 'MVP 범위'
+  };
+  const readFields = document.querySelectorAll('#concept-read-body .concept-field-value');
+  ['01','02','03','04','05'].forEach((n, i) => {
+    const ta = document.getElementById('cf-'+n);
+    if (ta && readFields[i]) {
+      readFields[i].textContent = ta.value || '';
+      readFields[i].classList.toggle('empty', !ta.value.trim());
+      if (!ta.value.trim()) readFields[i].textContent = '아직 작성되지 않았습니다.';
+    }
+  });
+  exitEditMode();
+  showToast('프로젝트 컨셉이 저장됐어요.');
+}
+
+function exitEditMode() {
+  document.getElementById('concept-card').classList.remove('edit-mode');
+  document.getElementById('concept-read-body').classList.remove('hidden');
+  document.getElementById('concept-edit-body').classList.add('hidden');
+  document.getElementById('edit-footer').classList.add('hidden');
+  const tag = document.querySelector('#concept-card .edit-mode-tag');
+  if (tag) tag.remove();
+  isDirty = false;
+}
+
+// ===== Toast =====
+let toastTimer;
+function showToast(msg = '저장이 완료됐어요.') {
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 3000);
+}
+function hideToast() {
+  document.getElementById('toast').classList.remove('show');
+}
+
+// ===== Side Panel =====
+const noticeData = [
+  { title:'v1.1.3 배포 완료 — LNB 내비게이션 연결 및 1200px 중앙 정렬 적용', type:'업데이트', date:'방금 전', body:'프로토타입 홈·이슈 목록·프로젝트 홈 간 LNB 이동 연결 완료.\n\n콘텐츠 영역 max-width 1200px 규칙 prs-tokens.md §12에 반영 및 GitHub push 완료 (commit: docs: 콘텐츠 영역 중앙 정렬 규칙 추가).', prd: true },
+  { title:'v2.0 AI 기획 자동화 에이전트 개발 착수 예정', type:'공지', date:'2일 전', body:'2026 Q3 목표로 AI 에이전트 기반 기능을 개발합니다.\n\n- PRD 자동 생성: 자연어 대화 기반 PRD 초안 작성\n- 이슈 트리 분해: PRD → 이슈 자동 변환\n- 기획 검토: AI가 기획 품질을 검토하고 개선 제안\n\n기획 검토 요청 예정이니 확인 부탁드립니다.', prd: true },
+  { title:'필터 패널 UX 개선 요청 — 담당자 검색 정확도 이슈', type:'전달사항', date:'3일 전', body:'담당자 필터에서 한글 초성 검색(예: "ㅈ" → "정서연")이 되지 않는 문제가 보고됐습니다.\n\nv1.2.0 스프린트 이슈로 등록하여 수정 예정입니다.\n담당: 김민준 / 예상 완료: v1.2.0 배포 시', prd: false },
+  { title:'디자인 시스템 GitHub 레포 연동 완료', type:'업데이트', date:'오늘', body:'prs-design-system 레포를 로컬 ~/claude 경로에 클론하고 git 원격 연결을 완료했습니다.\n\n이제 CLAUDE.md, PRS/prs-tokens.md 등 파일 수정 시 바로 git add → commit → push로 GitHub에 반영할 수 있습니다.', prd: false },
+  { title:'스프린트 회고 — v1.1 완료 및 v1.2 킥오프', type:'공지', date:'1주 전', body:'v1.1 스프린트 완료 회고를 진행했습니다.\n\n완료 항목:\n- 이슈 생성 모달 v2 전체 필드\n- 버전 관리 모달\n- 이슈 상세 사이드 패널\n- LNB 공통 내비게이션\n\nv1.2 킥오프: 필터 개선, 이슈 일괄 수정, 검색 자동완성', prd: false },
+];
+
+function openNoticePanel(idx) {
+  const n = noticeData[idx];
+  document.getElementById('sp-title').textContent = n.title;
+  document.getElementById('sp-date').textContent = n.date;
+  document.getElementById('sp-type').textContent = n.type;
+  document.getElementById('sp-body').textContent = n.body;
+  document.getElementById('sp-prd-btn').style.display = n.prd ? '' : 'none';
+  document.getElementById('side-panel').classList.add('open');
+}
+function closeSidePanel() {
+  document.getElementById('side-panel').classList.remove('open');
+}
+
+// ===== Agent Modal =====
+const agentReplies = [
+  '네, 분석해드릴게요! 현재 컨셉에서 <strong>핵심 가치</strong>를 이렇게 제안합니다:<br><br>우측 04번 필드에 채워뒀어요. ✅<br><br>"기획 컨텍스트를 잃지 않고 PRD→이슈→구조도까지 일관되게 관리할 수 있는 단일 워크스페이스. PM 1인이 기획부터 실행 추적까지 전담해도 누락 없이 운영 가능한 환경."',
+  'MVP 범위도 제안해드릴게요! 우측 05번 필드에 반영했습니다. ✅<br><br>핵심 기능 3가지에 집중하는 것을 추천드려요: 이슈 목록 + 계층 구조, PRD 기본 에디터, AI 초안 생성 (기본).',
+  '좋습니다! 컨셉이 많이 구체화됐어요. 저장하고 닫기 버튼을 눌러 반영하시겠어요?',
+];
+let agentIdx = 0;
+
+function handleAgentKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAgentMsg(); } }
+
+function sendAgentMsg() {
+  const input = document.getElementById('agent-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const msgs = document.getElementById('agent-msgs');
+  const typing = document.getElementById('agent-typing');
+
+  const uMsg = document.createElement('div');
+  uMsg.className = 'msg user';
+  uMsg.innerHTML = `<div class="msg-sender">나</div><div class="msg-bubble">${text}</div>`;
+  msgs.insertBefore(uMsg, typing);
+  input.value = ''; input.style.height = 'auto';
+
+  typing.classList.remove('hidden');
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    typing.classList.add('hidden');
+    const reply = agentReplies[agentIdx % agentReplies.length]; agentIdx++;
+    const aMsg = document.createElement('div');
+    aMsg.className = 'msg ai';
+    aMsg.innerHTML = `<div class="msg-sender"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg> AI 에이전트</div><div class="msg-bubble">${reply}</div>`;
+    msgs.insertBefore(aMsg, typing);
+
+    // Fill agent editor fields
+    if (agentIdx === 1) {
+      const ta = document.getElementById('ag-cf-04');
+      ta.value = '기획 컨텍스트를 잃지 않고 PRD→이슈→구조도까지 일관되게 관리할 수 있는 단일 워크스페이스. PM 1인이 기획부터 실행 추적까지 전담해도 누락 없이 운영 가능한 환경.';
+      ta.classList.add('ai-filled');
+    }
+    if (agentIdx === 2) {
+      const ta = document.getElementById('ag-cf-05');
+      ta.value = '포함: 이슈 목록 + 계층 구조 (Epic/Story/Task), PRD 기본 에디터 (섹션 편집), AI PRD 초안 생성 (기본).\n\n제외: 실시간 협업, 노드뷰, 고급 AI 에이전트 (v2 이후).';
+      ta.classList.add('ai-filled');
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1400);
+}
+
+function openAgentModal() { document.getElementById('agent-blanket').classList.add('open'); }
+function closeAgentModal() { document.getElementById('agent-blanket').classList.remove('open'); }
+
+function saveFromAgent() {
+  // sync agent fields back to main edit fields
+  ['01','02','03','04','05'].forEach(n => {
+    const agTa = document.getElementById('ag-cf-'+n);
+    const mainTa = document.getElementById('cf-'+n);
+    if (agTa && mainTa) mainTa.value = agTa.value;
+  });
+  closeAgentModal();
+  // save
+  saveEdit();
+}
+</script>
+</body>
+</html>
