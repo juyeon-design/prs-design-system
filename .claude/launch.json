@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prs-prototype",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3700", "--directory", "/Users/leejy/claude"],
+      "port": 3700,
+      "autoPort": false
+    }
+  ]
+}

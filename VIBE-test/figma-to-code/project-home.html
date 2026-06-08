@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRS — 프로젝트 홈</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Pretendard, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #343434;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ───── LNB ───── */
+    .lnb {
+      width: 220px;
+      min-height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #dfdfdf;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .lnb-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* Top global nav */
+    .lnb-global {
+      padding: 10px;
+      border-bottom: 1px solid #dfdfdf;
+    }
+
+    .lnb-global-row {
+      display: flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 8px;
+      border-radius: 8px;
+    }
+
+    .lnb-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #6f64dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .lnb-logo-letter {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .lnb-global-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #343434;
+      margin-left: 12px;
+      flex: 1;
+    }
+
+    .lnb-global-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #848484;
+      position: relative;
+    }
+
+    .lnb-global-icon:hover { background: #f5f5f5; }
+
+    .badge-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #f04040;
+    }
+
+    /* Home item */
+    .lnb-section {
+      padding: 8px 10px 0;
+    }
+
+    .lnb-item {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #343434;
+      gap: 8px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .lnb-item:hover { background: #f5f5f5; }
+    .lnb-item.active { background: #f0f0f0; font-weight: 500; }
+    a.lnb-item { text-decoration: none; color: #343434; }
+
+    .lnb-item-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #848484;
+    }
+
+    .lnb-divider {
+      height: 1px;
+      background: #dfdfdf;
+      margin: 8px 0;
+    }
+
+    /* Project section */
+    .lnb-project-header {
+      display: flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 8px;
+      margin: 0 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      gap: 8px;
+    }
+
+    .lnb-project-header:hover { background: #f5f5f5; }
+
+    .project-avatar-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #6f64dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .lnb-project-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #343434;
+      flex: 1;
+    }
+
+    .lnb-chevron {
+      color: #848484;
+      font-size: 12px;
+    }
+
+    .lnb-sub-items {
+      padding: 0 10px;
+    }
+
+    .lnb-sub-item {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      padding: 0 8px 0 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #343434;
+      font-size: 14px;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .lnb-sub-item:hover { background: #f5f5f5; }
+    .lnb-sub-item.active { background: #f0f0f0; font-weight: 500; }
+
+    .lnb-sub-item-icon {
+      width: 16px;
+      height: 16px;
+      color: #848484;
+      flex-shrink: 0;
+    }
+
+    /* Bottom user */
+    .lnb-user {
+      padding: 12px 10px;
+      border-top: 1px solid #dfdfdf;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #6f64dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 500; color: #343434; }
+    .user-email { font-size: 11px; color: #848484; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .user-more {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #848484;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .user-more:hover { background: #f5f5f5; }
+
+    /* ───── Content ───── */
+    .content-wrapper {
+      margin-left: 220px;
+      flex: 1;
+      min-height: 100vh;
+      background: #f5f5f5;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background gradient ellipse */
+    .bg-ellipse {
+      position: absolute;
+      top: -300px;
+      left: -200px;
+      width: 1400px;
+      height: 1400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(111,100,221,0.08) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 40px 80px;
+    }
+
+    /* ───── Project Header ───── */
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .project-header-left { display: flex; flex-direction: column; gap: 16px; }
+
+    .project-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-avatar-lg {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #6f64dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .project-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .project-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: #343434;
+      line-height: 1.2;
+    }
+
+    .star-icon { color: #f5c342; font-size: 18px; cursor: pointer; }
+
+    .project-subtitle {
+      font-size: 16px;
+      color: #343434;
+      line-height: 26px;
+      max-width: 760px;
+    }
+
+    .more-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #848484;
+      border: none;
+      background: transparent;
+    }
+
+    .more-btn:hover { background: #ebebeb; }
+
+    /* ───── Description Card ───── */
+    .desc-card {
+      background: #ffffff;
+      border: 1px solid #dfdfdf;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+    }
+
+    .desc-text {
+      font-size: 14px;
+      line-height: 24px;
+      color: #343434;
+      margin-bottom: 16px;
+    }
+
+    .desc-more {
+      font-size: 14px;
+      color: #6f64dd;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .desc-divider {
+      height: 1px;
+      background: #dfdfdf;
+      margin-bottom: 24px;
+    }
+
+    .desc-meta {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 48px;
+    }
+
+    .meta-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #848484;
+      font-size: 14px;
+    }
+
+    .meta-icon {
+      width: 20px;
+      height: 20px;
+      color: #aeaeae;
+      flex-shrink: 0;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      color: #343434;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #6f64dd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* ───── Section Header ───── */
+    .section-header {
+      font-size: 18px;
+      font-weight: 600;
+      color: #343434;
+      line-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    /* ───── Version Cards ───── */
+    .version-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .version-card {
+      background: #ffffff;
+      border: 1px solid #dfdfdf;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+    }
+
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      margin-bottom: 12px;
+    }
+
+    .badge-in-progress { background: #e0eeff; color: #174fde; }
+    .badge-latest { background: #e6fef0; color: #077a36; }
+    .badge-next { background: #f0f0f0; color: #848484; }
+
+    .version-number {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .version-in-progress .version-number { color: #6f64dd; }
+    .version-latest .version-number { color: #343434; }
+    .version-next .version-number { color: #343434; }
+
+    .version-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #848484;
+      margin-bottom: 20px;
+    }
+
+    .version-date-icon { font-size: 16px; color: #aeaeae; }
+
+    .version-items {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .version-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: #343434;
+      line-height: 20px;
+    }
+
+    .version-item::before {
+      content: '•';
+      color: #aeaeae;
+      flex-shrink: 0;
+      line-height: 20px;
+    }
+
+    /* ───── Change List ───── */
+    .change-list-section { margin-bottom: 40px; }
+
+    .change-list {
+      background: #ffffff;
+      border: 1px solid #dfdfdf;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+    }
+
+    .change-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+      min-height: 64px;
+    }
+
+    .change-item:last-child { border-bottom: none; }
+
+    .change-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-red { background: #f04040; }
+    .dot-blue { background: #174fde; }
+    .dot-gray { background: #d2d2d2; }
+
+    .change-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 16px;
+    }
+
+    .icon-org { background: #fff5e0; color: #a07800; }
+    .icon-person { background: #e0eeff; color: #174fde; }
+    .icon-doc { background: #f2f1fe; color: #6f64dd; }
+    .icon-assign { background: #e0eeff; color: #174fde; }
+    .icon-new { background: #e6fef0; color: #077a36; }
+
+    .change-content { flex: 1; min-width: 0; }
+
+    .change-category {
+      font-size: 12px;
+      color: #848484;
+      margin-bottom: 2px;
+    }
+
+    .change-title {
+      font-size: 14px;
+      color: #343434;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .change-arrow {
+      color: #848484;
+      font-size: 12px;
+    }
+
+    .change-highlight { font-weight: 600; color: #343434; }
+
+    .change-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .change-assignee {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #343434;
+    }
+
+    .assignee-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .av-purple { background: #6f64dd; }
+    .av-green { background: #2da44e; }
+    .av-orange { background: #e36f1e; }
+
+    .change-time {
+      font-size: 12px;
+      color: #aeaeae;
+      white-space: nowrap;
+      min-width: 48px;
+      text-align: right;
+    }
+
+    .change-status {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      min-width: 52px;
+      text-align: right;
+    }
+
+    .status-unread { color: #f04040; }
+    .status-read { color: #aeaeae; }
+
+    .change-more-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #343434;
+      cursor: pointer;
+      gap: 6px;
+      background: #ffffff;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .change-more-btn:hover { background: #f9f9f9; }
+
+    /* ───── SVG Icons ───── */
+    svg { display: inline-block; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <!-- ════════ LNB ════════ -->
+  <nav class="lnb">
+    <div class="lnb-inner">
+
+      <!-- Global top -->
+      <div class="lnb-global">
+        <div class="lnb-global-row">
+          <div class="lnb-logo">
+            <span class="lnb-logo-letter">M</span>
+          </div>
+          <span class="lnb-global-name">PRS</span>
+          <!-- Notification icon -->
+          <div class="lnb-global-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span class="badge-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home -->
+      <div class="lnb-section" style="padding-bottom:4px;">
+        <a class="lnb-item" href="prs-home.html">
+          <span class="lnb-item-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          홈
+        </a>
+      </div>
+
+      <div class="lnb-divider" style="margin:4px 10px;"></div>
+
+      <!-- Project group -->
+      <div style="padding:4px 0;">
+        <div class="lnb-project-header">
+          <div class="project-avatar-sm">P</div>
+          <span class="lnb-project-name">PRS</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#848484" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+
+        <div class="lnb-sub-items">
+          <a class="lnb-sub-item active" href="project-home.html">
+            <svg class="lnb-sub-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+            프로젝트 홈
+          </a>
+          <a class="lnb-sub-item" href="#">
+            <svg class="lnb-sub-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            기획 문서
+          </a>
+          <a class="lnb-sub-item" href="issue-list.html">
+            <svg class="lnb-sub-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            이슈 목록
+          </a>
+          <a class="lnb-sub-item" href="#">
+            <svg class="lnb-sub-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+            </svg>
+            프로젝트 설정
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- User profile -->
+    <div class="lnb-user">
+      <div class="user-avatar">김</div>
+      <div class="user-info">
+        <div class="user-name">김승수</div>
+        <div class="user-email">kss0610@midasit.com</div>
+      </div>
+      <div class="user-more">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════ Main Content ════════ -->
+  <main class="content-wrapper">
+    <div class="bg-ellipse"></div>
+    <div class="content-inner">
+
+      <!-- Project Header -->
+      <div class="project-header">
+        <div class="project-header-left">
+          <div class="project-title-row">
+            <div class="project-avatar-lg">P</div>
+          </div>
+          <div>
+            <div class="project-name-row">
+              <span class="project-name">PRS</span>
+              <span class="star-icon">★</span>
+            </div>
+            <p class="project-subtitle" style="margin-top:8px;">
+              제품 히스토리와 기획 맥락을 연결하고, 기획 자동화로 상품성과 생산성을 향상 시키는 협업 플랫폼
+            </p>
+          </div>
+        </div>
+        <button class="more-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Description Card -->
+      <div class="desc-card">
+        <p class="desc-text">
+          흩어진 정보를 하나의 제품 맥락 안에서 연결함으로써 PO, 기획자, 개발자, 제품 리더가 같은 기준과 배경을 바탕으로 협업할 수 있게 한다.<br/>
+          또한 PRD 작성, 문서 탐색, 히스토리 확인, 승인 요청 등 기획 과정에서 반복적으로 발생하는 업무를 AI와 함께 처리하여 기획 생산성을 높이고, 기획 의도와 개발 결과물이 어긋나지 않도록 추적한다.<br/>
+          궁극적으로 PRS는 제품이 왜 만들어졌고, 어떤 방향으로 발전해야 하며, 현재 실행 결과가 그 방향과 잘 연결되어 있는지를 지속적으로 관리함으로써 제품의 상품성을 높이는 것을 목적으로 한다.
+        </p>
+        <span class="desc-more">
+          자세히보기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </span>
+        <div class="desc-divider"></div>
+        <div class="desc-meta">
+          <div class="meta-item">
+            <div class="meta-label">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+              </svg>
+              담당 조직
+            </div>
+            <span class="meta-value">inAX TF</span>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              책임자
+            </div>
+            <div class="meta-value">
+              <div class="meta-avatar">이</div>
+              이상엽
+            </div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 11 12 14 22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+              최신 버전
+            </div>
+            <span class="meta-value">v.8.3.0</span>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              최근 업데이트
+            </div>
+            <span class="meta-value">2026.04.30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Version Status -->
+      <div style="margin-bottom:40px;">
+        <h2 class="section-header">진행 상태</h2>
+        <div class="version-grid">
+
+          <!-- Card 1: 진행중 -->
+          <div class="version-card version-in-progress">
+            <div class="version-badge badge-in-progress">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <polygon points="10 8 16 12 10 16 10 8"/>
+              </svg>
+              진행중
+            </div>
+            <div class="version-number">v8.4.0</div>
+            <div class="version-date">
+              <svg class="version-date-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+              </svg>
+              목표 배포일&nbsp;&nbsp;2026.05.30
+            </div>
+            <div class="version-items">
+              <div class="version-item">AI 회의록 사용성 개선</div>
+              <div class="version-item">기타 VOC 반영</div>
+              <div class="version-item">최대 3개 항목까지 보여집니다</div>
+            </div>
+          </div>
+
+          <!-- Card 2: 최신 버전 -->
+          <div class="version-card version-latest">
+            <div class="version-badge badge-latest">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              최신 버전
+            </div>
+            <div class="version-number">v8.3.0</div>
+            <div class="version-date">
+              <svg class="version-date-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+              </svg>
+              배포일&nbsp;&nbsp;2026.04.30
+            </div>
+            <div class="version-items">
+              <div class="version-item">AI 회의록 사용성 개선</div>
+              <div class="version-item">기타 VOC 반영</div>
+              <div class="version-item">최대 3개 항목까지 보여집니다</div>
+            </div>
+          </div>
+
+          <!-- Card 3: 다음 목표 -->
+          <div class="version-card version-next">
+            <div class="version-badge badge-next">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+              다음 목표
+            </div>
+            <div class="version-number">v8.5.0</div>
+            <div class="version-date">
+              <svg class="version-date-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+              </svg>
+              목표 배포일&nbsp;&nbsp;2026.06.30
+            </div>
+            <div class="version-items">
+              <div class="version-item">AI 회의록 사용성 개선</div>
+              <div class="version-item">기타 VOC 반영</div>
+              <div class="version-item">최대 3개 항목까지 보여집니다</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Major Changes -->
+      <div class="change-list-section">
+        <h2 class="section-header">주요 변경 사항</h2>
+        <div class="change-list">
+
+          <!-- Item 1 -->
+          <div class="change-item">
+            <span class="change-dot dot-red"></span>
+            <div class="change-icon-wrap icon-org">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              </svg>
+            </div>
+            <div class="change-content">
+              <div class="change-category">프로젝트 담당 조직 변경</div>
+              <div class="change-title">
+                PRS · inAX TF
+                <svg width="12" height="12" class="change-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+                <span class="change-highlight">xRS</span>
+              </div>
+            </div>
+            <div class="change-right">
+              <div class="change-assignee">
+                <div class="assignee-avatar av-purple">이</div>
+                이상엽
+              </div>
+              <span class="change-time">2시간 전</span>
+              <span class="change-status status-unread">읽지 않음</span>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="change-item">
+            <span class="change-dot dot-red"></span>
+            <div class="change-icon-wrap icon-person">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="change-content">
+              <div class="change-category">이슈 담당자 변경</div>
+              <div class="change-title">
+                그라운드룰 관리 기능 · 김길동
+                <svg width="12" height="12" class="change-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+                <span class="change-highlight">박길동</span>
+              </div>
+            </div>
+            <div class="change-right">
+              <div class="change-assignee">
+                <div class="assignee-avatar av-green">김</div>
+                김길동
+              </div>
+              <span class="change-time">4시간 전</span>
+              <span class="change-status status-unread">읽지 않음</span>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="change-item">
+            <span class="change-dot dot-gray"></span>
+            <div class="change-icon-wrap icon-doc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </div>
+            <div class="change-content">
+              <div class="change-category">기획문서 업데이트</div>
+              <div class="change-title">캘린더 CRUD · PRD v1.4 업데이트</div>
+            </div>
+            <div class="change-right">
+              <div class="change-assignee">
+                <div class="assignee-avatar av-purple">이</div>
+                이상엽
+              </div>
+              <span class="change-time">1일 전</span>
+              <span class="change-status status-read">위음</span>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="change-item">
+            <span class="change-dot dot-gray"></span>
+            <div class="change-icon-wrap icon-assign">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="change-content">
+              <div class="change-category">기획 문서 담당자 변경</div>
+              <div class="change-title">
+                월간 캘린더 뷰 · 홍길동
+                <svg width="12" height="12" class="change-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+                <span class="change-highlight">길동홍</span>
+              </div>
+            </div>
+            <div class="change-right">
+              <div class="change-assignee">
+                <div class="assignee-avatar av-orange">홍</div>
+                홍길동
+              </div>
+              <span class="change-time">6일 전</span>
+              <span class="change-status status-read">위음</span>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="change-item">
+            <span class="change-dot dot-red"></span>
+            <div class="change-icon-wrap icon-new">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="11" x2="12" y2="17"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
+              </svg>
+            </div>
+            <div class="change-content">
+              <div class="change-category">기획 문서 게시</div>
+              <div class="change-title">월간 캘린더 뷰</div>
+            </div>
+            <div class="change-right">
+              <div class="change-assignee">
+                <div class="assignee-avatar av-purple">이</div>
+                이상엽
+              </div>
+              <span class="change-time">26.05.12</span>
+              <span class="change-status status-unread">읽지 않음</span>
+            </div>
+          </div>
+
+          <!-- More button -->
+          <div class="change-more-btn">
+            더보기
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
