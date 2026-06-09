@@ -490,7 +490,12 @@ export const MyComponent = ({ className }: MyComponentProps) => {
 - No `rem`, `em`, `%` to work around fixed specs
 - Minimize inline `style={{}}`
 - Icons: import from `@inax-prs/design-system` only (no new `lucide-react` imports)
-- Component priority: `@inax-prs/design-system` → `shadcn/ui` → Tailwind direct
+- **Component priority — strictly follow this order:**
+  1. `@inax-prs/design-system` component API (e.g. `<Button variant="primary">`) — always first
+  2. `shadcn/ui` component
+  3. Tailwind + muix tokens — only when no component exists
+  4. Hex values — **never for coding**. Reference only. If unavoidable, add `// TODO: confirm with designer` comment.
+- The color/token tables in Section D are **reference only**. Do not hardcode hex from those tables into components — always map to a component prop or token class first.
 
 **Unmapped value handling**
 ```tsx
@@ -508,6 +513,8 @@ Every screen must implement all 3 states. Missing any is considered incomplete.
 | **Error** | Error message + **"다시 시도" retry button**. Error color `#fd493f` (`$semantic-color-text-error`). Field-level errors: Body3 below input in `text-semantic-color-text-error`. |
 
 > AI generation loading: use typing animation or progress message instead of Skeleton.
+
+> ⚠️ Before implementing Edge Cases, check `apps/web/.agents/rules/project-structure.md` for existing global patterns (React Suspense, ErrorBoundary, TanStack Query, etc.). Follow the project's global architecture first — do not implement per-screen error/loading handling if a global solution already exists.
 
 ---
 

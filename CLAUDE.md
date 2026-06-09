@@ -56,6 +56,8 @@ Follow this priority order for all screen work.
 - **Subtle border**: `#dfdfdf`
 - **Divider**: `#dfdfdf`
 
+> ⚠️ All hex values above are for reference only. Always use component API or token class when writing code. Never hardcode hex directly.
+
 ### 4. Issue Status Badges
 | Status | Background | Text |
 |--------|-----------|------|
