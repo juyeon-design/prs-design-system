@@ -499,13 +499,15 @@ className="text-[#a07800]" // TODO: confirm with designer — In Review status t
 
 ### D-8. Edge Cases — Required (All 3)
 
+Every screen must implement all 3 states. Missing any is considered incomplete.
+
 | State | Implementation rule |
 |-------|-------------------|
-| **Loading** | Skeleton UI (shimmer). Spinner only for full-screen blocking. |
-| **Empty** | Icon/illustration + Body2 description + CTA button. Text-only treatment is forbidden. |
-| **Error** | Error message + retry button. Field-level errors: Body3 below input, `text-semantic-color-text-error` |
+| **Loading** | Skeleton UI with shimmer animation. Background `#eaeaea` (`$base-color-neutral-coolgray-100`). Spinner only for full-screen blocking operations. |
+| **Empty** | 48px icon + title (Body1 semibold) + description (Body2, `#848484`) + CTA button. Text-only treatment is forbidden. AI-related empty states must use `✶` prefix on CTA (e.g. `✶ 기능 설계하기`). |
+| **Error** | Error message + **"다시 시도" retry button**. Error color `#fd493f` (`$semantic-color-text-error`). Field-level errors: Body3 below input in `text-semantic-color-text-error`. |
 
-> AI generation loading: use typing animation or progress message instead of Skeleton
+> AI generation loading: use typing animation or progress message instead of Skeleton.
 
 ---
 
