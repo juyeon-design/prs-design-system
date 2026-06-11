@@ -1,3 +1,5 @@
+> ⚠️ DEPRECATED — Content migrated to `screen-types/` directory. Use `screen-types/index.md` instead.
+
 # PRS Screen Types — 9-Type Guide
 
 Reference for `spec-to-code` SKILL. Do not reference other files from this document.

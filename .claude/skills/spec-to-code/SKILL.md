@@ -10,7 +10,8 @@ description: >
 
 # Spec → Code (PRS)
 
-> **Mandatory at STEP 1:** Read `screen-types.md` for screen type guide.
+> **Mandatory at STEP 1:** Read `screen-types/index.md` to classify screen type.
+> **Mandatory at Section B:** Read only the matched guide in `screen-types/`.
 > **Mandatory at Section D:** Read `tokens/common-rules.md` before coding.
 
 ---
@@ -33,10 +34,10 @@ If answers are vague → keep asking. If clear → move to STEP 1.
 
 ---
 
-## STEP 1. Confirm Screen Type (Mandatory — Read `screen-types.md`)
+## STEP 1. Confirm Screen Type (Mandatory — Read `screen-types/index.md`)
 
-Classify into one of 9 types. See `screen-types.md` for full guide.
-If unclear → ask before proceeding. Never fill in ambiguities unilaterally.
+Classify into one of 9 types by dominant user goal. See `screen-types/index.md`.
+If unclear, report ambiguity in the Build Plan — do not silently choose.
 
 ---
 
@@ -47,6 +48,10 @@ Do not fill in the following unilaterally — report and ask first:
 - Button action result (where does save navigate to?)
 - Empty state / error message copy
 - Modal presence
+- Data mutation behavior
+- Permission behavior
+
+If user says "바로 해줘" or "skip" → make conservative assumptions and list them in the Result Report.
 
 ---
 
@@ -65,9 +70,16 @@ Map each wireframe area to PRD translation table in `PRS/components.md`.
 
 ---
 
-## Section B. Component Set
+## Section B. Load Screen-Type Guide
 
-Once screen type is confirmed, apply the default component set from `screen-types.md`.
+Read only the matched guide in `screen-types/`. Apply for:
+- Default layout and dimensions
+- Default component set
+- Interaction rules
+- Required states
+- Code structure
+
+If empty/loading/error states need further detail, read `patterns/empty-state.md`.
 
 ---
 
@@ -76,14 +88,16 @@ Once screen type is confirmed, apply the default component set from `screen-type
 **Create mode:**
 ```
 [Build Plan]
-- Screen type: {List / Form / ...}
+- Screen type: {List Table / Card View / Detail / Form / Dashboard / Settings / Node View / Flow Chart / Modal}
+- Matched guide: {screen-types/...}
 - Component: {ComponentName}
 - Path: {targetPath}
 - @inax-prs/design-system: InputText, Checkbox, SearchIcon...
 - shadcn/ui: Button, Dialog...
 - Tokens: text-semantic-color-text-default, p-200, rounded-100...
-- Edge Cases: Loading / Empty / Error included
+- Required states: Loading / Empty / Error included
 - Ambiguities: (list here if any)
+- Assumptions: (list if fast execution requested)
 → Proceed?
 ```
 
@@ -118,14 +132,17 @@ Do not declare completion until this passes.
 
 ```
 [Result]
-- Input type: B (Wireframe + description) / C (Description only)
-- Screen type: {List / Form / ...}
+- Input type: A (Description only) / B (Wireframe + description) / C (Update)
+- Screen type: {List Table / Card View / Detail / Form / Dashboard / Settings / Node View / Flow Chart / Modal}
+- Matched guide: {screen-types/...}
 - Files created: {list}
+- Files modified: {list}
 - @inax-prs/design-system components: {list}
 - Tokens used: {list}
-- Edge Cases: Loading ✅ / Empty ✅ / Error ✅
+- Required states: Loading ✅ / Empty ✅ / Error ✅
+- Assumptions: {or "none"}
 - Unmapped values: {or "none"}
-- typecheck: passed
+- typecheck: passed / failed / not run (reason)
 ```
 
 ---
