@@ -1,7 +1,7 @@
 ---
 name: figma-to-code
 description: >
-  Converts Figma designs to React 19 + TypeScript + Tailwind code using Figma MCP.
+  Converts Figma designs to React + TypeScript + Tailwind code using Figma context.
   Handles token mapping, coordinate measurement, and visual verification against original design.
   Use when a Figma URL or nodeId is provided, or user requests
   "피그마에서 가져와줘", "이 디자인 구현해줘", "피그마 코드로 만들어줘".
@@ -106,7 +106,7 @@ Confirm screen type before building. See `spec-to-code/screen-types.md` for the 
 > Full mapping: `tokens/figma-variable-mapping.md`
 
 **Spacing / Radius**
-| Figma | px | Tailwind |
+| Figma | px | Tailwind class |
 |-------|----|---------|
 | `var(--dimen/space/100)` | 8px | `gap-100`, `p-100` |
 | `var(--dimen/space/200)` | 16px | `gap-200`, `p-200` |
@@ -138,8 +138,7 @@ Apply layout, color tokens, button rules, Edge Cases, and coding rules from `tok
 - Screen type: {List / Form / ...}
 - Component: {ComponentName}
 - Path: {targetPath}
-- @inax-prs/design-system: InputText, Checkbox, SearchIcon...
-- shadcn/ui: Button, Dialog...
+- shadcn/ui or Radix: Button, Dialog, Select, Checkbox...
 - Tokens: text-semantic-color-text-default, p-200, rounded-100...
 - Edge Cases: Loading / Empty / Error included
 - Ambiguities: (list here if any)
@@ -160,19 +159,24 @@ Apply layout, color tokens, button rules, Edge Cases, and coding rules from `tok
 
 ## Section F. Verification
 
-### F-1. Type Check
-```bash
-cd apps/web && pnpm typecheck
+### F-1. Frontend Checks
+Run the target project's available frontend checks:
 ```
-Do not declare completion until this passes.
+□ TypeScript / typecheck passes when the project exposes a script
+□ Lint passes when the project exposes a script
+□ Layout keeps GNB + LNB structure
+□ Loading / Empty / Error states render
+□ shadcn/ui or Radix interactions work as expected
+```
+Do not declare completion until this passes or the skipped item is explicitly reported.
 
 ### F-2. Visual Verification
-Render via Playwright, compare against Figma on 6 points:
+Compare the rendered prototype against Figma on 6 points:
 ```
 □ Presence / Placement / Components / Hierarchy / Direction / States
 ```
 Gap/padding diff ≥ 5px → fix. Missing elements → always fix.
-Dev server unavailable → skip, write **"Visual verification skipped"** in report.
+Visual verification unavailable → skip, write **"Visual verification skipped"** in report.
 
 ---
 
@@ -183,27 +187,26 @@ Dev server unavailable → skip, write **"Visual verification skipped"** in repo
 - Input type: Figma
 - Screen type: {List / Form / ...}
 - Files created: {list}
-- @inax-prs/design-system components: {list}
+- shadcn/ui or Radix components: {list}
 - Tokens used: {list}
 - Edge Cases: Loading ✅ / Empty ✅ / Error ✅
 - Unmapped values: {or "none"}
 - Visual verification: passed / skipped
-- typecheck: passed
+- Typecheck/lint: passed / skipped
 ```
 
 ---
 
 ## Section H. Final Checklist
 
-- [ ] `@inax-prs/design-system` components used to the maximum extent?
 - [ ] Multiple Figma variants merged into a single component?
-- [ ] Icons from `@inax-prs/design-system` only? (no new `lucide-react`)
 - [ ] All mappable values using color tokens? (no stray hex)
 - [ ] No HEX/RGBA hardcoding? (exceptions have comments)
-- [ ] Spacing/size using muix tokens?
+- [ ] Spacing/size using Tailwind token utilities or CSS custom properties?
+- [ ] shadcn/ui or Radix components used where they fit?
 - [ ] `cn()` for class merging?
 - [ ] Arrow function component?
-- [ ] `pnpm typecheck` passed?
+- [ ] Typecheck/lint passed or explicitly skipped?
 - [ ] gap·padding measured from coordinates if token didn't match?
 - [ ] §A-3 recovery procedure followed when needed?
 - [ ] §A-5 container frame style checklist completed?

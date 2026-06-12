@@ -1,7 +1,7 @@
-# Figma MCP CSS 변수 → muix 토큰 변환 규칙
+# Figma CSS 변수 → Tailwind 토큰 변환 규칙
 
-Figma MCP(`get_design_context`)가 반환하는 힌트 코드는 Figma 자체 CSS 변수를 사용합니다.
-이를 `@inax-prs/design-system` muix 토큰(Tailwind alias)으로 변환해야 합니다.
+Figma가 반환하는 힌트 코드는 Figma 자체 CSS 변수를 사용합니다.
+이를 PRS Tailwind 토큰 클래스 또는 CSS custom property로 변환해야 합니다.
 
 ---
 
@@ -11,7 +11,7 @@ Figma MCP(`get_design_context`)가 반환하는 힌트 코드는 Figma 자체 CS
 
 Figma 변수 구조: `--color/{category}/{...path}`
 
-| Figma CSS 변수 | Tailwind alias (muix) |
+| Figma CSS 변수 | Tailwind class |
 |---------------|----------------------|
 | `var(--color/text/default)` | `text-semantic-color-text-default` |
 | `var(--color/text/subtle)` | `text-semantic-color-text-subtle` |
@@ -46,7 +46,7 @@ Figma 변수 구조: `--color/{category}/{...path}`
 - `neutral/`, `accent/` 등 하위 경로 있으면 `component-color-` 삽입
 
 **hex fallback**: Figma 변수가 `var(--color/..., #xxxxxx)` 형태면 hex 값으로 토큰 근접값 탐색.
-탐색 실패 시: `text-[#xxxxxx]` 임의값 + `{/* TODO: 디자이너 확인 */}` 주석.
+탐색 실패 시: Tailwind arbitrary value 또는 별도 CSS class와 `/* TODO: 디자이너 확인 */` 주석으로 격리합니다.
 
 ---
 
@@ -112,9 +112,9 @@ px 값으로 매핑 (토큰 변수 없이 Figma가 직접 px 반환):
 
 Figma `font-family` 힌트 코드: `font-['Pretendard:SemiBold',sans-serif]` + `text-[14px]` + `leading-[20px]`
 
-muix 타이포 토큰으로 변환:
+PRS 타이포 Tailwind utility로 변환:
 
-| Figma 폰트 힌트 | Tailwind 유틸리티 |
+| Figma 폰트 힌트 | Tailwind utility |
 |----------------|------------------|
 | SemiBold 12px / lh 16 | `font-body3-semibold` |
 | Medium 12px / lh 16 | `font-body3-medium` |
@@ -125,15 +125,14 @@ muix 타이포 토큰으로 변환:
 | Medium 18px | `font-title3-medium` |
 | SemiBold 20px | `font-title2-semibold` |
 
-토큰 없으면: `text-[14px] font-semibold leading-[20px]`
+토큰 없으면: Tailwind arbitrary value 또는 별도 CSS class를 만들고 px 값을 주석으로 남깁니다.
 
 ---
 
 ## 전체 토큰 레퍼런스
 
 더 자세한 토큰 목록:
-- 색상: `packages/design-system/design-tokens/tailwind-color-alias-mapping.md`
-- 간격·크기·radius: `packages/design-system/design-tokens/tailwind-dimension-alias-mapping.md`
-- shadow: `packages/design-system/design-tokens/shadow-tokens.md`
-- 타이포: `packages/design-system/design-tokens/typography-tokens.md`
-- 컴포넌트 API: `packages/design-system/src/index.ts` → 개별 컴포넌트 파일 grep
+- 색상: `tokens/tailwind-color-alias-mapping.md`
+- 간격·크기·radius: `tokens/tailwind-dimension-alias-mapping.md`
+- shadow: `tokens/shadow-tokens.md`
+- 타이포: `tokens/typography-tokens.md`

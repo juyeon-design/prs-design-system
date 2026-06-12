@@ -53,7 +53,7 @@ STEP 5   Implement Edge Cases (Loading / Empty / Error)
 - **Subtle text**: `#848484`
 - **Default border**: `#d2d2d2`
 
-> ⚠️ All hex values above are for reference only. Always use component API or token class when writing code. Never hardcode hex directly.
+> ⚠️ All hex values above are for reference only. Prefer Tailwind token classes or CSS custom properties when writing code. Never hardcode hex directly unless the value is explicitly marked as unmapped.
 
 ### 4. Issue Status Badges
 | Status | Background | Text |

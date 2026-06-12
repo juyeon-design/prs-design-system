@@ -26,11 +26,11 @@ $semantic-color-background-default: var(--muix-semantic-color-background-default
 
 | File | Contents |
 |------|---------|
-| [figma-variable-mapping.md](./figma-variable-mapping.md) | ★ Figma MCP variable → Tailwind class conversion rules. Reference this first when working with Figma. |
+| [figma-variable-mapping.md](./figma-variable-mapping.md) | ★ Figma variable → Tailwind class conversion rules. Reference this first when working with Figma. |
 | [tailwind-color-alias-mapping.md](./tailwind-color-alias-mapping.md) | Tailwind color alias → `$token-name` / CSS variable mapping |
 | [tailwind-dimension-alias-mapping.md](./tailwind-dimension-alias-mapping.md) | Tailwind spacing / size / radius alias mapping |
 | [tailwind-style-utility-alias-mapping.md](./tailwind-style-utility-alias-mapping.md) | Tailwind custom style utility alias (shadow · typography) mapping |
-| [app-theme-tokens.md](./app-theme-tokens.md) | App theme and shadcn-compatible tokens |
+| [app-theme-tokens.md](./app-theme-tokens.md) | App theme and shadcn/Radix-compatible tokens |
 | [base-color-tokens.md](./base-color-tokens.md) | Base color palette. Used as the reference foundation for semantic/component tokens. |
 | [semantic-color-tokens.md](./semantic-color-tokens.md) | Intent-based semantic color tokens (background · text · border · icon states) |
 | [component-color-tokens.md](./component-color-tokens.md) | Component-level color tokens for direct use |

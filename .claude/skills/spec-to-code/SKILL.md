@@ -92,8 +92,7 @@ If empty/loading/error states need further detail, read `patterns/empty-state.md
 - Matched guide: {screen-types/...}
 - Component: {ComponentName}
 - Path: {targetPath}
-- @inax-prs/design-system: InputText, Checkbox, SearchIcon...
-- shadcn/ui: Button, Dialog...
+- shadcn/ui or Radix: Button, Dialog...
 - Tokens: text-semantic-color-text-default, p-200, rounded-100...
 - Required states: Loading / Empty / Error included
 - Ambiguities: (list here if any)
@@ -121,10 +120,15 @@ Apply layout, color tokens, button rules, Edge Cases, and coding rules from `tok
 
 ## Section E. Verification
 
-```bash
-cd apps/web && pnpm typecheck
+Run the target project's available frontend checks:
 ```
-Do not declare completion until this passes.
+□ TypeScript / typecheck passes when the project exposes a script
+□ Lint passes when the project exposes a script
+□ Layout keeps LNB structure
+□ Loading / Empty / Error states render
+□ shadcn/ui or Radix interactions work as expected
+```
+Do not declare completion until this passes or the skipped item is explicitly reported.
 
 ---
 
@@ -137,7 +141,7 @@ Do not declare completion until this passes.
 - Matched guide: {screen-types/...}
 - Files created: {list}
 - Files modified: {list}
-- @inax-prs/design-system components: {list}
+- shadcn/ui or Radix components: {list}
 - Tokens used: {list}
 - Required states: Loading ✅ / Empty ✅ / Error ✅
 - Assumptions: {or "none"}
@@ -149,13 +153,11 @@ Do not declare completion until this passes.
 
 ## Section G. Final Checklist
 
-- [ ] `@inax-prs/design-system` components used to the maximum extent?
-- [ ] Icons from `@inax-prs/design-system` only? (no new `lucide-react`)
 - [ ] All mappable values using color tokens? (no stray hex)
 - [ ] No HEX/RGBA hardcoding? (exceptions have comments)
 - [ ] Spacing/size using muix tokens?
 - [ ] `cn()` for class merging?
 - [ ] Arrow function component?
-- [ ] `pnpm typecheck` passed?
+- [ ] Typecheck/lint passed or explicitly skipped?
 - [ ] Unmapped values listed in result report?
 - [ ] Edge Cases all 3 implemented?

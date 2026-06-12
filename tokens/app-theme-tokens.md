@@ -1,6 +1,6 @@
 # App Theme Tokens
 
-앱 테마 및 shadcn-compatible 토큰입니다.
+앱 테마 및 shadcn/Radix-compatible 토큰입니다.
 
 ## Token Access Rule
 
@@ -75,4 +75,4 @@ $semantic-color-background-default: var(--muix-semantic-color-background-default
 
 ## Tailwind Alias Mapping
 
-Tailwind alias를 사용하는 경우에도 최종적으로 같은 `$token-name` 또는 CSS variable로 연결합니다. 프로젝트에 Tailwind prefix가 있으면 실제 클래스에는 `tw-` prefix가 붙을 수 있습니다.
+Tailwind alias를 사용하는 경우에도 최종적으로 같은 `$token-name` 또는 CSS variable로 연결합니다.

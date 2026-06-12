@@ -57,7 +57,7 @@ Do not reference other files from this document.
 
 ## Color Tokens
 
-> ⚠️ Hex values below are **reference only**. Always use component API or token class when coding. Never hardcode hex directly.
+> ⚠️ Hex values below are **reference only**. Prefer Tailwind token classes or CSS custom properties when coding. Never hardcode hex directly unless the value is explicitly marked as unmapped.
 
 **Background**
 | Usage | Token | Value | Tailwind |
@@ -101,11 +101,12 @@ Do not reference other files from this document.
 
 ## Button Rules
 
-**Component priority — strictly follow this order:**
-1. `@inax-prs/design-system` component API (e.g. `<Button variant="primary">`) — always first
-2. `shadcn/ui` component
-3. Tailwind + muix tokens — only when no component exists
-4. Hex values — **never for coding**. Reference only.
+**Implementation priority — strictly follow this order:**
+1. React + TypeScript components
+2. shadcn/ui components when available in the target app
+3. Radix primitives for behavior that shadcn/ui does not cover
+4. Tailwind token classes or CSS custom properties from this repo
+5. Hex values — **never for coding**. Reference only.
 
 | Button | Background | Token | Usage |
 |--------|-----------|-------|-------|
@@ -114,11 +115,7 @@ Do not reference other files from this document.
 | **Ghost** | `#ffffff` + border `#d2d2d2` | `$semantic-color-background-default` | Cancel, secondary actions |
 
 - AI buttons must always use `✦` sparkle prefix (e.g. `✦ Design Features`, `✦ Generate PRD`)
-- For the sparkle icon, use `IconLlmLine` from `@inax-prs/design-system`:
-```tsx
-import { IconLlmLine } from '@inax-prs/design-system'
-<Button variant="accent"><IconLlmLine size={16} /> 기능 설계하기</Button>
-```
+- Do not add icon libraries only for the sparkle. Use the text prefix or an inline SVG when a custom icon is required.
 - Page Header button order: Ghost → Secondary → Primary (left to right)
 - Modal Footer button order: Ghost "Cancel" → Primary "Confirm" (right-aligned)
 
@@ -192,7 +189,7 @@ Every screen must implement all 3 states. Missing any is considered incomplete.
 | **Error** | Error message + **"다시 시도" retry button**. Error color `#fd493f` (`$semantic-color-text-error`). Field-level errors: Body3 below input in `text-semantic-color-text-error`. |
 
 > AI generation loading: use typing animation or progress message instead of Skeleton.
-> ⚠️ Before implementing Edge Cases, check `apps/web/.agents/rules/project-structure.md` for existing global patterns (React Suspense, ErrorBoundary, TanStack Query, etc.). Follow the project's global architecture first.
+> If the target app already has Suspense, ErrorBoundary, TanStack Query, or route-level loading/error patterns, follow the app architecture first and apply these visual rules inside that structure.
 
 ---
 
@@ -200,21 +197,29 @@ Every screen must implement all 3 states. Missing any is considered incomplete.
 
 ```tsx
 // ✅ Arrow function component
-interface MyComponentProps {
+interface SectionProps {
   className?: string;
 }
-export const MyComponent = ({ className }: MyComponentProps) => {
-  return <div className={cn('flex items-center gap-100', className)} />;
+
+export const Section = ({ className }: SectionProps) => {
+  return (
+    <section className={cn('bg-semantic-color-background-default p-200 rounded-150', className)}>
+      <h2 className="font-title3-semibold text-semantic-color-text-default">섹션 제목</h2>
+    </section>
+  );
 };
 ```
 
-- Class merging: always use `cn()`
+- Build with React + TypeScript + Tailwind.
+- Use shadcn/ui first for common controls when the target app has the component installed.
+- Use Radix primitives directly only when the target app does not already expose the needed shadcn/ui wrapper.
+- Class merging: always use `cn()` when combining static classes with props or conditional classes.
 - No HEX/RGBA hardcoding (exception: external brand colors with comment)
 - No `rem`, `em`, `%` to work around fixed specs
 - Minimize inline `style={{}}`
-- Icons: import from `@inax-prs/design-system` only (no new `lucide-react` imports)
+- Icons: use existing project icons, text symbols, or inline SVG. Do not add a new icon package just for one icon.
 
 **Unmapped value handling:**
 ```tsx
-className="text-[#a07800]" // TODO: confirm with designer — In Review status text
+<span className="prs-status-review-text">{/* TODO: confirm with designer - In Review status text */}</span>
 ```
