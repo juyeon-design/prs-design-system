@@ -14,7 +14,7 @@ When a PRS screen request comes in, **automatically** follow the appropriate ski
 ```
 STEP -1  Requirements clarification (spec-to-code only)
 STEP 0   Confirm input type → load correct skill
-STEP 1   Confirm screen type (9 types) → see spec-to-code/screen-types.md
+STEP 1   Confirm screen type (9 types) → see spec-to-code/screen-types/index.md
 STEP 2   Select components based on PRS/components.md
 STEP 3   Map tokens (never use hex alone)
            - With Figma: tokens/figma-variable-mapping.md first
@@ -29,7 +29,7 @@ STEP 5   Implement Edge Cases (Loading / Empty / Error)
 ### 1. Reference Priority
 1. `.claude/skills/figma-to-code/SKILL.md` — Figma → code pipeline
 2. `.claude/skills/spec-to-code/SKILL.md` — Spec → code pipeline
-3. `.claude/skills/spec-to-code/screen-types.md` — 9-type screen guide
+3. `.claude/skills/spec-to-code/screen-types/index.md` — screen type classifier (+ per-type guides in same folder)
 4. `./tokens/common-rules.md` — Shared design system rules (layout, color, button, Edge Cases)
 5. `./PRS/components.md` — Component usage rules + PRD translation table
 6. `./PRS/prs-tokens.md` — PRS token summary
