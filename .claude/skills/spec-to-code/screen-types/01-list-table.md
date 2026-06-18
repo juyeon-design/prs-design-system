@@ -71,3 +71,4 @@
 - Separate container, toolbar, table, and row action components.
 - Keep table column definitions declarative.
 - Do not hardcode mock data inside UI components.
+- 행 높이는 `<tr>`의 `h-*`로 제어되지 않는다. `<tr style={{ height: '64px' }}>` 또는 `<td className="h-16">`으로 지정할 것.
