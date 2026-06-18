@@ -26,6 +26,7 @@
 **Row height rule:**
 - Contains avatar, status badge, or type badge → **64px**
 - Nested / sub-list, text + icon only → **40px**
+- **한 페이지 내에서는 하나의 높이만 사용한다.** 중첩 구조가 있는 경우 모든 행을 40px로 통일.
 - Default display count: 10 rows
 
 **Standard row columns (1580px at 1920px canvas):**
@@ -71,4 +72,4 @@
 - Separate container, toolbar, table, and row action components.
 - Keep table column definitions declarative.
 - Do not hardcode mock data inside UI components.
-- 행 높이는 `<tr>`의 `h-*`로 제어되지 않는다. `<tr style={{ height: '64px' }}>` 또는 `<td className="h-16">`으로 지정할 것.
+- 행 높이는 `<tr>`의 `h-*` 및 `style={{ height }}`로 제어되지 않는다. 반드시 `<td className="h-16">`으로 지정할 것.
