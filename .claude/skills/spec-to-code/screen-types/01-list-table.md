@@ -6,7 +6,14 @@
 
 ## Layout
 
-Content width: **Fill pattern** — LNB 220px excluded, left/right padding 60px each.
+**Content width — two patterns:**
+
+| Pattern | When to use | How to apply |
+|---|---|---|
+| **Fill** | Data-heavy list/table screens (Issue List, etc.) | `w-full`, outer container `px-[60px]` — table fills remaining width |
+| **Fixed 1200px** | Hub / home screens with mixed content (cards + table) | `max-w-[1200px] mx-auto` — no additional horizontal padding |
+
+> The 60px padding applies at the **page container level only**. Do NOT apply it to individual table rows or headers.
 
 | Layer | Height |
 |---|---|

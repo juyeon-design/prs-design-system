@@ -20,6 +20,25 @@ Do not reference other files from this document.
 
 ## Layout Structure
 
+**기본 스펙**
+
+| 항목 | 값 |
+|---|---|
+| 캔버스 | 1920×1080px |
+| LNB | 220px (collapsed: 56px) |
+| GNB | 48px 고정 |
+
+> No GNB (top bar). Logo and notification icon go in the LNB header (height 56px).
+
+**콘텐츠 너비 패턴 2종**
+
+| 패턴 | 적용 화면 | 구현 |
+|---|---|---|
+| **Fill** | 리스트/테이블, 대시보드 | `w-full`, 좌우 패딩 60px을 **페이지 컨테이너**에만 적용 (`px-[60px]`) |
+| **Fixed** | 폼, 디테일, 설정, 홈(허브형) | `max-w-[1200px] mx-auto` |
+
+> ⚠️ 60px 패딩은 페이지 컨테이너 레벨에만. 테이블 헤더·행 내부에 적용하지 않는다.
+
 ```css
 /* Full 1920px base */
 .layout { display: flex; width: 100%; }
@@ -38,19 +57,24 @@ Do not reference other files from this document.
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   background: #f5f5f5;   /* $semantic-color-background-sunken */
 }
 
-/* Inner content */
-.content-inner {
+/* Fill pattern */
+.content-fill {
+  width: 100%;
+  padding: 0 60px;
+}
+
+/* Fixed pattern */
+.content-fixed {
   width: 100%;
   max-width: 1200px;
+  margin: 0 auto;
   padding: 40px;         /* $base-dimen-space-500 */
 }
 ```
 
-> No GNB (top bar). Logo and notification icon go in the LNB header (height 56px).
 > Exceptions: NodeView canvas `#f0f0f0`, AI Wizard violet gradient.
 
 ---
